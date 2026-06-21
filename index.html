@@ -2,684 +2,239 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manulife Heritage Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Interactive Dashboard</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #080c14;
-            --card-bg: #111827;
-            --text-main: #ffffff;
-            --text-muted: #9ca3af;
-            --primary-glow: #00f2fe;
-            --secondary-glow: #4facfe;
-            --warning-glow: #f59e0b;
-            --danger-glow: #ef4444;
-            --success-glow: #10b981;
-            --border-color: rgba(255, 255, 255, 0.08);
-        }
-
-        * {
-            box-sizing: border-box;
+        /* Force a true, unscrollable full-screen app canvas */
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc; /* Slate 50 */
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-screen-orientation: portrait;
         }
 
-        html, body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+        /* Core Layout Matrix */
+        .app-shell {
+            display: grid;
+            grid-template-columns: 360px 1fr;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Lock viewport entirely */
+            overflow: hidden;
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 1.5rem;
-        }
-
-        header {
-            text-align: center;
-            height: 50px;
-        }
-
-        header h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-top: 0.2rem;
-        }
-
-        /* Fixed High-Impact Executive Display Framework */
-        .dashboard-container {
+        /* Scrollable Right Panel Area */
+        .right-column {
             display: grid;
-            grid-template-columns: 340px 1fr;
-            gap: 1.5rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            height: 680px; 
-            transform-origin: top center; /* Anchor scaling location */
-            transition: transform 0.2s ease-out;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .control-panel {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            height: 100%;
+        /* iOS Safari Momentum Scroll & Trap Protections */
+        .scrollable-container {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain; /* Prevents whole-page rubber-banding */
         }
 
-        .selector-label {
-            color: var(--text-muted);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.4rem;
-            display: block;
+        /* Custom Scrollbar Styles for Sleek Look */
+        .scrollable-container::-webkit-scrollbar {
+            width: 6px;
         }
-
-        .toggle-group {
-            display: flex;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 3px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .toggle-btn {
-            flex: 1;
+        .scrollable-container::-webkit-scrollbar-track {
             background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 8px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.2); /* Slate 400 with opacity */
+            border-radius: 9999px;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.4);
         }
 
-        .toggle-btn.active {
-            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
-            color: #04060a;
-            box-shadow: 0 4px 12px rgba(0, 242, 254, 0.2);
-        }
-
-        .slider-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            transition: opacity 0.3s ease;
-        }
-
-        .slider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .slider-label {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .slider-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .range-slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 5px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            outline: none;
-            cursor: pointer;
-        }
-
-        .range-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--primary-glow);
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--primary-glow);
-        }
-
-        .slider-group.locked { opacity: 0.35; }
-        .slider-group.locked .range-slider { cursor: not-allowed; background: rgba(255, 255, 255, 0.03); }
-        .slider-group.locked .range-slider::-webkit-slider-thumb { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
-
-        .rewards-panel {
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .reward-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.15);
-            padding: 0.65rem 0.9rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: all 0.3s ease;
-        }
-
-        .reward-info {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-        }
-
-        .reward-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            transition: color 0.3s;
-        }
-
-        .reward-range {
-            font-size: 0.65rem;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .reward-badge {
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.03);
-            color: rgba(255, 255, 255, 0.2);
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .reward-row.unlocked {
-            background: rgba(16, 185, 129, 0.04);
-            border-color: rgba(16, 185, 129, 0.15);
-        }
-        .reward-row.unlocked .reward-title { color: var(--text-main); }
-        .reward-row.unlocked .reward-badge {
-            background: rgba(16, 185, 129, 0.12);
-            color: var(--success-glow);
-            border-color: rgba(16, 185, 129, 0.2);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
-        }
-
-        .reward-row.greyed {
-            opacity: 0.15;
-            background: rgba(0, 0, 0, 0.4);
-            pointer-events: none;
-        }
-
-        /* Cinematic Visual Canvas Panel */
-        .visual-display {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.8rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            height: 100%;
-        }
-
-        .chart-container { 
-            width: 100%; 
-            height: calc(100% - 130px);
-            position: relative; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        
-        svg { 
-            width: 100%; 
-            height: 100%; 
-            max-height: 100%;
-            overflow: visible; 
-        }
-
-        .ribbon-main { stroke: url(#ribbonGradient); stroke-width: 5px; stroke-linecap: round; fill: none; transition: d 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .milestone-node { fill: var(--card-bg); stroke: var(--primary-glow); stroke-width: 3.5px; transition: cx 0.4s, cy 0.4s, stroke 0.4s; }
-        .axis-label { fill: var(--text-muted); font-size: 11px; font-weight: 500; text-anchor: middle; }
-
-        /* Structural Freeze Framework */
-        .milestone-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 1.2rem;
-            height: 110px;
-        }
-
-        .milestone-card {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.01);
-            border-radius: 10px;
-            padding: 0.8rem;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .milestone-age { 
-            font-size: 0.75rem; 
-            color: var(--text-muted); 
-            text-transform: uppercase;
-            height: 16px;
-            line-height: 16px;
-        }
-        
-        .milestone-value { 
-            font-size: 1.2rem; 
-            font-weight: 700;
-            margin: 0.2rem 0;
-            height: 24px;
-            line-height: 24px;
-            white-space: nowrap;
-        }
-        
-        .status-badge { 
-            display: inline-block; 
-            font-size: 0.65rem; 
-            font-weight: 700; 
-            padding: 2px 6px; 
-            border-radius: 4px; 
-            text-transform: uppercase;
-            height: 16px;
-            line-height: 12px;
-        }
-        
-        .status-good { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .status-risk { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-        .status-lapsed { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-
-        footer {
-            text-align: center;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.2);
-            line-height: 1.4;
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 30px;
-        }
-
-        .lock-indicator { display: inline-flex; align-items: center; font-size: 0.65rem; background: rgba(255, 255, 255, 0.05); padding: 1px 5px; border-radius: 3px; color: var(--text-muted); }
-        .lock-indicator.active { color: var(--primary-glow); border: 1px solid rgba(0, 242, 254, 0.2); background: rgba(0, 242, 254, 0.05); }
-
-        /* THE SYSTEM DECK FIX: Targets iPad viewport landscape/portrait constraints to shrink presentation size perfectly */
-        @media (max-width: 1199px) or (max-height: 799px) {
-            body {
-                padding: 0.5rem;
-            }
-            header {
-                height: 40px;
-            }
-            header h1 {
-                font-size: 1.3rem;
-            }
-            header p {
-                font-size: 0.75rem;
-            }
-            .dashboard-container {
-                transform: scale(0.82); /* Compresses total layout footprint into tablet views */
-                margin-top: -10px;
-            }
-            footer {
-                font-size: 0.65rem;
-                height: auto;
-            }
-        }
-        
-        /* Proportional micro-shrink adjustment rules for standard base iPad 1024x768 frames */
-        @media (max-width: 1024px) and (max-height: 768px) {
-            .dashboard-container {
-                transform: scale(0.76);
-                margin-top: -30px;
-            }
+        /* Fix Graph proportions from being crushed */
+        .graph-container {
+            min-height: 320px;
+            height: 45vh;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Manulife Heritage Portfolio</h1>
-        <p>Strategic Presentation Interface for Advisors • Horizon Target: Age 80 Next Birthday</p>
-    </header>
-
-    <div class="dashboard-container">
-        <div class="control-panel">
-            <div>
-                <span class="selector-label">Premium Payment Term</span>
-                <div class="toggle-group">
-                    <button id="term-6" class="toggle-btn active" onclick="setPaymentTerm(6)">6 Yrs</button>
-                    <button id="term-10" class="toggle-btn" onclick="setPaymentTerm(10)">10 Yrs</button>
-                    <button id="term-20" class="toggle-btn" onclick="setPaymentTerm(20)">20 Yrs</button>
-                </div>
+    <div class="app-shell">
+        
+        <!-- ================= LEFT HAND PANEL ================= -->
+        <!-- Controls, parameters, inputs go here. Vertically scrollable. -->
+        <aside class="scrollable-container border-r border-slate-800 bg-slate-900/50 p-6 space-y-6">
+            <div class="pb-4 border-b border-slate-800">
+                <h1 class="text-xl font-bold tracking-tight text-white">Policy Controls</h1>
+                <p class="text-xs text-slate-400 mt-1">Adjust premium parameters and scenarios</p>
             </div>
 
-            <div>
-                <span class="selector-label">Advisor Control Mode</span>
-                <div class="toggle-group">
-                    <button id="btn-mode-premium" class="toggle-btn active" onclick="setMode('premium')">🔒 Lock Premium</button>
-                    <button id="btn-mode-protection" class="toggle-btn" onclick="setMode('protection')">🔒 Lock Protection</button>
+            <!-- Sample Form Fields to demonstrate scroll layout -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Coverage Terms</label>
+                    <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <option>20 Years (Standard)</option>
+                        <option>25 Years</option>
+                        <option>30 Years</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Annual Premium Allocation</label>
+                    <input type="range" min="1000" max="50000" value="12000" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                    <div class="flex justify-between text-xs text-slate-400 mt-1">
+                        <span>RM 1,000</span>
+                        <span class="text-indigo-400 font-medium">RM 12,000</span>
+                        <span>RM 50,000</span>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Rider Selection</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-3 bg-slate-800/40 p-2.5 rounded-lg border border-slate-800/80 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-900 h-4 w-4">
+                            <span class="text-sm text-slate-200">Critical Illness Multi-Pay</span>
+                        </label>
+                        <label class="flex items-center space-x-3 bg-slate-800/40 p-2.5 rounded-lg border border-slate-800/80 cursor-pointer">
+                            <input type="checkbox" class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-900 h-4 w-4">
+                            <span class="text-sm text-slate-200">Waiver of Premium Rider</span>
+                        </label>
+                        <label class="flex items-center space-x-3 bg-slate-800/40 p-2.5 rounded-lg border border-slate-800/80 cursor-pointer">
+                            <input type="checkbox" class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-900 h-4 w-4">
+                            <span class="text-sm text-slate-200">Accidental Death Benefit</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Add more control content blocks down here to test scrolling -->
+                <div class="pt-4 border-t border-slate-800 space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Assumed Growth Rate</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="bg-slate-800 border border-slate-700 py-1.5 text-xs rounded-md text-slate-300">Low (2%)</button>
+                            <button class="bg-indigo-600 border border-indigo-500 py-1.5 text-xs rounded-md text-white font-medium">Mid (5%)</button>
+                            <button class="bg-slate-800 border border-slate-700 py-1.5 text-xs rounded-md text-slate-300">High (8%)</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Advisor Disclosures</label>
+                        <p class="text-[11px] text-slate-500 leading-normal">
+                            Illustrations are based on historical index configurations. Actual cash value projections may vary according to underlying performance mechanics.
+                        </p>
+                    </div>
                 </div>
             </div>
+        </aside>
 
-            <div class="slider-group" id="protection-group">
-                <div class="slider-header">
-                    <span class="slider-label">Protection <span id="lock-badge-protection" class="lock-indicator"></span></span>
-                    <span class="slider-value" id="protection-display">RM 1,200,000</span>
+        <!-- ================= RIGHT HAND CONTAINER ================= -->
+        <main class="right-column bg-slate-950">
+            
+            <!-- TOP HALF: Fixed Graph Container (Never Scrolls) -->
+            <section class="graph-container p-6 border-b border-slate-900 bg-gradient-to-b from-slate-900/30 to-transparent flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-white tracking-tight">Performance Projections</h2>
+                        <p class="text-xs text-slate-400">Account Value vs. Cumulative Net Premium</p>
+                    </div>
+                    <div class="flex space-x-4 text-xs">
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 bg-indigo-500 rounded-full mr-1.5"></span> Cash Value</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-1.5"></span> Principal Paid</span>
+                    </div>
                 </div>
-                <input type="range" id="protection-slider" class="range-slider" min="500000" max="2000000" step="100000" value="1200000" oninput="handleSliderInput()">
-            </div>
-
-            <div class="slider-group" id="premium-group">
-                <div class="slider-header">
-                    <span class="slider-label">Premium <span id="lock-badge-premium" class="lock-indicator active">LOCKED</span></span>
-                    <span class="slider-value" id="premium-display">RM 1,200/mo</span>
-                </div>
-                <input type="range" id="premium-slider" class="range-slider" min="500" max="2500" step="100" value="1200" oninput="handleSliderInput()" disabled>
-            </div>
-
-            <div class="rewards-panel">
-                <span class="selector-label">Privilege Discount Tracker</span>
                 
-                <div id="reward-mcc-5" class="reward-row">
-                    <div class="reward-info">
-                        <span class="reward-title">MCC Premium Discount</span>
-                        <span class="reward-range">Face Amount: 500K - 749K</span>
-                    </div>
-                    <span class="reward-badge">5% OFF COI</span>
+                <!-- Mock SVG Graph - Stretches perfectly to container dimensions -->
+                <div class="w-full flex-1 mt-4 relative bg-slate-900/20 border border-slate-800/40 rounded-xl overflow-hidden flex items-center justify-center">
+                    <svg class="w-full h-full p-2" viewBox="0 0 800 240" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25"/>
+                                <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Grid lines -->
+                        <line x1="0" y1="60" x2="800" y2="60" stroke="#1e293b" stroke-dasharray="4"/>
+                        <line x1="0" y1="120" x2="800" y2="120" stroke="#1e293b" stroke-dasharray="4"/>
+                        <line x1="0" y1="180" x2="800" y2="180" stroke="#1e293b" stroke-dasharray="4"/>
+                        <!-- Area Under Curve -->
+                        <path d="M 0,220 Q 200,180 400,130 T 800,40 L 800,240 L 0,240 Z" fill="url(#chart-grad)" />
+                        <!-- Line Paths -->
+                        <path d="M 0,220 Q 200,180 400,130 T 800,40" fill="none" stroke="#6366f1" stroke-width="3" />
+                        <path d="M 0,220 L 800,110" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4" />
+                    </svg>
+                    <span class="absolute bottom-3 right-4 text-[10px] text-slate-500 font-mono">Simulation Powered by Engine v2.4</span>
                 </div>
+            </section>
 
-                <div id="reward-mcc-10" class="reward-row">
-                    <div class="reward-info">
-                        <span class="reward-title">MCC High-Volume Reward</span>
-                        <span class="reward-range">Face Amount: 750K and above</span>
-                    </div>
-                    <span class="reward-badge">10% OFF COI</span>
+            <!-- BOTTOM HALF: Scrollable 4 Milestone Boxes Container -->
+            <section class="scrollable-container p-6 bg-slate-950/60">
+                <div class="mb-3">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Policy Milestones</h3>
                 </div>
-
-                <div id="reward-heritage-20" class="reward-row">
-                    <div class="reward-info">
-                        <span class="reward-title">Heritage Elite Tier</span>
-                        <span class="reward-range">Face Amount: 1.0M and above</span>
-                    </div>
-                    <span class="reward-badge">20% OFF HERITAGE</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="visual-display">
-            <div class="chart-container">
-                <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
-                    <defs>
-                        <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#7e5bef" />
-                            <stop offset="100%" id="gradient-end" stop-color="#00f2fe" />
-                        </linearGradient>
-                        <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="8" result="blur" />
-                            <feMerge>
-                                <feMergeNode in="blur" />
-                                <feMergeNode in="SourceGraphic" />
-                            </feMerge>
-                        </filter>
-                    </defs>
-                    <line x1="50" y1="280" x2="750" y2="280" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+                
+                <!-- The 4 Boxes Grid Struct -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     
-                    <path id="glow-ribbon" d="" fill="none" stroke="url(#ribbonGradient)" stroke-width="12" opacity="0.4" filter="url(#neonGlow)" style="transition: d 0.4s ease-out; stroke: url(#ribbonGradient) !important;" />
-                    <path id="main-ribbon" class="ribbon-main" d="" />
-                    
-                    <circle id="node-y10" class="milestone-node" r="6" />
-                    <circle id="node-y20" class="milestone-node" r="6" />
-                    <circle id="node-a65" class="milestone-node" r="6" />
-                    <circle id="node-a80" class="milestone-node" r="6" />
+                    <!-- Box 1 -->
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="text-xs text-slate-400 font-medium">Year 5</div>
+                            <div class="text-xl font-bold text-white mt-1">RM 60,000</div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Break-even milestone achieved for base premium investment matrix.</p>
+                    </div>
 
-                    <text x="50" y="310" class="axis-label">Age 35</text>
-                    <text x="250" y="310" class="axis-label">Age 45 (Yr 10)</text>
-                    <text x="450" y="310" class="axis-label">Age 55 (Yr 20)</text>
-                    <text x="600" y="310" class="axis-label">Age 65</text>
-                    <text x="750" y="310" class="axis-label">Age 80 (Maturity)</text>
-                </svg>
-            </div>
+                    <!-- Box 2 -->
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="text-xs text-slate-400 font-medium">Year 10</div>
+                            <div class="text-xl font-bold text-indigo-400 mt-1">RM 142,500</div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Guaranteed non-forfeiture equity values unlock completely.</p>
+                    </div>
 
-            <div class="milestone-grid">
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 45 (Yr 10)</div>
-                    <div class="milestone-value" id="val-y10">~RM --</div>
-                    <span id="badge-y10" class="status-badge status-good">Healthy</span>
+                    <!-- Box 3 -->
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="text-xs text-slate-400 font-medium">Year 15</div>
+                            <div class="text-xl font-bold text-white mt-1">RM 268,000</div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Enhanced cash value accumulation outpaces fallback models.</p>
+                    </div>
+
+                    <!-- Box 4 -->
+                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="text-xs text-slate-400 font-medium">Year 20 (Maturity)</div>
+                            <div class="text-xl font-bold text-emerald-400 mt-1">RM 415,200</div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Targeted capitalization realized. Options available for conversion.</p>
+                    </div>
+
                 </div>
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 55 (Yr 20)</div>
-                    <div class="milestone-value" id="val-y20">~RM --</div>
-                    <span id="badge-y20" class="status-badge status-good">Healthy</span>
+
+                <!-- Proof of Concept: Stacking extra data panels underneath the boxes -->
+                <div class="mt-6 bg-slate-900/30 border border-slate-800/60 rounded-xl p-4">
+                    <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Extended Financial Trajectory Data</h4>
+                    <div class="text-xs text-slate-500 space-y-1">
+                        <p>• The values illustrated above include terminal bonuses calculating dynamic indexing models.</p>
+                        <p>• Adjusting options in the left-hand configuration matrix instantly scales these outcome milestones.</p>
+                    </div>
                 </div>
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 65 (Retire)</div>
-                    <div class="milestone-value" id="val-a65">~RM --</div>
-                    <span id="badge-a65" class="status-badge status-good">Healthy</span>
-                </div>
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 80 (Maturity)</div>
-                    <div class="milestone-value" id="val-a80">~RM --</div>
-                    <span id="badge-a80" class="status-badge status-good">Healthy</span>
-                </div>
-            </div>
-        </div>
+                
+            </section>
+
+        </main>
     </div>
 
-    <footer>
-        📊 <strong>Executive Capital Mapping Environment:</strong> Standard operational parameters impose minimum volume limits matching specific term horizons (RM500k entry for 6/10-year plans, and RM750k entry for 20-year profiles). Portfolio asset accumulation curves automatically adapt to premium reductions.
-    </footer>
-
-    <script>
-        let currentMode = 'premium'; 
-        let selectedTerm = 6; 
-
-        function setPaymentTerm(years) {
-            selectedTerm = years;
-            document.querySelectorAll('[id^="term-"]').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`term-${years}`).classList.add('active');
-            
-            const pSlider = document.getElementById('protection-slider');
-            if (years === 20) {
-                pSlider.min = "750000";
-                if (parseInt(pSlider.value) < 750000) pSlider.value = "750000";
-            } else {
-                pSlider.min = "500000";
-            }
-            handleSliderInput();
-        }
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.toggle-group button.toggle-btn').forEach(btn => {
-                if(btn.id.startsWith('btn-mode-')) btn.classList.remove('active');
-            });
-            
-            document.getElementById('protection-slider').disabled = (mode === 'protection');
-            document.getElementById('premium-slider').disabled = (mode === 'premium');
-            
-            const badgePremium = document.getElementById('lock-badge-premium');
-            const badgeProtection = document.getElementById('lock-badge-protection');
-
-            if (mode === 'premium') {
-                document.getElementById('btn-mode-premium').classList.add('active');
-                document.getElementById('premium-group').classList.add('locked');
-                document.getElementById('protection-group').classList.remove('locked');
-                badgePremium.innerText = 'LOCKED';
-                badgePremium.classList.add('active');
-                badgeProtection.innerText = '';
-                badgeProtection.classList.remove('active');
-            } else {
-                document.getElementById('btn-mode-protection').classList.add('active');
-                document.getElementById('protection-group').classList.add('locked');
-                document.getElementById('premium-group').classList.remove('locked');
-                badgeProtection.innerText = 'LOCKED';
-                badgeProtection.classList.add('active');
-                badgePremium.innerText = '';
-                badgePremium.classList.remove('active');
-            }
-        }
-
-        function handleSliderInput() {
-            let protection = parseInt(document.getElementById('protection-slider').value);
-            let premium = parseInt(document.getElementById('premium-slider').value);
-            updateUIOutputs(protection, premium);
-        }
-
-        function updateUIOutputs(protection, premium) {
-            document.getElementById('protection-display').innerText = `RM ${protection.toLocaleString()}`;
-            document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/mo`;
-
-            const mcc5Card = document.getElementById('reward-mcc-5');
-            const mcc10Card = document.getElementById('reward-mcc-10');
-            const heritage20Card = document.getElementById('reward-heritage-20');
-
-            mcc5Card.className = "reward-row";
-            mcc10Card.className = "reward-row";
-            heritage20Card.className = "reward-row";
-
-            if (selectedTerm === 20) mcc5Card.classList.add('greyed');
-
-            if (protection >= 500000 && protection <= 749999) {
-                if (selectedTerm !== 20) mcc5Card.classList.add('unlocked');
-            } else if (protection >= 750000) {
-                mcc10Card.classList.add('unlocked');
-                if (protection >= 1000000) heritage20Card.classList.add('unlocked');
-            }
-
-            let mccDiscountFactor = 1.0;
-            let heritageDiscountFactor = 1.0;
-
-            if (protection >= 500000 && protection <= 749999 && selectedTerm !== 20) mccDiscountFactor = 0.95; 
-            else if (protection >= 750000) mccDiscountFactor = 0.90; 
-
-            if (protection >= 1000000) heritageDiscountFactor = 0.80; 
-
-            let premiumSavingsBonus = (2 - mccDiscountFactor) * (2 - heritageDiscountFactor);
-            let protectionRatio = protection / 1000000;
-            
-            let termMultiplier = 1.0;
-            if (selectedTerm === 6) termMultiplier = 1.45;   
-            if (selectedTerm === 10) termMultiplier = 1.15;  
-            if (selectedTerm === 20) termMultiplier = 0.85;  
-
-            let y10 = (premium * 110) * (1.12 - (0.08 * protectionRatio)) * termMultiplier * ((premiumSavingsBonus + 3) / 4);
-            let y20 = (premium * 260) * (1.25 - (0.22 * protectionRatio)) * (termMultiplier * 0.9) * ((premiumSavingsBonus + 1.5) / 2.5);
-            let a65 = (premium * 380) * (1.38 - (0.45 * protectionRatio)) * (termMultiplier * 0.85) * premiumSavingsBonus;
-            let a80 = (premium * 310) * (1.45 - (0.90 * protectionRatio)) * (termMultiplier * 0.8) * (premiumSavingsBonus * 1.1);
-
-            y10 = Math.max(0, Math.round(y10));
-            y20 = Math.max(0, Math.round(y20));
-            a65 = Math.max(0, Math.round(a65));
-            a80 = Math.max(0, Math.round(a80));
-
-            updateMilestoneCard('y10', y10, false);
-            updateMilestoneCard('y20', y20, false);
-            updateMilestoneCard('a65', a65, false);
-            updateMilestoneCard('a80', a80, true);
-
-            let maxVisualCeiling = 1400000; 
-            function toSvgY(val) { return 280 - ((val / maxVisualCeiling) * 230); }
-
-            let pStart = { x: 50,  y: 280 };
-            let pY10   = { x: 250, y: toSvgY(y10) };
-            let pY20   = { x: 450, y: toSvgY(y20) };
-            let pA65   = { x: 600, y: toSvgY(a65) };
-            let pA80   = { x: 750, y: toSvgY(a80) };
-
-            let pathD = `M ${pStart.x} ${pStart.y} 
-                         Q 150 ${toSvgY(y10 * 0.75)}, ${pY10.x} ${pY10.y} 
-                         T ${pY20.x} ${pY20.y} 
-                         Q 525 ${toSvgY(Math.max(y20, a65) * 1.03)}, ${pA65.x} ${pA65.y} 
-                         S 675 ${toSvgY(a80 * 1.08)}, ${pA80.x} ${pA80.y}`;
-
-            document.getElementById('main-ribbon').setAttribute('d', pathD);
-            document.getElementById('glow-ribbon').setAttribute('d', pathD);
-
-            document.getElementById('node-y10').setAttribute('cx', pY10.x);
-            document.getElementById('node-y10').setAttribute('cy', pY10.y);
-            document.getElementById('node-y20').setAttribute('cx', pY20.x);
-            document.getElementById('node-y20').setAttribute('cy', pY20.y);
-            document.getElementById('node-a65').setAttribute('cx', pA65.x);
-            document.getElementById('node-a65').setAttribute('cy', pA65.y);
-            document.getElementById('node-a80').setAttribute('cx', pA80.x);
-            document.getElementById('node-a80').setAttribute('cy', pA80.y);
-
-            const glowRibbon = document.getElementById('glow-ribbon');
-            const gradientEnd = document.getElementById('gradient-end');
-
-            if (a80 <= 0 || a65 <= 0) {
-                glowRibbon.style.stroke = 'var(--warning-glow)';
-                gradientEnd.setAttribute('stop-color', 'var(--warning-glow)');
-                setNodeStyles('var(--warning-glow)');
-            } else {
-                glowRibbon.style.stroke = 'var(--primary-glow)';
-                gradientEnd.setAttribute('stop-color', 'var(--primary-glow)');
-                setNodeStyles('var(--primary-glow)');
-            }
-        }
-
-        function setNodeStyles(color) {
-            document.querySelectorAll('.milestone-node').forEach(node => { node.style.stroke = color; });
-        }
-
-        function updateMilestoneCard(id, value, isMaturity) {
-            const valEl = document.getElementById(`val-${id}`);
-            const badgeEl = document.getElementById(`badge-${id}`);
-
-            if (value <= 0) {
-                valEl.innerText = isMaturity ? "Risk" : "Lapsed";
-                valEl.style.color = isMaturity ? 'var(--warning-glow)' : 'var(--danger-glow)';
-                badgeEl.innerText = isMaturity ? "Risk" : "Lapsed";
-                badgeEl.className = `status-badge ${isMaturity ? 'status-risk' : 'status-lapsed'}`;
-            } else {
-                valEl.innerText = `~RM ${(Math.round(value/1000)*1000).toLocaleString()}`;
-                valEl.style.color = 'var(--text-main)';
-                badgeEl.innerText = "Sustained";
-                badgeEl.className = "status-badge status-good";
-            }
-        }
-
-        setPaymentTerm(6);
-        setMode('premium');
-    </script>
 </body>
 </html>
