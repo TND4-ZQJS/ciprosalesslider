@@ -25,23 +25,28 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        body {
+        html, body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Force strict app environment containing zero page scrolls */
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 2rem 1.5rem;
+            padding: 1.5rem;
         }
 
         header {
-            margin-bottom: 2.5rem;
             text-align: center;
+            height: 50px;
         }
 
         header h1 {
-            font-size: 2rem;
+            font-size: 1.6rem;
             font-weight: 700;
             letter-spacing: -0.03em;
             background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
@@ -51,48 +56,47 @@
 
         header p {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
         }
 
+        /* Fixed High-Impact Executive Display Framework */
         .dashboard-container {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 1200px;
+            grid-template-columns: 340px 1fr; /* Narrow sidebar input + Broad cinematic display */
+            gap: 1.5rem;
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
-        }
-
-        @media (min-width: 992px) {
-            .dashboard-container { grid-template-columns: 430px 1fr; }
+            height: 680px; /* Rigid, unshifting desktop vertical frame boundary */
         }
 
         .control-panel {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2.2rem;
+            border-radius: 16px;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            justify-content: space-between; /* Perfect clean snap distribution without bleeding height */
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            height: 100%;
         }
 
         .selector-label {
             color: var(--text-muted);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             display: block;
         }
 
         .toggle-group {
             display: flex;
             background: rgba(0, 0, 0, 0.3);
-            padding: 4px;
-            border-radius: 12px;
+            padding: 3px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -101,11 +105,11 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 7px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: all 0.2s ease;
         }
 
@@ -118,7 +122,7 @@
         .slider-group {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.5rem;
             transition: opacity 0.3s ease;
         }
 
@@ -130,13 +134,13 @@
 
         .slider-label {
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
         }
 
         .slider-value {
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--text-main);
         }
@@ -144,7 +148,7 @@
         .range-slider {
             -webkit-appearance: none;
             width: 100%;
-            height: 6px;
+            height: 5px;
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.08);
             outline: none;
@@ -154,25 +158,25 @@
         .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: var(--primary-glow);
             cursor: pointer;
-            box-shadow: 0 0 12px var(--primary-glow);
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .slider-group.locked { opacity: 0.35; }
         .slider-group.locked .range-slider { cursor: not-allowed; background: rgba(255, 255, 255, 0.03); }
         .slider-group.locked .range-slider::-webkit-slider-thumb { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
 
-        /* NEW: Premium Reward Indicator Widgets */
+        /* Premium Reward Tracking Elements Grouping */
         .rewards-panel {
             border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 1.5rem;
+            padding-top: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
+            gap: 0.5rem;
         }
 
         .reward-row {
@@ -180,8 +184,8 @@
             justify-content: space-between;
             align-items: center;
             background: rgba(0, 0, 0, 0.15);
-            padding: 0.85rem 1.2rem;
-            border-radius: 10px;
+            padding: 0.65rem 0.9rem;
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.02);
             transition: all 0.3s ease;
         }
@@ -189,33 +193,33 @@
         .reward-info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
 
         .reward-title {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-muted);
             transition: color 0.3s;
         }
 
         .reward-range {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: rgba(255, 255, 255, 0.3);
         }
 
         .reward-badge {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
+            padding: 3px 8px;
+            border-radius: 4px;
             background: rgba(255, 255, 255, 0.03);
             color: rgba(255, 255, 255, 0.2);
             border: 1px solid transparent;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
-        /* Interactive Indicator Reward Status States */
         .reward-row.unlocked {
             background: rgba(16, 185, 129, 0.04);
             border-color: rgba(16, 185, 129, 0.15);
@@ -234,64 +238,97 @@
             pointer-events: none;
         }
 
-        /* Visual Display (Right Column) */
+        /* Cinematic Visual Canvas Panel (Right Box) */
         .visual-display {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2.2rem;
+            border-radius: 16px;
+            padding: 1.8rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            min-height: 480px;
+            height: 100%;
         }
 
-        .chart-container { width: 100%; height: 280px; position: relative; }
+        .chart-container { 
+            width: 100%; 
+            height: 380px; /* Grand spatial allocation for curve visibility */
+            position: relative; 
+        }
+        
         svg { width: 100%; height: 100%; overflow: visible; }
 
         .ribbon-main { stroke: url(#ribbonGradient); stroke-width: 5px; stroke-linecap: round; fill: none; transition: d 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .milestone-node { fill: var(--card-bg); stroke: var(--primary-glow); stroke-width: 3.5px; transition: cx 0.4s, cy 0.4s, stroke 0.4s; }
         .axis-label { fill: var(--text-muted); font-size: 11px; font-weight: 500; text-anchor: middle; }
 
+        /* Structural Freeze Framework: Anchoring child heights completely stops shifting layouts */
         .milestone-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.2rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 1.8rem;
-            margin-top: 1rem;
+            padding-top: 1.2rem;
+            height: 110px; /* Frozen strict height constraint box */
         }
-
-        @media (min-width: 576px) { .milestone-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .milestone-card {
             text-align: center;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 1rem;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 10px;
+            padding: 0.8rem;
             border: 1px solid rgba(255, 255, 255, 0.03);
+            height: 100%; /* Anchor execution completely to its grid frame layout */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        .milestone-age { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase; }
-        .milestone-value { font-size: 1.15rem; font-weight: 700; }
-        .status-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-top: 0.4rem; text-transform: uppercase; }
+        .milestone-age { 
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            text-transform: uppercase;
+            height: 16px;
+            line-height: 16px;
+        }
+        
+        .milestone-value { 
+            font-size: 1.2rem; 
+            font-weight: 700;
+            margin: 0.2rem 0;
+            height: 24px;
+            line-height: 24px;
+            white-space: nowrap;
+        }
+        
+        .status-badge { 
+            display: inline-block; 
+            font-size: 0.65rem; 
+            font-weight: 700; 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            text-transform: uppercase;
+            height: 16px;
+            line-height: 12px;
+        }
+        
         .status-good { background: rgba(16, 185, 129, 0.1); color: #10b981; }
         .status-risk { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
         .status-lapsed { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
 
         footer {
-            margin-top: 3rem;
             text-align: center;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.25);
-            line-height: 1.5;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.2);
+            line-height: 1.4;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 30px;
         }
 
-        .lock-indicator { display: inline-flex; align-items: center; font-size: 0.7rem; background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
+        .lock-indicator { display: inline-flex; align-items: center; font-size: 0.65rem; background: rgba(255, 255, 255, 0.05); padding: 1px 5px; border-radius: 3px; color: var(--text-muted); }
         .lock-indicator.active { color: var(--primary-glow); border: 1px solid rgba(0, 242, 254, 0.2); background: rgba(0, 242, 254, 0.05); }
     </style>
 </head>
@@ -308,9 +345,9 @@
             <div>
                 <span class="selector-label">Premium Payment Term</span>
                 <div class="toggle-group">
-                    <button id="term-6" class="toggle-btn active" onclick="setPaymentTerm(6)">6 Years</button>
-                    <button id="term-10" class="toggle-btn" onclick="setPaymentTerm(10)">10 Years</button>
-                    <button id="term-20" class="toggle-btn" onclick="setPaymentTerm(20)">20 Years</button>
+                    <button id="term-6" class="toggle-btn active" onclick="setPaymentTerm(6)">6 Yrs</button>
+                    <button id="term-10" class="toggle-btn" onclick="setPaymentTerm(10)">10 Yrs</button>
+                    <button id="term-20" class="toggle-btn" onclick="setPaymentTerm(20)">20 Yrs</button>
                 </div>
             </div>
 
@@ -324,7 +361,7 @@
 
             <div class="slider-group" id="protection-group">
                 <div class="slider-header">
-                    <span class="slider-label">Protection Face Amount <span id="lock-badge-protection" class="lock-indicator"></span></span>
+                    <span class="slider-label">Protection <span id="lock-badge-protection" class="lock-indicator"></span></span>
                     <span class="slider-value" id="protection-display">RM 1,200,000</span>
                 </div>
                 <input type="range" id="protection-slider" class="range-slider" min="500000" max="2000000" step="100000" value="1200000" oninput="handleSliderInput()">
@@ -332,7 +369,7 @@
 
             <div class="slider-group" id="premium-group">
                 <div class="slider-header">
-                    <span class="slider-label">Premium Payment <span id="lock-badge-premium" class="lock-indicator active">LOCKED</span></span>
+                    <span class="slider-label">Premium <span id="lock-badge-premium" class="lock-indicator active">LOCKED</span></span>
                     <span class="slider-value" id="premium-display">RM 1,200/mo</span>
                 </div>
                 <input type="range" id="premium-slider" class="range-slider" min="500" max="2500" step="100" value="1200" oninput="handleSliderInput()" disabled>
@@ -369,8 +406,7 @@
 
         <div class="visual-display">
             <div class="chart-container">
-                <svg viewBox="0 0 600 220">
-                    <defs>
+                <svg viewBox="0 0 800 340" preserveAspectRatio="none"> <defs>
                         <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stop-color="#7e5bef" />
                             <stop offset="100%" id="gradient-end" stop-color="#00f2fe" />
@@ -383,7 +419,7 @@
                             </feMerge>
                         </filter>
                     </defs>
-                    <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+                    <line x1="50" y1="280" x2="750" y2="280" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
                     
                     <path id="glow-ribbon" d="" fill="none" stroke="url(#ribbonGradient)" stroke-width="12" opacity="0.4" filter="url(#neonGlow)" style="transition: d 0.4s ease-out; stroke: url(#ribbonGradient) !important;" />
                     <path id="main-ribbon" class="ribbon-main" d="" />
@@ -393,11 +429,11 @@
                     <circle id="node-a65" class="milestone-node" r="6" />
                     <circle id="node-a80" class="milestone-node" r="6" />
 
-                    <text x="50" y="205" class="axis-label">Age 35</text>
-                    <text x="200" y="205" class="axis-label">Age 45 (Yr 10)</text>
-                    <text x="350" y="205" class="axis-label">Age 55 (Yr 20)</text>
-                    <text x="450" y="205" class="axis-label">Age 65</text>
-                    <text x="550" y="205" class="axis-label">Age 80 (Maturity)</text>
+                    <text x="50" y="310" class="axis-label">Age 35</text>
+                    <text x="250" y="310" class="axis-label">Age 45 (Yr 10)</text>
+                    <text x="450" y="310" class="axis-label">Age 55 (Yr 20)</text>
+                    <text x="600" y="310" class="axis-label">Age 65</text>
+                    <text x="750" y="310" class="axis-label">Age 80 (Maturity)</text>
                 </svg>
             </div>
 
@@ -427,7 +463,7 @@
     </div>
 
     <footer>
-        📊 <strong>Advisor Portfolio Map:</strong> Manulife Heritage basic plan structural configurations enforce a strict minimum threshold matching the chosen premium horizon rules (RM500k minimum for 6/10-year structures, and RM750k minimum for 20-year structures). Shorter payment horizons naturally drive higher early capital curves relative to premium spent.
+        📊 <strong>Executive Capital Mapping Environment:</strong> Standard operational parameters impose minimum volume limits matching specific term horizons (RM500k entry for 6/10-year plans, and RM750k entry for 20-year profiles). Portfolio asset accumulation curves automatically adapt to premium reductions.
     </footer>
 
     <script>
@@ -495,48 +531,45 @@
             document.getElementById('protection-display').innerText = `RM ${protection.toLocaleString()}`;
             document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/mo`;
 
-            // --- EVALUATE AND RENDER REWARD DISCOUNT TIERS ---
+            // --- REWARD VALUE INDICATOR EVALUATION (FIXED THRESHOLDS) ---
             const mcc5Card = document.getElementById('reward-mcc-5');
             const mcc10Card = document.getElementById('reward-mcc-10');
             const heritage20Card = document.getElementById('reward-heritage-20');
 
-            // Reset States
             mcc5Card.className = "reward-row";
             mcc10Card.className = "reward-row";
             heritage20Card.className = "reward-row";
 
-            // Underwriting Overrides: Grey out 5% tier entirely if 20-Year Pay is active
+            // Underwriting Rule: 20-Year pay terms cannot utilize the 5% tier
             if (selectedTerm === 20) {
                 mcc5Card.classList.add('greyed');
             }
 
-            // Evaluate thresholds dynamically based on current face amount value
+            // Real-time tracking alignment logic matching requirements
             if (protection >= 500000 && protection <= 749999) {
                 if (selectedTerm !== 20) mcc5Card.classList.add('unlocked');
-            } else if (protection >= 750000 && protection <= 999999) {
+            } else if (protection >= 750000) {
                 mcc10Card.classList.add('unlocked');
-            } else if (protection >= 1000000) {
-                mcc10Card.classList.add('unlocked');
-                heritage20Card.classList.add('unlocked');
+                if (protection >= 1000000) {
+                    heritage20Card.classList.add('unlocked');
+                }
             }
 
-            // --- CALCULATE AND SIMULATE IMPACT OF COI DISCOUNTS ON FUTURE ACCOUNT VALUE ---
-            let mccDiscountFactor = 1.0;       // No discount base
-            let heritageDiscountFactor = 1.0;  // No discount base
+            // --- ACCUMULATION & SURRENDER CURVE MODELLING LABS ---
+            let mccDiscountFactor = 1.0;
+            let heritageDiscountFactor = 1.0;
 
             if (protection >= 500000 && protection <= 749999 && selectedTerm !== 20) {
-                mccDiscountFactor = 0.95; // 5% Off COI drag
+                mccDiscountFactor = 0.95; 
             } else if (protection >= 750000) {
-                mccDiscountFactor = 0.90; // 10% Off COI drag
+                mccDiscountFactor = 0.90; 
             }
 
             if (protection >= 1000000) {
-                heritageDiscountFactor = 0.80; // 20% Off Heritage base plan charges
+                heritageDiscountFactor = 0.80; 
             }
 
-            // Blended index calculation to simulate optimization savings returning directly back to cash growth
             let premiumSavingsBonus = (2 - mccDiscountFactor) * (2 - heritageDiscountFactor);
-
             let protectionRatio = protection / 1000000;
             
             let termMultiplier = 1.0;
@@ -544,7 +577,6 @@
             if (selectedTerm === 10) termMultiplier = 1.15;  
             if (selectedTerm === 20) termMultiplier = 0.85;  
 
-            // Apply the savings directly into wealth performance formulas
             let y10 = (premium * 110) * (1.12 - (0.08 * protectionRatio)) * termMultiplier * ((premiumSavingsBonus + 3) / 4);
             let y20 = (premium * 260) * (1.25 - (0.22 * protectionRatio)) * (termMultiplier * 0.9) * ((premiumSavingsBonus + 1.5) / 2.5);
             let a65 = (premium * 380) * (1.38 - (0.45 * protectionRatio)) * (termMultiplier * 0.85) * premiumSavingsBonus;
@@ -560,21 +592,21 @@
             updateMilestoneCard('a65', a65, false);
             updateMilestoneCard('a80', a80, true);
 
-            // Vector plotting boundaries
+            // Updated vector scale equations matching the broad widescreen viewBox dimensions (800x340)
             let maxVisualCeiling = 1400000; 
-            function toSvgY(val) { return 180 - ((val / maxVisualCeiling) * 150); }
+            function toSvgY(val) { return 280 - ((val / maxVisualCeiling) * 230); }
 
-            let pStart = { x: 50,  y: 180 };
-            let pY10   = { x: 200, y: toSvgY(y10) };
-            let pY20   = { x: 350, y: toSvgY(y20) };
-            let pA65   = { x: 450, y: toSvgY(a65) };
-            let pA80   = { x: 550, y: toSvgY(a80) };
+            let pStart = { x: 50,  y: 280 };
+            let pY10   = { x: 250, y: toSvgY(y10) };
+            let pY20   = { x: 450, y: toSvgY(y20) };
+            let pA65   = { x: 600, y: toSvgY(a65) };
+            let pA80   = { x: 750, y: toSvgY(a80) };
 
             let pathD = `M ${pStart.x} ${pStart.y} 
-                         Q 125 ${toSvgY(y10 * 0.75)}, ${pY10.x} ${pY10.y} 
+                         Q 150 ${toSvgY(y10 * 0.75)}, ${pY10.x} ${pY10.y} 
                          T ${pY20.x} ${pY20.y} 
-                         Q 400 ${toSvgY(Math.max(y20, a65) * 1.03)}, ${pA65.x} ${pA65.y} 
-                         S 500 ${toSvgY(a80 * 1.08)}, ${pA80.x} ${pA80.y}`;
+                         Q 525 ${toSvgY(Math.max(y20, a65) * 1.03)}, ${pA65.x} ${pA65.y} 
+                         S 675 ${toSvgY(a80 * 1.08)}, ${pA80.x} ${pA80.y}`;
 
             document.getElementById('main-ribbon').setAttribute('d', pathD);
             document.getElementById('glow-ribbon').setAttribute('d', pathD);
@@ -613,7 +645,7 @@
             if (value <= 0) {
                 valEl.innerText = isMaturity ? "Risk" : "Lapsed";
                 valEl.style.color = isMaturity ? 'var(--warning-glow)' : 'var(--danger-glow)';
-                badgeEl.innerText = isMaturity ? "Sustainability Risk" : "Lapsed";
+                badgeEl.innerText = isMaturity ? "Risk" : "Lapsed";
                 badgeEl.className = `status-badge ${isMaturity ? 'status-risk' : 'status-lapsed'}`;
             } else {
                 valEl.innerText = `~RM ${(Math.round(value/1000)*1000).toLocaleString()}`;
@@ -623,7 +655,6 @@
             }
         }
 
-        // Init System States
         setPaymentTerm(6);
         setMode('premium');
     </script>
