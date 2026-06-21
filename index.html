@@ -251,13 +251,21 @@
             height: 100%;
         }
 
-        .chart-container { 
-            width: 100%; 
-            height: 380px; /* Grand spatial allocation for curve visibility */
-            position: relative; 
-        }
-        
-        svg { width: 100%; height: 100%; overflow: visible; }
+    .chart-container { 
+    width: 100%; 
+    height: 100%; /* Let it occupy the maximum available space dynamically */
+    min-height: 0; /* Critical: allows the container to shrink on smaller screens */
+    position: relative; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+svg { 
+    width: 100%; 
+    height: 100%; 
+    max-height: 100%; /* Prevents the SVG vector from expanding beyond its boundary */
+}
 
         .ribbon-main { stroke: url(#ribbonGradient); stroke-width: 5px; stroke-linecap: round; fill: none; transition: d 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .milestone-node { fill: var(--card-bg); stroke: var(--primary-glow); stroke-width: 3.5px; transition: cx 0.4s, cy 0.4s, stroke 0.4s; }
@@ -461,7 +469,7 @@
 
         <div class="visual-display">
             <div class="chart-container">
-                <svg viewBox="0 0 800 340" preserveAspectRatio="none"> <defs>
+                <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet"> <defs>
                         <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stop-color="#7e5bef" />
                             <stop offset="100%" id="gradient-end" stop-color="#00f2fe" />
