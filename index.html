@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manulife Heritage - Smooth Plotter</title>
+    <title>Manulife Heritage - Interactive Mind Map</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -67,6 +67,7 @@
             }
         }
 
+        /* Control Panel Styles */
         .control-panel {
             background-color: var(--card-bg);
             border-radius: 16px;
@@ -121,6 +122,9 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .slider-value {
@@ -136,6 +140,7 @@
             border-radius: 3px;
             background: rgba(255,255,255,0.1);
             outline: none;
+            transition: opacity 0.2s;
         }
 
         .range-slider::-webkit-slider-thumb {
@@ -147,11 +152,24 @@
             background: var(--primary-glow);
             cursor: pointer;
             box-shadow: 0 0 10px var(--primary-glow);
+            transition: transform 0.1s;
         }
 
-        .slider-group.locked { opacity: 0.4; }
-        .slider-group.locked .range-slider::-webkit-slider-thumb { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
 
+        /* Locked state styling */
+        .slider-group.locked {
+            opacity: 0.5;
+        }
+        .slider-group.locked .range-slider::-webkit-slider-thumb {
+            background: var(--text-muted);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Visual Output Styles */
         .visual-display {
             background-color: var(--card-bg);
             border-radius: 16px;
@@ -169,7 +187,12 @@
             position: relative;
         }
 
-        svg { width: 100%; height: 100%; overflow: visible; }
+        /* Custom SVG Styling for Glow Ribbon */
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
 
         .ribbon-glow {
             stroke: var(--primary-glow);
@@ -196,8 +219,13 @@
             transition: cx 0.3s ease-out, cy 0.3s ease-out, stroke 0.3s;
         }
 
-        .axis-label { fill: var(--text-muted); font-size: 11px; text-anchor: middle; }
+        .axis-label {
+            fill: var(--text-muted);
+            font-size: 11px;
+            text-anchor: middle;
+        }
 
+        /* Milestone Table */
         .milestone-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -207,9 +235,20 @@
             margin-top: 1rem;
         }
 
-        .milestone-card { text-align: center; }
-        .milestone-age { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-        .milestone-value { font-size: 1.1rem; font-weight: 600; }
+        .milestone-card {
+            text-align: center;
+        }
+
+        .milestone-age {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .milestone-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
 
         footer {
             margin-top: 2rem;
@@ -226,38 +265,38 @@
 <body>
 
     <header>
-        <h1>Manulife Heritage Dashboard</h1>
-        <p>Interactive Visual Concept Map • Horizon Target: Age 80 Next Birthday</p>
+        <h1>Manulife Heritage</h1>
+        <p>Interactive Client Mind-Mapping Template (Maturity Target: Age 80)</p>
     </header>
 
     <div class="dashboard-container">
-        <!-- Controls -->
         <div class="control-panel">
             <div class="mode-selector">
                 <button class="mode-btn active" onclick="setMode('premium')">Lock Premium</button>
                 <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
             </div>
 
-            <!-- Protection Slider -->
             <div class="slider-group" id="protection-group">
                 <div class="slider-header">
-                    <span class="slider-label">Protection Face Amount</span>
+                    <span class="slider-label">
+                        <span id="lock-icon-protection"></span> Protection Face Amount
+                    </span>
                     <span class="slider-value" id="protection-display">RM 1.2M</span>
                 </div>
                 <input type="range" id="protection-slider" class="range-slider" min="500000" max="2000000" step="100000" value="1200000" oninput="handleSliderInput()">
             </div>
 
-            <!-- Premium Slider -->
             <div class="slider-group" id="premium-group">
                 <div class="slider-header">
-                    <span class="slider-label">🔒 Premium Amount</span>
+                    <span class="slider-label">
+                        <span id="lock-icon-premium">🔒</span> Premium Payment
+                    </span>
                     <span class="slider-value" id="premium-display">RM 1,200/mo</span>
                 </div>
                 <input type="range" id="premium-slider" class="range-slider" min="500" max="2500" step="100" value="1200" oninput="handleSliderInput()" disabled>
             </div>
         </div>
 
-        <!-- Output Visualization -->
         <div class="visual-display">
             <div class="chart-container">
                 <svg viewBox="0 0 600 220">
@@ -267,7 +306,9 @@
                             <stop offset="100%" id="gradient-end" stop-color="#00f2fe" />
                         </linearGradient>
                     </defs>
+                    
                     <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                    <line x1="50" y1="100" x2="550" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
                     
                     <path id="glow-ribbon" class="ribbon-glow" d="" />
                     <path id="main-ribbon" class="ribbon-main" d="" />
@@ -285,7 +326,6 @@
                 </svg>
             </div>
 
-            <!-- Milestone Cards -->
             <div class="milestone-grid">
                 <div class="milestone-card">
                     <div class="milestone-age">Age 45 (Yr 10)</div>
@@ -308,43 +348,15 @@
     </div>
 
     <footer>
-        📊 <strong>Interactive Concept Map:</strong> Calculated utilizing linear interpolation based on custom Manulife Heritage baseline scenarios (5% illustrated investment return layout). Values map as indicators (~RM) to convey high-level portfolio trends. Refer to official documentation for binding policies.
+        📊 <strong>Interactive Concept Map:</strong> This dashboard uses non-linear mathematical modeling inspired by basic Manulife Heritage parameters (5% illustrated investment scenario) for client mapping. Account values display as approximations (~RM) to emphasize structural trends over exact numbers. For binding values, consult an official company illustration.
     </footer>
 
     <script>
-        // --- CHOOSE YOUR DATA ANCHORS HERE ---
-        // You can change these exact numbers below to match your real quotations perfectly.
-        const quoteData = {
-            // Under Low Protection (RM 500,000)
-            500000: {
-                premium: 500, // Matching baseline premium entry
-                y10: 55000,   // Change this to the real Year 10 Ledger Value
-                y20: 135000,  // Change this to the real Year 20 Ledger Value
-                a65: 210000,  // Change this to the real Age 65 Ledger Value
-                a80: 180000   // Change this to the real Age 80 Ledger Value
-            },
-            // Under Mid Protection (RM 1,200,000)
-            1200000: {
-                premium: 1200,
-                y10: 128000,
-                y20: 310000,
-                a65: 480000,
-                a80: 390000
-            },
-            // Under High Protection (RM 2,000,000)
-            2000000: {
-                premium: 2000,
-                y10: 210000,
-                y20: 495000,
-                a65: 760000,
-                a80: 510000
-            }
-        };
-
-        let currentMode = 'premium';
+        let currentMode = 'premium'; 
 
         function setMode(mode) {
             currentMode = mode;
+            
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('protection-slider').disabled = (mode === 'protection');
             document.getElementById('premium-slider').disabled = (mode === 'premium');
@@ -353,10 +365,14 @@
                 document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
                 document.getElementById('premium-group').classList.add('locked');
                 document.getElementById('protection-group').classList.remove('locked');
+                document.getElementById('lock-icon-premium').innerText = '🔒';
+                document.getElementById('lock-icon-protection').innerText = '';
             } else {
                 document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
                 document.getElementById('protection-group').classList.add('locked');
                 document.getElementById('premium-group').classList.remove('locked');
+                document.getElementById('lock-icon-protection').innerText = '🔒';
+                document.getElementById('lock-icon-premium').innerText = '';
             }
             handleSliderInput();
         }
@@ -366,81 +382,56 @@
             let premium = parseInt(document.getElementById('premium-slider').value);
 
             if (currentMode === 'premium') {
-                // Lock Premium mode: Protection moves, premium follows a direct lookup map ratio
-                // Simple proportional slider mapping
-                let pct = (protection - 500000) / (2000000 - 500000);
-                premium = 500 + Math.round(pct * 15) * 100; 
-                document.getElementById('premium-slider').value = premium;
+                let basePremiumNeeded = (protection / 1000); 
             } else {
-                // Lock Protection mode: Premium moves, protection follows a direct lookup map ratio
-                let pct = (premium - 500) / (2500 - 500);
-                protection = 500000 + Math.round(pct * 15) * 100000;
-                document.getElementById('protection-slider').value = protection;
+                // Scenario 2
             }
 
             updateUIOutputs(protection, premium);
-        }
-
-        // Standard linear mathematical interpolation to estimate points in between your quotes
-        function interpolate(x, x1, x2, y1, y2) {
-            if (x1 === x2) return y1;
-            return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1);
-        }
-
-        function getInterpolatedMilestones(protection) {
-            const keys = Object.keys(quoteData).map(Number).sort((a, b) => a - b);
-            
-            // Boundary checks
-            if (protection <= keys[0]) return quoteData[keys[0]];
-            if (protection >= keys[keys.length - 1]) return quoteData[keys[keys.length - 1]];
-            
-            // Find bounding anchor indices
-            let lower = keys[0], upper = keys[1];
-            if (protection > keys[1]) {
-                lower = keys[1];
-                upper = keys[2];
-            }
-
-            let d1 = quoteData[lower];
-            let d2 = quoteData[upper];
-
-            return {
-                y10: interpolate(protection, lower, upper, d1.y10, d2.y10),
-                y20: interpolate(protection, lower, upper, d1.y20, d2.y20),
-                a65: interpolate(protection, lower, upper, d1.a65, d2.a65),
-                a80: interpolate(protection, lower, upper, d1.a80, d2.a80)
-            };
         }
 
         function updateUIOutputs(protection, premium) {
             document.getElementById('protection-display').innerText = `RM ${(protection/1000000).toFixed(1)}M`;
             document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/mo`;
 
-            // Pull clean plotted milestone indicators
-            let values = getInterpolatedMilestones(protection);
+            let coverageLoad = protection / 1000000; 
+            let fundingPower = premium / 1200;       
 
-            // Format numbers to clean rounded presentation outputs
-            document.getElementById('val-y10').innerText = `~RM ${(Math.round(values.y10/1000)*1000).toLocaleString()}`;
-            document.getElementById('val-y20').innerText = `~RM ${(Math.round(values.y20/1000)*1000).toLocaleString()}`;
-            document.getElementById('val-a65').innerText = `~RM ${(Math.round(values.a65/1000)*1000).toLocaleString()}`;
-            document.getElementById('val-a80').innerText = `~RM ${(Math.round(values.a80/1000)*1000).toLocaleString()}`;
+            let y10 = Math.max(0, Math.round((premium * 110) * (2 - (coverageLoad * 0.4))));
+            let y20 = Math.max(0, Math.round((y10 * 1.8) * fundingPower * (1.3 - (coverageLoad * 0.25))));
+            let a65 = Math.max(0, Math.round((y20 * 1.4) * (1.4 - (coverageLoad * 0.45))));
+            let a80 = Math.max(0, Math.round((a65 * 0.85) * (1.6 - (coverageLoad * 0.65))));
 
-            // Scale calculations inside viewport bounding matrix
-            let maxValPossible = 900000; 
-            function toSvgY(val) { return 180 - ((val / maxValPossible) * 150); }
+            document.getElementById('val-y10').innerText = y10 > 0 ? `~RM ${(Math.round(y10/1000)*1000).toLocaleString()}` : 'Lapsed';
+            document.getElementById('val-y20').innerText = y20 > 0 ? `~RM ${(Math.round(y20/1000)*1000).toLocaleString()}` : 'Lapsed';
+            document.getElementById('val-a65').innerText = a65 > 0 ? `~RM ${(Math.round(a65/1000)*1000).toLocaleString()}` : 'Lapsed';
+            document.getElementById('val-a80').innerText = a80 > 0 ? `~RM ${(Math.round(a80/1000)*1000).toLocaleString()}` : 'Sustainability Risk';
+
+            // --- THE SOLUTION: DYNAMIC CEILING SCALING ---
+            // Find the single highest value among the milestones to determine our peak.
+            let highestValue = Math.max(y10, y20, a65, a80);
+            
+            // Set a fallback baseline ceiling (e.g., 1.2M), or use the highest value padded out by 15% 
+            // so the peak node never clips right up against the top border of the box.
+            let dynamicCeiling = Math.max(1200000, highestValue * 1.15); 
+
+            function toSvgY(val) {
+                let pct = val / dynamicCeiling;
+                return 180 - (pct * 150); // Now dynamically fits perfect ratio every time!
+            }
+            // ---------------------------------------------
 
             let pStart = { x: 50,  y: 180 };
-            let pY10   = { x: 200, y: toSvgY(values.y10) };
-            let pY20   = { x: 350, y: toSvgY(values.y20) };
-            let pA65   = { x: 450, y: toSvgY(values.a65) };
-            let pA80   = { x: 550, y: toSvgY(values.a80) };
+            let pY10   = { x: 200, y: toSvgY(y10) };
+            let pY20   = { x: 350, y: toSvgY(y20) };
+            let pA65   = { x: 450, y: toSvgY(a65) };
+            let pA80   = { x: 550, y: toSvgY(a80) };
 
-            // Pure curve plotting syntax
             let pathD = `M ${pStart.x} ${pStart.y} 
-                         Q 125 ${toSvgY(values.y10*0.75)}, ${pY10.x} ${pY10.y} 
+                         Q 125 ${toSvgY(y10*0.7)}, ${pY10.x} ${pY10.y} 
                          T ${pY20.x} ${pY20.y} 
-                         Q 400 ${toSvgY(Math.max(values.y20, values.a65)*1.03)}, ${pA65.x} ${pA65.y} 
-                         S 500 ${toSvgY(values.a80 * 1.08)}, ${pA80.x} ${pA80.y}`;
+                         Q 400 ${toSvgY(Math.max(y20, a65)*1.05)}, ${pA65.x} ${pA65.y} 
+                         S 500 ${toSvgY(a80 * 1.1)}, ${pA80.x} ${pA80.y}`;
 
             document.getElementById('main-ribbon').setAttribute('d', pathD);
             document.getElementById('glow-ribbon').setAttribute('d', pathD);
@@ -453,6 +444,14 @@
             document.getElementById('node-a65').setAttribute('cy', pA65.y);
             document.getElementById('node-a80').setAttribute('cx', pA80.x);
             document.getElementById('node-a80').setAttribute('cy', pA80.y);
+
+            if(a80 <= 0 || a65 <= 0) {
+                document.getElementById('glow-ribbon').style.stroke = 'var(--warning-glow)';
+                document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
+            } else {
+                document.getElementById('glow-ribbon').style.stroke = 'var(--primary-glow)';
+                document.getElementById('gradient-end').setAttribute('stop-color', 'var(--primary-glow)');
+            }
         }
 
         setMode('premium');
