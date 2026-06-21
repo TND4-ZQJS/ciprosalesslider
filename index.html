@@ -14,6 +14,7 @@
             --secondary-glow: #4facfe;
             --warning-glow: #f59e0b;
             --danger-glow: #ef4444;
+            --success-glow: #10b981;
             --border-color: rgba(255, 255, 255, 0.08);
         }
 
@@ -64,7 +65,7 @@
         }
 
         @media (min-width: 992px) {
-            .dashboard-container { grid-template-columns: 420px 1fr; }
+            .dashboard-container { grid-template-columns: 430px 1fr; }
         }
 
         .control-panel {
@@ -74,11 +75,10 @@
             padding: 2.2rem;
             display: flex;
             flex-direction: column;
-            gap: 2.2rem;
+            gap: 2rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
-        /* Mode & Term Sub-Selectors */
         .selector-label {
             color: var(--text-muted);
             font-size: 0.75rem;
@@ -166,6 +166,75 @@
         .slider-group.locked .range-slider { cursor: not-allowed; background: rgba(255, 255, 255, 0.03); }
         .slider-group.locked .range-slider::-webkit-slider-thumb { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
 
+        /* NEW: Premium Reward Indicator Widgets */
+        .rewards-panel {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .reward-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.85rem 1.2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+        }
+
+        .reward-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .reward-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .reward-range {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .reward-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.2);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        /* Interactive Indicator Reward Status States */
+        .reward-row.unlocked {
+            background: rgba(16, 185, 129, 0.04);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+        .reward-row.unlocked .reward-title { color: var(--text-main); }
+        .reward-row.unlocked .reward-badge {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success-glow);
+            border-color: rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+        }
+
+        .reward-row.greyed {
+            opacity: 0.15;
+            background: rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        /* Visual Display (Right Column) */
         .visual-display {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -268,6 +337,34 @@
                 </div>
                 <input type="range" id="premium-slider" class="range-slider" min="500" max="2500" step="100" value="1200" oninput="handleSliderInput()" disabled>
             </div>
+
+            <div class="rewards-panel">
+                <span class="selector-label">Privilege Discount Tracker</span>
+                
+                <div id="reward-mcc-5" class="reward-row">
+                    <div class="reward-info">
+                        <span class="reward-title">MCC Premium Discount</span>
+                        <span class="reward-range">Face Amount: 500K - 749K</span>
+                    </div>
+                    <span class="reward-badge">5% OFF COI</span>
+                </div>
+
+                <div id="reward-mcc-10" class="reward-row">
+                    <div class="reward-info">
+                        <span class="reward-title">MCC High-Volume Reward</span>
+                        <span class="reward-range">Face Amount: 750K and above</span>
+                    </div>
+                    <span class="reward-badge">10% OFF COI</span>
+                </div>
+
+                <div id="reward-heritage-20" class="reward-row">
+                    <div class="reward-info">
+                        <span class="reward-title">Heritage Elite Tier</span>
+                        <span class="reward-range">Face Amount: 1.0M and above</span>
+                    </div>
+                    <span class="reward-badge">20% OFF HERITAGE</span>
+                </div>
+            </div>
         </div>
 
         <div class="visual-display">
@@ -335,21 +432,18 @@
 
     <script>
         let currentMode = 'premium'; 
-        let selectedTerm = 6; // Defaults to 6 Years fixed term
+        let selectedTerm = 6; 
 
         function setPaymentTerm(years) {
             selectedTerm = years;
             
-            // Toggle active classes on terms UI buttons
             document.querySelectorAll('[id^="term-"]').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`term-${years}`).classList.add('active');
             
-            // Apply Dynamic Underwriting Rule Boundary Limits
             const pSlider = document.getElementById('protection-slider');
             
             if (years === 20) {
                 pSlider.min = "750000";
-                // Rule Enforcement: If current value sits under new floor, instantly update it
                 if (parseInt(pSlider.value) < 750000) {
                     pSlider.value = "750000";
                 }
@@ -357,7 +451,6 @@
                 pSlider.min = "500000";
             }
             
-            // Re-render data calculation points matching new term structure rules
             handleSliderInput();
         }
 
@@ -402,20 +495,60 @@
             document.getElementById('protection-display').innerText = `RM ${protection.toLocaleString()}`;
             document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/mo`;
 
+            // --- EVALUATE AND RENDER REWARD DISCOUNT TIERS ---
+            const mcc5Card = document.getElementById('reward-mcc-5');
+            const mcc10Card = document.getElementById('reward-mcc-10');
+            const heritage20Card = document.getElementById('reward-heritage-20');
+
+            // Reset States
+            mcc5Card.className = "reward-row";
+            mcc10Card.className = "reward-row";
+            heritage20Card.className = "reward-row";
+
+            // Underwriting Overrides: Grey out 5% tier entirely if 20-Year Pay is active
+            if (selectedTerm === 20) {
+                mcc5Card.classList.add('greyed');
+            }
+
+            // Evaluate thresholds dynamically based on current face amount value
+            if (protection >= 500000 && protection <= 749999) {
+                if (selectedTerm !== 20) mcc5Card.classList.add('unlocked');
+            } else if (protection >= 750000 && protection <= 999999) {
+                mcc10Card.classList.add('unlocked');
+            } else if (protection >= 1000000) {
+                mcc10Card.classList.add('unlocked');
+                heritage20Card.classList.add('unlocked');
+            }
+
+            // --- CALCULATE AND SIMULATE IMPACT OF COI DISCOUNTS ON FUTURE ACCOUNT VALUE ---
+            let mccDiscountFactor = 1.0;       // No discount base
+            let heritageDiscountFactor = 1.0;  // No discount base
+
+            if (protection >= 500000 && protection <= 749999 && selectedTerm !== 20) {
+                mccDiscountFactor = 0.95; // 5% Off COI drag
+            } else if (protection >= 750000) {
+                mccDiscountFactor = 0.90; // 10% Off COI drag
+            }
+
+            if (protection >= 1000000) {
+                heritageDiscountFactor = 0.80; // 20% Off Heritage base plan charges
+            }
+
+            // Blended index calculation to simulate optimization savings returning directly back to cash growth
+            let premiumSavingsBonus = (2 - mccDiscountFactor) * (2 - heritageDiscountFactor);
+
             let protectionRatio = protection / 1000000;
             
-            // --- FIXED PAYMENT TERM INFLUENCE MULTIPLIER ---
-            // Shorter premium pay terms mean faster funding and lower cumulative long-term COI drain
             let termMultiplier = 1.0;
-            if (selectedTerm === 6) termMultiplier = 1.45;   // Compressed funding = high cash trajectory
-            if (selectedTerm === 10) termMultiplier = 1.15;  // Moderate funding speed
-            if (selectedTerm === 20) termMultiplier = 0.85;  // Extended timeline increases early protection costs
+            if (selectedTerm === 6) termMultiplier = 1.45;   
+            if (selectedTerm === 10) termMultiplier = 1.15;  
+            if (selectedTerm === 20) termMultiplier = 0.85;  
 
-            // Core Wealth Ribbon Mathematics Engine
-            let y10 = (premium * 110) * (1.12 - (0.08 * protectionRatio)) * termMultiplier;
-            let y20 = (premium * 260) * (1.25 - (0.22 * protectionRatio)) * (termMultiplier * 0.9);
-            let a65 = (premium * 380) * (1.38 - (0.45 * protectionRatio)) * (termMultiplier * 0.85);
-            let a80 = (premium * 310) * (1.45 - (0.90 * protectionRatio)) * (termMultiplier * 0.8);
+            // Apply the savings directly into wealth performance formulas
+            let y10 = (premium * 110) * (1.12 - (0.08 * protectionRatio)) * termMultiplier * ((premiumSavingsBonus + 3) / 4);
+            let y20 = (premium * 260) * (1.25 - (0.22 * protectionRatio)) * (termMultiplier * 0.9) * ((premiumSavingsBonus + 1.5) / 2.5);
+            let a65 = (premium * 380) * (1.38 - (0.45 * protectionRatio)) * (termMultiplier * 0.85) * premiumSavingsBonus;
+            let a80 = (premium * 310) * (1.45 - (0.90 * protectionRatio)) * (termMultiplier * 0.8) * (premiumSavingsBonus * 1.1);
 
             y10 = Math.max(0, Math.round(y10));
             y20 = Math.max(0, Math.round(y20));
