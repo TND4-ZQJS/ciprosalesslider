@@ -330,6 +330,39 @@
 
         .lock-indicator { display: inline-flex; align-items: center; font-size: 0.65rem; background: rgba(255, 255, 255, 0.05); padding: 1px 5px; border-radius: 3px; color: var(--text-muted); }
         .lock-indicator.active { color: var(--primary-glow); border: 1px solid rgba(0, 242, 254, 0.2); background: rgba(0, 242, 254, 0.05); }
+
+        /* Target devices with shorter screens or tablets like iPads */
+@media (max-max-height: 780px), (max-width: 1024px) {
+    body {
+        padding: 1rem; /* Compress outer spacing */
+    }
+    
+    header {
+        height: 40px; /* Shrink header footprint */
+    }
+    
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    .dashboard-container {
+        height: calc(100vh - 120px); /* Dynamically scales down to fit the screen */
+        min-height: 520px; /* Prevents it from crushing too flat */
+        gap: 1rem;
+    }
+
+    .chart-container {
+        height: calc(100% - 120px); /* Lets the chart dynamically scale down its height */
+    }
+
+    /* Slightly scale down control text sizes to prevent clipping */
+    .slider-value {
+        font-size: 1.1rem;
+    }
+    .reward-row {
+        padding: 0.5rem 0.75rem;
+    }
+}
     </style>
 </head>
 <body>
