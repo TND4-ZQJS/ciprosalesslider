@@ -2,239 +2,460 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Interactive Dashboard</title>
-    <!-- Tailwind CSS CDN for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manulife Heritage - Smooth Plotter</title>
     <style>
-        /* Force a true, unscrollable full-screen app canvas */
-        html, body {
-            height: 100%;
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151c2c;
+            --text-main: #ffffff;
+            --text-muted: #8a99ad;
+            --primary-glow: #00f2fe;
+            --secondary-glow: #4facfe;
+            --warning-glow: #ff9f43;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: #0f172a; /* Slate 900 */
-            color: #f8fafc; /* Slate 50 */
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            -webkit-screen-orientation: portrait;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* Core Layout Matrix */
-        .app-shell {
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            background: linear-gradient(to right, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .dashboard-container {
             display: grid;
-            grid-template-columns: 360px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        /* Scrollable Right Panel Area */
-        .right-column {
-            display: grid;
-            grid-template-rows: auto 1fr;
-            height: 100vh;
-            overflow: hidden;
+        @media (min-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 400px 1fr;
+            }
         }
 
-        /* iOS Safari Momentum Scroll & Trap Protections */
-        .scrollable-container {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain; /* Prevents whole-page rubber-banding */
+        .control-panel {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* Custom Scrollbar Styles for Sleek Look */
-        .scrollable-container::-webkit-scrollbar {
-            width: 6px;
+        .mode-selector {
+            display: flex;
+            background: rgba(0,0,0,0.2);
+            padding: 4px;
+            border-radius: 8px;
         }
-        .scrollable-container::-webkit-scrollbar-track {
+
+        .mode-btn {
+            flex: 1;
             background: transparent;
-        }
-        .scrollable-container::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.2); /* Slate 400 with opacity */
-            border-radius: 9999px;
-        }
-        .scrollable-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(148, 163, 184, 0.4);
+            border: none;
+            color: var(--text-muted);
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        /* Fix Graph proportions from being crushed */
-        .graph-container {
-            min-height: 320px;
-            height: 45vh;
+        .mode-btn.active {
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            color: var(--bg-color);
+            font-weight: 600;
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slider-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .slider-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-glow);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .slider-group.locked { opacity: 0.4; }
+        .slider-group.locked .range-slider::-webkit-slider-thumb { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
+
+        .visual-display {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            min-height: 400px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 260px;
+            position: relative;
+        }
+
+        svg { width: 100%; height: 100%; overflow: visible; }
+
+        .ribbon-glow {
+            stroke: var(--primary-glow);
+            stroke-width: 12px;
+            stroke-linecap: round;
+            fill: none;
+            opacity: 0.15;
+            filter: blur(8px);
+            transition: d 0.3s ease-out, stroke 0.3s;
+        }
+
+        .ribbon-main {
+            stroke: url(#ribbonGradient);
+            stroke-width: 5px;
+            stroke-linecap: round;
+            fill: none;
+            transition: d 0.3s ease-out;
+        }
+
+        .milestone-node {
+            fill: var(--card-bg);
+            stroke: var(--primary-glow);
+            stroke-width: 3px;
+            transition: cx 0.3s ease-out, cy 0.3s ease-out, stroke 0.3s;
+        }
+
+        .axis-label { fill: var(--text-muted); font-size: 11px; text-anchor: middle; }
+
+        .milestone-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .milestone-card { text-align: center; }
+        .milestone-age { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .milestone-value { font-size: 1.1rem; font-weight: 600; }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.3);
+            line-height: 1.4;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 </head>
 <body>
 
-    <div class="app-shell">
-        
-        <!-- ================= LEFT HAND PANEL ================= -->
-        <!-- Controls, parameters, inputs go here. Vertically scrollable. -->
-        <aside class="scrollable-container border-r border-slate-800 bg-slate-900/50 p-6 space-y-6">
-            <div class="pb-4 border-b border-slate-800">
-                <h1 class="text-xl font-bold tracking-tight text-white">Policy Controls</h1>
-                <p class="text-xs text-slate-400 mt-1">Adjust premium parameters and scenarios</p>
+    <header>
+        <h1>Manulife Heritage Dashboard</h1>
+        <p>Interactive Visual Concept Map • Horizon Target: Age 80 Next Birthday</p>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Controls -->
+        <div class="control-panel">
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('premium')">Lock Premium</button>
+                <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
             </div>
 
-            <!-- Sample Form Fields to demonstrate scroll layout -->
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Coverage Terms</label>
-                    <select class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
-                        <option>20 Years (Standard)</option>
-                        <option>25 Years</option>
-                        <option>30 Years</option>
-                    </select>
+            <!-- Protection Slider -->
+            <div class="slider-group" id="protection-group">
+                <div class="slider-header">
+                    <span class="slider-label">Protection Face Amount</span>
+                    <span class="slider-value" id="protection-display">RM 1.2M</span>
                 </div>
-
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Annual Premium Allocation</label>
-                    <input type="range" min="1000" max="50000" value="12000" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
-                    <div class="flex justify-between text-xs text-slate-400 mt-1">
-                        <span>RM 1,000</span>
-                        <span class="text-indigo-400 font-medium">RM 12,000</span>
-                        <span>RM 50,000</span>
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Rider Selection</label>
-                    <div class="space-y-2">
-                        <label class="flex items-center space-x-3 bg-slate-800/40 p-2.5 rounded-lg border border-slate-800/80 cursor-pointer">
-                            <input type="checkbox" checked class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-900 h-4 w-4">
-                            <span class="text-sm text-slate-200">Critical Illness Multi-Pay</span>
-                        </label>
-                        <label class="flex items-center space-x-3 bg-slate-800/40 p-2.5 rounded-lg border border-slate-800/80 cursor-pointer">
-                            <input type="checkbox" class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-900 h-4 w-4">
-                            <span class="text-sm text-slate-200">Waiver of Premium Rider</span>
-                        </label>
-                        <label class="flex items-center space-x-3 bg-slate-800/40 p-2.5 rounded-lg border border-slate-800/80 cursor-pointer">
-                            <input type="checkbox" class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-900 h-4 w-4">
-                            <span class="text-sm text-slate-200">Accidental Death Benefit</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Add more control content blocks down here to test scrolling -->
-                <div class="pt-4 border-t border-slate-800 space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Assumed Growth Rate</label>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button class="bg-slate-800 border border-slate-700 py-1.5 text-xs rounded-md text-slate-300">Low (2%)</button>
-                            <button class="bg-indigo-600 border border-indigo-500 py-1.5 text-xs rounded-md text-white font-medium">Mid (5%)</button>
-                            <button class="bg-slate-800 border border-slate-700 py-1.5 text-xs rounded-md text-slate-300">High (8%)</button>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Advisor Disclosures</label>
-                        <p class="text-[11px] text-slate-500 leading-normal">
-                            Illustrations are based on historical index configurations. Actual cash value projections may vary according to underlying performance mechanics.
-                        </p>
-                    </div>
-                </div>
+                <input type="range" id="protection-slider" class="range-slider" min="500000" max="2000000" step="100000" value="1200000" oninput="handleSliderInput()">
             </div>
-        </aside>
 
-        <!-- ================= RIGHT HAND CONTAINER ================= -->
-        <main class="right-column bg-slate-950">
-            
-            <!-- TOP HALF: Fixed Graph Container (Never Scrolls) -->
-            <section class="graph-container p-6 border-b border-slate-900 bg-gradient-to-b from-slate-900/30 to-transparent flex flex-col justify-between">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-lg font-bold text-white tracking-tight">Performance Projections</h2>
-                        <p class="text-xs text-slate-400">Account Value vs. Cumulative Net Premium</p>
-                    </div>
-                    <div class="flex space-x-4 text-xs">
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 bg-indigo-500 rounded-full mr-1.5"></span> Cash Value</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-1.5"></span> Principal Paid</span>
-                    </div>
+            <!-- Premium Slider -->
+            <div class="slider-group" id="premium-group">
+                <div class="slider-header">
+                    <span class="slider-label">🔒 Premium Amount</span>
+                    <span class="slider-value" id="premium-display">RM 1,200/mo</span>
                 </div>
-                
-                <!-- Mock SVG Graph - Stretches perfectly to container dimensions -->
-                <div class="w-full flex-1 mt-4 relative bg-slate-900/20 border border-slate-800/40 rounded-xl overflow-hidden flex items-center justify-center">
-                    <svg class="w-full h-full p-2" viewBox="0 0 800 240" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25"/>
-                                <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <!-- Grid lines -->
-                        <line x1="0" y1="60" x2="800" y2="60" stroke="#1e293b" stroke-dasharray="4"/>
-                        <line x1="0" y1="120" x2="800" y2="120" stroke="#1e293b" stroke-dasharray="4"/>
-                        <line x1="0" y1="180" x2="800" y2="180" stroke="#1e293b" stroke-dasharray="4"/>
-                        <!-- Area Under Curve -->
-                        <path d="M 0,220 Q 200,180 400,130 T 800,40 L 800,240 L 0,240 Z" fill="url(#chart-grad)" />
-                        <!-- Line Paths -->
-                        <path d="M 0,220 Q 200,180 400,130 T 800,40" fill="none" stroke="#6366f1" stroke-width="3" />
-                        <path d="M 0,220 L 800,110" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4" />
-                    </svg>
-                    <span class="absolute bottom-3 right-4 text-[10px] text-slate-500 font-mono">Simulation Powered by Engine v2.4</span>
-                </div>
-            </section>
+                <input type="range" id="premium-slider" class="range-slider" min="500" max="2500" step="100" value="1200" oninput="handleSliderInput()" disabled>
+            </div>
+        </div>
 
-            <!-- BOTTOM HALF: Scrollable 4 Milestone Boxes Container -->
-            <section class="scrollable-container p-6 bg-slate-950/60">
-                <div class="mb-3">
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Key Policy Milestones</h3>
-                </div>
-                
-                <!-- The 4 Boxes Grid Struct -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Output Visualization -->
+        <div class="visual-display">
+            <div class="chart-container">
+                <svg viewBox="0 0 600 220">
+                    <defs>
+                        <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#4facfe" />
+                            <stop offset="100%" id="gradient-end" stop-color="#00f2fe" />
+                        </linearGradient>
+                    </defs>
+                    <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
                     
-                    <!-- Box 1 -->
-                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="text-xs text-slate-400 font-medium">Year 5</div>
-                            <div class="text-xl font-bold text-white mt-1">RM 60,000</div>
-                        </div>
-                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Break-even milestone achieved for base premium investment matrix.</p>
-                    </div>
+                    <path id="glow-ribbon" class="ribbon-glow" d="" />
+                    <path id="main-ribbon" class="ribbon-main" d="" />
+                    
+                    <circle id="node-y10" class="milestone-node" r="6" />
+                    <circle id="node-y20" class="milestone-node" r="6" />
+                    <circle id="node-a65" class="milestone-node" r="6" />
+                    <circle id="node-a80" class="milestone-node" r="6" />
 
-                    <!-- Box 2 -->
-                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="text-xs text-slate-400 font-medium">Year 10</div>
-                            <div class="text-xl font-bold text-indigo-400 mt-1">RM 142,500</div>
-                        </div>
-                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Guaranteed non-forfeiture equity values unlock completely.</p>
-                    </div>
+                    <text x="50" y="205" class="axis-label">Age 35</text>
+                    <text x="200" y="205" class="axis-label">Age 45 (Yr 10)</text>
+                    <text x="350" y="205" class="axis-label">Age 55 (Yr 20)</text>
+                    <text x="450" y="205" class="axis-label">Age 65</text>
+                    <text x="550" y="205" class="axis-label">Age 80 (Maturity)</text>
+                </svg>
+            </div>
 
-                    <!-- Box 3 -->
-                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="text-xs text-slate-400 font-medium">Year 15</div>
-                            <div class="text-xl font-bold text-white mt-1">RM 268,000</div>
-                        </div>
-                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Enhanced cash value accumulation outpaces fallback models.</p>
-                    </div>
-
-                    <!-- Box 4 -->
-                    <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="text-xs text-slate-400 font-medium">Year 20 (Maturity)</div>
-                            <div class="text-xl font-bold text-emerald-400 mt-1">RM 415,200</div>
-                        </div>
-                        <p class="text-xs text-slate-400 mt-3 border-t border-slate-800/60 pt-2">Targeted capitalization realized. Options available for conversion.</p>
-                    </div>
-
+            <!-- Milestone Cards -->
+            <div class="milestone-grid">
+                <div class="milestone-card">
+                    <div class="milestone-age">Age 45 (Yr 10)</div>
+                    <div class="milestone-value" id="val-y10">~RM --</div>
                 </div>
-
-                <!-- Proof of Concept: Stacking extra data panels underneath the boxes -->
-                <div class="mt-6 bg-slate-900/30 border border-slate-800/60 rounded-xl p-4">
-                    <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Extended Financial Trajectory Data</h4>
-                    <div class="text-xs text-slate-500 space-y-1">
-                        <p>• The values illustrated above include terminal bonuses calculating dynamic indexing models.</p>
-                        <p>• Adjusting options in the left-hand configuration matrix instantly scales these outcome milestones.</p>
-                    </div>
+                <div class="milestone-card">
+                    <div class="milestone-age">Age 55 (Yr 20)</div>
+                    <div class="milestone-value" id="val-y20">~RM --</div>
                 </div>
-                
-            </section>
-
-        </main>
+                <div class="milestone-card">
+                    <div class="milestone-age">Age 65 (Retire)</div>
+                    <div class="milestone-value" id="val-a65">~RM --</div>
+                </div>
+                <div class="milestone-card">
+                    <div class="milestone-age">Age 80 (Maturity)</div>
+                    <div class="milestone-value" id="val-a80">~RM --</div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <footer>
+        📊 <strong>Interactive Concept Map:</strong> Calculated utilizing linear interpolation based on custom Manulife Heritage baseline scenarios (5% illustrated investment return layout). Values map as indicators (~RM) to convey high-level portfolio trends. Refer to official documentation for binding policies.
+    </footer>
+
+    <script>
+        // --- CHOOSE YOUR DATA ANCHORS HERE ---
+        // You can change these exact numbers below to match your real quotations perfectly.
+        const quoteData = {
+            // Under Low Protection (RM 500,000)
+            500000: {
+                premium: 500, // Matching baseline premium entry
+                y10: 55000,   // Change this to the real Year 10 Ledger Value
+                y20: 135000,  // Change this to the real Year 20 Ledger Value
+                a65: 210000,  // Change this to the real Age 65 Ledger Value
+                a80: 180000   // Change this to the real Age 80 Ledger Value
+            },
+            // Under Mid Protection (RM 1,200,000)
+            1200000: {
+                premium: 1200,
+                y10: 128000,
+                y20: 310000,
+                a65: 480000,
+                a80: 390000
+            },
+            // Under High Protection (RM 2,000,000)
+            2000000: {
+                premium: 2000,
+                y10: 210000,
+                y20: 495000,
+                a65: 760000,
+                a80: 510000
+            }
+        };
+
+        let currentMode = 'premium';
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('protection-slider').disabled = (mode === 'protection');
+            document.getElementById('premium-slider').disabled = (mode === 'premium');
+            
+            if(mode === 'premium') {
+                document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
+                document.getElementById('premium-group').classList.add('locked');
+                document.getElementById('protection-group').classList.remove('locked');
+            } else {
+                document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
+                document.getElementById('protection-group').classList.add('locked');
+                document.getElementById('premium-group').classList.remove('locked');
+            }
+            handleSliderInput();
+        }
+
+        function handleSliderInput() {
+            let protection = parseInt(document.getElementById('protection-slider').value);
+            let premium = parseInt(document.getElementById('premium-slider').value);
+
+            if (currentMode === 'premium') {
+                // Lock Premium mode: Protection moves, premium follows a direct lookup map ratio
+                // Simple proportional slider mapping
+                let pct = (protection - 500000) / (2000000 - 500000);
+                premium = 500 + Math.round(pct * 15) * 100; 
+                document.getElementById('premium-slider').value = premium;
+            } else {
+                // Lock Protection mode: Premium moves, protection follows a direct lookup map ratio
+                let pct = (premium - 500) / (2500 - 500);
+                protection = 500000 + Math.round(pct * 15) * 100000;
+                document.getElementById('protection-slider').value = protection;
+            }
+
+            updateUIOutputs(protection, premium);
+        }
+
+        // Standard linear mathematical interpolation to estimate points in between your quotes
+        function interpolate(x, x1, x2, y1, y2) {
+            if (x1 === x2) return y1;
+            return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1);
+        }
+
+        function getInterpolatedMilestones(protection) {
+            const keys = Object.keys(quoteData).map(Number).sort((a, b) => a - b);
+            
+            // Boundary checks
+            if (protection <= keys[0]) return quoteData[keys[0]];
+            if (protection >= keys[keys.length - 1]) return quoteData[keys[keys.length - 1]];
+            
+            // Find bounding anchor indices
+            let lower = keys[0], upper = keys[1];
+            if (protection > keys[1]) {
+                lower = keys[1];
+                upper = keys[2];
+            }
+
+            let d1 = quoteData[lower];
+            let d2 = quoteData[upper];
+
+            return {
+                y10: interpolate(protection, lower, upper, d1.y10, d2.y10),
+                y20: interpolate(protection, lower, upper, d1.y20, d2.y20),
+                a65: interpolate(protection, lower, upper, d1.a65, d2.a65),
+                a80: interpolate(protection, lower, upper, d1.a80, d2.a80)
+            };
+        }
+
+        function updateUIOutputs(protection, premium) {
+            document.getElementById('protection-display').innerText = `RM ${(protection/1000000).toFixed(1)}M`;
+            document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/mo`;
+
+            // Pull clean plotted milestone indicators
+            let values = getInterpolatedMilestones(protection);
+
+            // Format numbers to clean rounded presentation outputs
+            document.getElementById('val-y10').innerText = `~RM ${(Math.round(values.y10/1000)*1000).toLocaleString()}`;
+            document.getElementById('val-y20').innerText = `~RM ${(Math.round(values.y20/1000)*1000).toLocaleString()}`;
+            document.getElementById('val-a65').innerText = `~RM ${(Math.round(values.a65/1000)*1000).toLocaleString()}`;
+            document.getElementById('val-a80').innerText = `~RM ${(Math.round(values.a80/1000)*1000).toLocaleString()}`;
+
+            // Scale calculations inside viewport bounding matrix
+            let maxValPossible = 900000; 
+            function toSvgY(val) { return 180 - ((val / maxValPossible) * 150); }
+
+            let pStart = { x: 50,  y: 180 };
+            let pY10   = { x: 200, y: toSvgY(values.y10) };
+            let pY20   = { x: 350, y: toSvgY(values.y20) };
+            let pA65   = { x: 450, y: toSvgY(values.a65) };
+            let pA80   = { x: 550, y: toSvgY(values.a80) };
+
+            // Pure curve plotting syntax
+            let pathD = `M ${pStart.x} ${pStart.y} 
+                         Q 125 ${toSvgY(values.y10*0.75)}, ${pY10.x} ${pY10.y} 
+                         T ${pY20.x} ${pY20.y} 
+                         Q 400 ${toSvgY(Math.max(values.y20, values.a65)*1.03)}, ${pA65.x} ${pA65.y} 
+                         S 500 ${toSvgY(values.a80 * 1.08)}, ${pA80.x} ${pA80.y}`;
+
+            document.getElementById('main-ribbon').setAttribute('d', pathD);
+            document.getElementById('glow-ribbon').setAttribute('d', pathD);
+
+            document.getElementById('node-y10').setAttribute('cx', pY10.x);
+            document.getElementById('node-y10').setAttribute('cy', pY10.y);
+            document.getElementById('node-y20').setAttribute('cx', pY20.x);
+            document.getElementById('node-y20').setAttribute('cy', pY20.y);
+            document.getElementById('node-a65').setAttribute('cx', pA65.x);
+            document.getElementById('node-a65').setAttribute('cy', pA65.y);
+            document.getElementById('node-a80').setAttribute('cx', pA80.x);
+            document.getElementById('node-a80').setAttribute('cy', pA80.y);
+        }
+
+        setMode('premium');
+    </script>
 </body>
 </html>
