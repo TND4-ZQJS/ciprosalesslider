@@ -221,13 +221,13 @@
             transition: d 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), stroke 0.4s;
         }
 
-        .ribbon-main {
-            stroke: url(#ribbonGradient);
-            stroke-width: 5px;
-            stroke-linecap: round;
-            fill: none;
-            transition: d 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+    .ribbon-main {
+    stroke: url(#ribbonGradient);
+    stroke-width: 5px; /* <-- INCREASE THIS NUMBER (e.g., change to 8px or 10px) */
+    stroke-linecap: round;
+    fill: none;
+    transition: d 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 
         .milestone-node {
             fill: var(--card-bg);
@@ -403,7 +403,7 @@
                     <line x1="50" y1="105" x2="550" y2="105" stroke="rgba(255,255,255,0.02)" stroke-width="1" stroke-dasharray="4"/>
                     <line x1="50" y1="30" x2="550" y2="30" stroke="rgba(255,255,255,0.02)" stroke-width="1" stroke-dasharray="4"/>
                     
-                    <path id="glow-ribbon" d="" fill="none" stroke="url(#ribbonGradient)" stroke-width="12" opacity="0.4" filter="url(#neonGlow)" style="transition: d 0.4s ease-out; stroke: url(#ribbonGradient) !important;" />
+                    <path id="glow-ribbon" d="" fill="none" stroke="url(#ribbonGradient)" stroke-width="18" opacity="0.4" filter="url(#neonGlow)" ... />
                     <path id="main-ribbon" class="ribbon-main" d="" />
                     
                     <circle id="node-y10" class="milestone-node" r="6" />
