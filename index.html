@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Manulife Heritage Portfolio</title>
     <style>
         :root {
@@ -30,7 +30,7 @@
             color: var(--text-main);
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Force strict app environment containing zero page scrolls */
+            overflow: hidden; /* Lock viewport entirely */
         }
 
         body {
@@ -63,12 +63,14 @@
         /* Fixed High-Impact Executive Display Framework */
         .dashboard-container {
             display: grid;
-            grid-template-columns: 340px 1fr; /* Narrow sidebar input + Broad cinematic display */
+            grid-template-columns: 340px 1fr;
             gap: 1.5rem;
             max-width: 1400px;
             margin: 0 auto;
             width: 100%;
-            height: 680px; /* Rigid, unshifting desktop vertical frame boundary */
+            height: 680px; 
+            transform-origin: top center; /* Anchor scaling location */
+            transition: transform 0.2s ease-out;
         }
 
         .control-panel {
@@ -78,7 +80,7 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Perfect clean snap distribution without bleeding height */
+            justify-content: space-between;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             height: 100%;
         }
@@ -170,7 +172,6 @@
         .slider-group.locked .range-slider { cursor: not-allowed; background: rgba(255, 255, 255, 0.03); }
         .slider-group.locked .range-slider::-webkit-slider-thumb { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
 
-        /* Premium Reward Tracking Elements Grouping */
         .rewards-panel {
             border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding-top: 1rem;
@@ -238,7 +239,7 @@
             pointer-events: none;
         }
 
-        /* Cinematic Visual Canvas Panel (Right Box) */
+        /* Cinematic Visual Canvas Panel */
         .visual-display {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -251,34 +252,35 @@
             height: 100%;
         }
 
-    .chart-container { 
-    width: 100%; 
-    height: 100%; /* Let it occupy the maximum available space dynamically */
-    min-height: 0; /* Critical: allows the container to shrink on smaller screens */
-    position: relative; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-svg { 
-    width: 100%; 
-    height: 100%; 
-    max-height: 100%; /* Prevents the SVG vector from expanding beyond its boundary */
-}
+        .chart-container { 
+            width: 100%; 
+            height: calc(100% - 130px);
+            position: relative; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 0;
+        }
+        
+        svg { 
+            width: 100%; 
+            height: 100%; 
+            max-height: 100%;
+            overflow: visible; 
+        }
 
         .ribbon-main { stroke: url(#ribbonGradient); stroke-width: 5px; stroke-linecap: round; fill: none; transition: d 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .milestone-node { fill: var(--card-bg); stroke: var(--primary-glow); stroke-width: 3.5px; transition: cx 0.4s, cy 0.4s, stroke 0.4s; }
         .axis-label { fill: var(--text-muted); font-size: 11px; font-weight: 500; text-anchor: middle; }
 
-        /* Structural Freeze Framework: Anchoring child heights completely stops shifting layouts */
+        /* Structural Freeze Framework */
         .milestone-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding-top: 1.2rem;
-            height: 110px; /* Frozen strict height constraint box */
+            height: 110px;
         }
 
         .milestone-card {
@@ -287,7 +289,7 @@ svg {
             border-radius: 10px;
             padding: 0.8rem;
             border: 1px solid rgba(255, 255, 255, 0.03);
-            height: 100%; /* Anchor execution completely to its grid frame layout */
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -339,60 +341,37 @@ svg {
         .lock-indicator { display: inline-flex; align-items: center; font-size: 0.65rem; background: rgba(255, 255, 255, 0.05); padding: 1px 5px; border-radius: 3px; color: var(--text-muted); }
         .lock-indicator.active { color: var(--primary-glow); border: 1px solid rgba(0, 242, 254, 0.2); background: rgba(0, 242, 254, 0.05); }
 
-/* Responsive adjustments for iPad and shorter viewports */
-@media (max-height: 800px), (max-width: 1024px) {
-    body {
-        padding: 0.75rem; /* Reclaim outer vertical space */
-    }
-
-    header {
-        height: 35px;
-    }
-
-    header h1 {
-        font-size: 1.2rem;
-    }
-
-    header p {
-        font-size: 0.75rem;
-    }
-
-    /* Transition the rigid container to match the actual viewport height */
-    .dashboard-container {
-        height: calc(100vh - 110px) !important; 
-        gap: 1rem;
-    }
-
-    /* Shrink the control panel inner gaps so elements compress naturally */
-    .control-panel {
-        padding: 1rem;
-        gap: 0.5rem;
-    }
-
-    .slider-value {
-        font-size: 1.1rem;
-    }
-
-    /* Shrink padding inside reward cards to save massive vertical space */
-    .rewards-panel {
-        padding-top: 0.5rem;
-        gap: 0.35rem;
-    }
-
-    .reward-row {
-        padding: 0.4rem 0.6rem;
-    }
-
-    /* Scale the SVG chart area down to leave enough room for the grid cards below it */
-    .chart-container {
-        height: calc(100% - 115px); 
-    }
-
-    .milestone-grid {
-        padding-top: 0.5rem;
-        height: 100px;
-    }
-}
+        /* THE SYSTEM DECK FIX: Targets iPad viewport landscape/portrait constraints to shrink presentation size perfectly */
+        @media (max-width: 1199px) or (max-height: 799px) {
+            body {
+                padding: 0.5rem;
+            }
+            header {
+                height: 40px;
+            }
+            header h1 {
+                font-size: 1.3rem;
+            }
+            header p {
+                font-size: 0.75rem;
+            }
+            .dashboard-container {
+                transform: scale(0.82); /* Compresses total layout footprint into tablet views */
+                margin-top: -10px;
+            }
+            footer {
+                font-size: 0.65rem;
+                height: auto;
+            }
+        }
+        
+        /* Proportional micro-shrink adjustment rules for standard base iPad 1024x768 frames */
+        @media (max-width: 1024px) and (max-height: 768px) {
+            .dashboard-container {
+                transform: scale(0.76);
+                margin-top: -30px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -404,7 +383,6 @@ svg {
 
     <div class="dashboard-container">
         <div class="control-panel">
-            
             <div>
                 <span class="selector-label">Premium Payment Term</span>
                 <div class="toggle-group">
@@ -469,7 +447,8 @@ svg {
 
         <div class="visual-display">
             <div class="chart-container">
-                <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet"> <defs>
+                <svg viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet">
+                    <defs>
                         <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stop-color="#7e5bef" />
                             <stop offset="100%" id="gradient-end" stop-color="#00f2fe" />
@@ -535,21 +514,16 @@ svg {
 
         function setPaymentTerm(years) {
             selectedTerm = years;
-            
             document.querySelectorAll('[id^="term-"]').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`term-${years}`).classList.add('active');
             
             const pSlider = document.getElementById('protection-slider');
-            
             if (years === 20) {
                 pSlider.min = "750000";
-                if (parseInt(pSlider.value) < 750000) {
-                    pSlider.value = "750000";
-                }
+                if (parseInt(pSlider.value) < 750000) pSlider.value = "750000";
             } else {
                 pSlider.min = "500000";
             }
-            
             handleSliderInput();
         }
 
@@ -594,7 +568,6 @@ svg {
             document.getElementById('protection-display').innerText = `RM ${protection.toLocaleString()}`;
             document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/mo`;
 
-            // --- REWARD VALUE INDICATOR EVALUATION (FIXED THRESHOLDS) ---
             const mcc5Card = document.getElementById('reward-mcc-5');
             const mcc10Card = document.getElementById('reward-mcc-10');
             const heritage20Card = document.getElementById('reward-heritage-20');
@@ -603,34 +576,22 @@ svg {
             mcc10Card.className = "reward-row";
             heritage20Card.className = "reward-row";
 
-            // Underwriting Rule: 20-Year pay terms cannot utilize the 5% tier
-            if (selectedTerm === 20) {
-                mcc5Card.classList.add('greyed');
-            }
+            if (selectedTerm === 20) mcc5Card.classList.add('greyed');
 
-            // Real-time tracking alignment logic matching requirements
             if (protection >= 500000 && protection <= 749999) {
                 if (selectedTerm !== 20) mcc5Card.classList.add('unlocked');
             } else if (protection >= 750000) {
                 mcc10Card.classList.add('unlocked');
-                if (protection >= 1000000) {
-                    heritage20Card.classList.add('unlocked');
-                }
+                if (protection >= 1000000) heritage20Card.classList.add('unlocked');
             }
 
-            // --- ACCUMULATION & SURRENDER CURVE MODELLING LABS ---
             let mccDiscountFactor = 1.0;
             let heritageDiscountFactor = 1.0;
 
-            if (protection >= 500000 && protection <= 749999 && selectedTerm !== 20) {
-                mccDiscountFactor = 0.95; 
-            } else if (protection >= 750000) {
-                mccDiscountFactor = 0.90; 
-            }
+            if (protection >= 500000 && protection <= 749999 && selectedTerm !== 20) mccDiscountFactor = 0.95; 
+            else if (protection >= 750000) mccDiscountFactor = 0.90; 
 
-            if (protection >= 1000000) {
-                heritageDiscountFactor = 0.80; 
-            }
+            if (protection >= 1000000) heritageDiscountFactor = 0.80; 
 
             let premiumSavingsBonus = (2 - mccDiscountFactor) * (2 - heritageDiscountFactor);
             let protectionRatio = protection / 1000000;
@@ -655,7 +616,6 @@ svg {
             updateMilestoneCard('a65', a65, false);
             updateMilestoneCard('a80', a80, true);
 
-            // Updated vector scale equations matching the broad widescreen viewBox dimensions (800x340)
             let maxVisualCeiling = 1400000; 
             function toSvgY(val) { return 280 - ((val / maxVisualCeiling) * 230); }
 
