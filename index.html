@@ -245,11 +245,11 @@
         /* FORTIFIED CYBERPUNK NEON GLOW ENGINE */
         .ribbon-glow {
             stroke: url(#glowGradient);
-            stroke-width: 14px; /* Increased thick aura trace */
+            stroke-width: 14px; 
             stroke-linecap: round;
             fill: none;
-            opacity: 0.75; /* Cranked up density drastically */
-            filter: url(#neonGlowBlur); /* Routed directly to SVG hardware-accelerated matrix */
+            opacity: 0.75; 
+            filter: url(#neonGlowBlur); 
             transition: d 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
 
@@ -358,7 +358,9 @@
                             </filter>
 
                             <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#8A2BE2" /> <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> </linearGradient>
+                                <stop offset="0%" stop-color="#8A2BE2" /> 
+                                <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
+                            </linearGradient>
 
                             <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#aa55ff" />
@@ -476,6 +478,29 @@
 
         let currentMode = 'premium'; 
 
+        // Calculation function to generate smooth horizontal tangent cubic bezier path strings
+        function getSmoothBezierPath(coords) {
+            if (coords.length === 0) return "";
+            let pathString = `M ${coords[0].x} ${coords[0].y}`;
+            
+            for (let i = 0; i < coords.length - 1; i++) {
+                const current = coords[i];
+                const next = coords[i + 1];
+                
+                // Control horizontal depth (35% gap creates clean interpolation)
+                const controlOffset = (next.x - current.x) * 0.35;
+                
+                const cp1x = current.x + controlOffset;
+                const cp1y = current.y;
+                
+                const cp2x = next.x - controlOffset;
+                const cp2y = next.y;
+                
+                pathString += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${next.x} ${next.y}`;
+            }
+            return pathString;
+        }
+
         function setMode(mode) {
             currentMode = mode;
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
@@ -516,7 +541,7 @@
 
             const milestones = scenarioData.milestones;
             const xCoordinates = [50, 175, 300, 425, 550];
-            let pointsString = "";
+            const activeCoords = [];
 
             const valuesList = milestones.map(m => m.accountValue || 0);
             const maxValInSet = Math.max(...valuesList, 100000);
@@ -546,13 +571,16 @@
                 document.getElementById(`node-${i}`).setAttribute('cx', cx);
                 document.getElementById(`node-${i}`).setAttribute('cy', cy);
 
-                pointsString += `${i === 0 ? 'M' : 'L'} ${cx} ${cy} `;
+                // Build modern coordinate map trace
+                activeCoords.push({ x: cx, y: cy });
             }
 
-            document.getElementById('main-ribbon').setAttribute('d', pointsString);
-            document.getElementById('glow-ribbon').setAttribute('d', pointsString);
+            // Construct smooth continuous spline strings
+            const smoothSplinePath = getSmoothBezierPath(activeCoords);
 
-            // Maintain premium purple-to-blue gradient mapping seamlessly during data state shifts
+            document.getElementById('main-ribbon').setAttribute('d', smoothSplinePath);
+            document.getElementById('glow-ribbon').setAttribute('d', smoothSplinePath);
+
             if((valuesList[3] <= 0 || valuesList[4] <= 0) && premium > 0) {
                 document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
                 document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
