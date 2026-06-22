@@ -11,9 +11,9 @@
             --border-color: rgba(255, 255, 255, 0.08);
             --text-main: #ffffff;
             --text-muted: #6f7e94;
-    --primary-glow: #a55eea;    /* High-grade Premium Purple Glow Aura */
-    --secondary-glow: #54a0ff;  /* Premium Sleek Blue Accents */
-    --warning-glow: #ff9f43;
+            --primary-glow: #8A2BE2;    /* High-grade Premium Purple Base */
+            --secondary-glow: #00d2ff;  /* Premium Sleek Blue Accents */
+            --warning-glow: #ff9f43;
         }
 
         * {
@@ -133,7 +133,7 @@
             transition: border-color 0.2s;
         }
         
-        .milestone-card:hover { border-color: rgba(0, 242, 254, 0.3); }
+        .milestone-card:hover { border-color: rgba(138, 43, 226, 0.4); }
 
         .milestone-age {
             font-size: 0.75rem;
@@ -167,7 +167,7 @@
         }
 
         .mode-btn.active {
-            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
             color: #000000;
             font-weight: 600;
         }
@@ -193,7 +193,6 @@
 
         .slider-value { font-size: 1.2rem; font-weight: 700; }
 
-        /* Match select interface styling seamlessly with theme panels */
         .select-styled {
             width: 100%;
             padding: 10px 12px;
@@ -231,9 +230,9 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: var(--primary-glow);
+            background: var(--secondary-glow);
             cursor: pointer;
-            box-shadow: 0 0 8px var(--primary-glow);
+            box-shadow: 0 0 10px var(--secondary-glow);
         }
 
         .slider-group.locked { opacity: 0.4; }
@@ -243,13 +242,14 @@
             cursor: not-allowed;
         }
 
+        /* FORTIFIED CYBERPUNK NEON GLOW ENGINE */
         .ribbon-glow {
-            stroke: var(--primary-glow);
-            stroke-width: 12px;
+            stroke: url(#glowGradient);
+            stroke-width: 14px; /* Increased thick aura trace */
             stroke-linecap: round;
             fill: none;
-            opacity: 0.12;
-            filter: blur(6px);
+            opacity: 0.75; /* Cranked up density drastically */
+            filter: url(#neonGlowBlur); /* Routed directly to SVG hardware-accelerated matrix */
             transition: d 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
 
@@ -263,7 +263,7 @@
 
         .milestone-node {
             fill: var(--card-bg);
-            stroke: var(--primary-glow);
+            stroke: var(--secondary-glow);
             stroke-width: 2.5px;
             transition: cx 0.2s, cy 0.2s;
         }
@@ -348,13 +348,23 @@
             <div class="graph-wrapper">
                 <div class="chart-container">
                     <svg viewBox="0 0 600 220">
-     <defs>
-    <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#8A2BE2" /> 
-        <stop offset="100%" id="gradient-end" stop-color="#00d2ff" />
-    </linearGradient>
-</defs>
+                        <defs>
+                            <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="8" result="blurOut" />
+                                <feMerge>
+                                    <feMergeNode in="blurOut" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
 
+                            <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#8A2BE2" /> <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> </linearGradient>
+
+                            <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#aa55ff" />
+                                <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
+                            </linearGradient>
+                        </defs>
                         
                         <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
                         <line x1="50" y1="100" x2="550" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
@@ -406,7 +416,6 @@
     </footer>
 
     <script>
-        // AGREED JSON DATA VAULT STRUCTURE
         const officialQuotationsDb = [
             {
                 "entryAge": 25, "gender": "Male", "fixedProtection": 1000000,
@@ -490,16 +499,12 @@
         }
 
         function handleSliderInput() {
-            // Read chosen drop-down key strings directly
             let ageValue = parseInt(document.getElementById('age-selector').value);
             let termKey = document.getElementById('term-selector').value;
             let strategyIndex = parseInt(document.getElementById('premium-slider').value);
 
-            // Locate specific age node block
             const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
             const targetTermData = matchedAgeBlock.premiumTerms[termKey];
-
-            // Assign structural scenario array track (0 = Least Premium, 1 = Max Premium)
             const scenarioData = (strategyIndex === 1) ? targetTermData.maxPremiumScenario : targetTermData.leastPremiumScenario;
 
             updateUIOutputs(scenarioData);
@@ -528,10 +533,8 @@
                 const pYear = milestone.policyYear || (i === 0 ? 1 : i === 1 ? 5 : i === 2 ? 10 : i === 3 ? 20 : 35);
                 const ageNext = milestone.ageNext || "--";
 
-                // Map Timeline X-axis coordinates strings dynamically
                 document.getElementById(`axis-${i}`).innerText = `Age ${ageNext} (Yr ${pYear})`;
 
-                // Render matching data grid cards
                 if (i > 0) {
                     document.getElementById(`lbl-${i}`).innerText = `Age ${ageNext} (Policy Yr ${pYear}) Value`;
                     document.getElementById(`val-${i}`).innerText = value > 0 ? `RM ${value.toLocaleString()}` : (premium === 0 ? 'RM --' : 'Lapsed');
@@ -549,16 +552,16 @@
             document.getElementById('main-ribbon').setAttribute('d', pointsString);
             document.getElementById('glow-ribbon').setAttribute('d', pointsString);
 
+            // Maintain premium purple-to-blue gradient mapping seamlessly during data state shifts
             if((valuesList[3] <= 0 || valuesList[4] <= 0) && premium > 0) {
-                document.getElementById('glow-ribbon').style.stroke = 'var(--warning-glow)';
                 document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
+                document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
             } else {
-                document.getElementById('glow-ribbon').style.stroke = 'var(--primary-glow)';
-                document.getElementById('gradient-end').setAttribute('stop-color', 'var(--primary-glow)');
+                document.getElementById('gradient-end').setAttribute('stop-color', '#00d2ff');
+                document.getElementById('glow-gradient-end').setAttribute('stop-color', '#00d2ff');
             }
         }
 
-        // Run primary calculations on startup
         setMode('premium');
     </script>
 </body>
