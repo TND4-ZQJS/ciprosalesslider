@@ -417,7 +417,7 @@
         [SYSTEM STATUS: ONLINE] // Contractual data mapping node. No background formulas or dynamic forecasting loops are active.
     </footer>
 
-    <script>
+  <script>
     const officialQuotationsDb = [
         {
             "entryAge": 25, "gender": "Male", "fixedProtection": 1000000,
@@ -577,26 +577,37 @@
         document.getElementById('main-ribbon').setAttribute('d', smoothSplinePath);
         document.getElementById('glow-ribbon').setAttribute('d', smoothSplinePath);
 
-        // EVALUATE DOWNWARD TREND FOR GRADIENT RE-MAPPING
-        // If Year 20 or Year 35 drops significantly lower than previous peaks, inject orange.
+        // Check if the tail end is actively sloping downward
         const isDownslope = (valuesList[4] < valuesList[3]) || (valuesList[3] < valuesList[2]);
 
         if (isDownslope && premium > 0) {
-            // Update gradient nodes to transition into premium orange
+            // ONLY modify the ending color coordinates of the SVG linear gradients
             document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
             document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
-            // Dynamically override CSS layout variable so terminal nodes turn orange seamlessly
-            document.documentElement.style.setProperty('--secondary-glow', 'var(--warning-glow)');
+            
+            // Turn ONLY the specific dropping nodes orange, leaving early nodes clean blue
+            for(let i = 3; i < 5; i++) {
+                if(valuesList[i] < valuesList[i-1]) {
+                    document.getElementById(`node-${i}`).style.stroke = 'var(--warning-glow)';
+                } else {
+                    document.getElementById(`node-${i}`).style.stroke = 'var(--secondary-glow)';
+                }
+            }
         } else {
-            // Reset to classic glowing cyber blueprint blue when performing well
+            // Reset right side to cyber blue when performance trends upward
             document.getElementById('gradient-end').setAttribute('stop-color', '#00d2ff');
             document.getElementById('glow-gradient-end').setAttribute('stop-color', '#00d2ff');
-            document.documentElement.style.setProperty('--secondary-glow', '#00d2ff');
+            
+            // Ensure all nodes use standard blue highlights
+            for(let i = 0; i < 5; i++) {
+                document.getElementById(`node-${i}`).style.stroke = '';
+            }
         }
     }
 
     setMode('premium');
 </script>
+
 
 </body>
 </html>
