@@ -418,179 +418,185 @@
     </footer>
 
     <script>
-        const officialQuotationsDb = [
-            {
-                "entryAge": 25, "gender": "Male", "fixedProtection": 1000000,
-                "premiumTerms": {
-                    "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
-                }
-            },
-            {
-                "entryAge": 35, "gender": "Male", "fixedProtection": 1000000,
-                "premiumTerms": {
-                    "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
-                }
-            },
-            {
-                "entryAge": 45, "gender": "Male", "fixedProtection": 1000000,
-                "premiumTerms": {
-                    "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay20": {
-                        "maxPremiumScenario": {
-                            "premiumAmount": 44410, 
-                            "billingFrequency": "Annual",
-                            "milestones": [
-                                { "policyYear": 1, "ageNext": 46, "accountValue": 18218 },
-                                { "policyYear": 5, "ageNext": 50, "accountValue": 137197 },
-                                { "policyYear": 10, "ageNext": 55, "accountValue": 359078 },
-                                { "policyYear": 20, "ageNext": 65, "accountValue": 1016285 },
-                                { "policyYear": 35, "ageNext": 80, "accountValue": 1714433 }
-                            ]
-                        },
-                        "leastPremiumScenario": {
-                            "premiumAmount": 21000, 
-                            "billingFrequency": "Annual",
-                            "milestones": [
-                                { "policyYear": 1, "ageNext": 46, "accountValue": 6578 },
-                                { "policyYear": 5, "ageNext": 50, "accountValue": 48865 },
-                                { "policyYear": 10, "ageNext": 55, "accountValue": 128754 },
-                                { "policyYear": 20, "ageNext": 65, "accountValue": 350378 },
-                                { "policyYear": 35, "ageNext": 80, "accountValue": 107184 }
-                            ]
-                        }
+    const officialQuotationsDb = [
+        {
+            "entryAge": 25, "gender": "Male", "fixedProtection": 1000000,
+            "premiumTerms": {
+                "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
+            }
+        },
+        {
+            "entryAge": 35, "gender": "Male", "fixedProtection": 1000000,
+            "premiumTerms": {
+                "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
+            }
+        },
+        {
+            "entryAge": 45, "gender": "Male", "fixedProtection": 1000000,
+            "premiumTerms": {
+                "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay20": {
+                    "maxPremiumScenario": {
+                        "premiumAmount": 44410, 
+                        "billingFrequency": "Annual",
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 18218 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 137197 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 359078 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 1016285 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 1714433 }
+                        ]
+                    },
+                    "leastPremiumScenario": {
+                        "premiumAmount": 21000, 
+                        "billingFrequency": "Annual",
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 6578 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 48865 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 128754 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 350378 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 107184 }
+                        ]
                     }
                 }
-            },
-            {
-                "entryAge": 55, "gender": "Male", "fixedProtection": 1000000,
-                "premiumTerms": {
-                    "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                    "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
-                }
             }
-        ];
+        },
+        {
+            "entryAge": 55, "gender": "Male", "fixedProtection": 1000000,
+            "premiumTerms": {
+                "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
+                "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
+            }
+        }
+    ];
 
-        let currentMode = 'premium'; 
+    let currentMode = 'premium'; 
 
-        // Calculation function to generate smooth horizontal tangent cubic bezier path strings
-        function getSmoothBezierPath(coords) {
-            if (coords.length === 0) return "";
-            let pathString = `M ${coords[0].x} ${coords[0].y}`;
+    function getSmoothBezierPath(coords) {
+        if (coords.length === 0) return "";
+        let pathString = `M ${coords[0].x} ${coords[0].y}`;
+        
+        for (let i = 0; i < coords.length - 1; i++) {
+            const current = coords[i];
+            const next = coords[i + 1];
             
-            for (let i = 0; i < coords.length - 1; i++) {
-                const current = coords[i];
-                const next = coords[i + 1];
-                
-                // Control horizontal depth (35% gap creates clean interpolation)
-                const controlOffset = (next.x - current.x) * 0.35;
-                
-                const cp1x = current.x + controlOffset;
-                const cp1y = current.y;
-                
-                const cp2x = next.x - controlOffset;
-                const cp2y = next.y;
-                
-                pathString += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${next.x} ${next.y}`;
-            }
-            return pathString;
-        }
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('protection-slider').disabled = (mode === 'protection');
-            document.getElementById('premium-slider').disabled = (mode === 'premium');
+            const controlOffset = (next.x - current.x) * 0.35;
             
-            if(mode === 'premium') {
-                document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
-                document.getElementById('premium-group').classList.add('locked');
-                document.getElementById('protection-group').classList.remove('locked');
-                document.getElementById('lock-icon-premium').innerText = '🔒';
-                document.getElementById('lock-icon-protection').innerText = '';
-            } else {
-                document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
-                document.getElementById('protection-group').classList.add('locked');
-                document.getElementById('premium-group').classList.remove('locked');
-                document.getElementById('lock-icon-protection').innerText = '🔒';
-                document.getElementById('lock-icon-premium').innerText = '';
-            }
-            handleSliderInput();
+            const cp1x = current.x + controlOffset;
+            const cp1y = current.y;
+            
+            const cp2x = next.x - controlOffset;
+            const cp2y = next.y;
+            
+            pathString += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${next.x} ${next.y}`;
+        }
+        return pathString;
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('protection-slider').disabled = (mode === 'protection');
+        document.getElementById('premium-slider').disabled = (mode === 'premium');
+        
+        if(mode === 'premium') {
+            document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
+            document.getElementById('premium-group').classList.add('locked');
+            document.getElementById('protection-group').classList.remove('locked');
+            document.getElementById('lock-icon-premium').innerText = '🔒';
+            document.getElementById('lock-icon-protection').innerText = '';
+        } else {
+            document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
+            document.getElementById('protection-group').classList.add('locked');
+            document.getElementById('premium-group').classList.remove('locked');
+            document.getElementById('lock-icon-protection').innerText = '🔒';
+            document.getElementById('lock-icon-premium').innerText = '';
+        }
+        handleSliderInput();
+    }
+
+    function handleSliderInput() {
+        let ageValue = parseInt(document.getElementById('age-selector').value);
+        let termKey = document.getElementById('term-selector').value;
+        let strategyIndex = parseInt(document.getElementById('premium-slider').value);
+
+        const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
+        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+        const scenarioData = (strategyIndex === 1) ? targetTermData.maxPremiumScenario : targetTermData.leastPremiumScenario;
+
+        updateUIOutputs(scenarioData);
+    }
+
+    function updateUIOutputs(scenarioData) {
+        const premium = scenarioData.premiumAmount;
+        document.getElementById('premium-display').innerText = premium > 0 ? `RM ${premium.toLocaleString()}/yr` : "Data Stream Empty";
+
+        const milestones = scenarioData.milestones;
+        const xCoordinates = [50, 175, 300, 425, 550];
+        const activeCoords = [];
+
+        const valuesList = milestones.map(m => m.accountValue || 0);
+        const maxValInSet = Math.max(...valuesList, 100000);
+        const yCeiling = maxValInSet * 1.15;
+
+        function toSvgY(val) {
+            let pct = val / yCeiling;
+            return 180 - (pct * 150);
         }
 
-        function handleSliderInput() {
-            let ageValue = parseInt(document.getElementById('age-selector').value);
-            let termKey = document.getElementById('term-selector').value;
-            let strategyIndex = parseInt(document.getElementById('premium-slider').value);
+        for(let i = 0; i < 5; i++) {
+            const milestone = milestones[i];
+            const value = milestone.accountValue || 0;
+            const pYear = milestone.policyYear || (i === 0 ? 1 : i === 1 ? 5 : i === 2 ? 10 : i === 3 ? 20 : 35);
+            const ageNext = milestone.ageNext || "--";
 
-            const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
-            const targetTermData = matchedAgeBlock.premiumTerms[termKey];
-            const scenarioData = (strategyIndex === 1) ? targetTermData.maxPremiumScenario : targetTermData.leastPremiumScenario;
+            document.getElementById(`axis-${i}`).innerText = `Age ${ageNext} (Yr ${pYear})`;
 
-            updateUIOutputs(scenarioData);
+            if (i > 0) {
+                document.getElementById(`lbl-${i}`).innerText = `Age ${ageNext} (Policy Yr ${pYear}) Value`;
+                document.getElementById(`val-${i}`).innerText = value > 0 ? `RM ${value.toLocaleString()}` : (premium === 0 ? 'RM --' : 'Lapsed');
+            }
+
+            const cx = xCoordinates[i];
+            const cy = toSvgY(value);
+
+            document.getElementById(`node-${i}`).setAttribute('cx', cx);
+            document.getElementById(`node-${i}`).setAttribute('cy', cy);
+
+            activeCoords.push({ x: cx, y: cy });
         }
 
-        function updateUIOutputs(scenarioData) {
-            const premium = scenarioData.premiumAmount;
-            document.getElementById('premium-display').innerText = premium > 0 ? `RM ${premium.toLocaleString()}/yr` : "Data Stream Empty";
+        const smoothSplinePath = getSmoothBezierPath(activeCoords);
 
-            const milestones = scenarioData.milestones;
-            const xCoordinates = [50, 175, 300, 425, 550];
-            const activeCoords = [];
+        document.getElementById('main-ribbon').setAttribute('d', smoothSplinePath);
+        document.getElementById('glow-ribbon').setAttribute('d', smoothSplinePath);
 
-            const valuesList = milestones.map(m => m.accountValue || 0);
-            const maxValInSet = Math.max(...valuesList, 100000);
-            const yCeiling = maxValInSet * 1.15;
+        // EVALUATE DOWNWARD TREND FOR GRADIENT RE-MAPPING
+        // If Year 20 or Year 35 drops significantly lower than previous peaks, inject orange.
+        const isDownslope = (valuesList[4] < valuesList[3]) || (valuesList[3] < valuesList[2]);
 
-            function toSvgY(val) {
-                let pct = val / yCeiling;
-                return 180 - (pct * 150);
-            }
-
-            for(let i = 0; i < 5; i++) {
-                const milestone = milestones[i];
-                const value = milestone.accountValue || 0;
-                const pYear = milestone.policyYear || (i === 0 ? 1 : i === 1 ? 5 : i === 2 ? 10 : i === 3 ? 20 : 35);
-                const ageNext = milestone.ageNext || "--";
-
-                document.getElementById(`axis-${i}`).innerText = `Age ${ageNext} (Yr ${pYear})`;
-
-                if (i > 0) {
-                    document.getElementById(`lbl-${i}`).innerText = `Age ${ageNext} (Policy Yr ${pYear}) Value`;
-                    document.getElementById(`val-${i}`).innerText = value > 0 ? `RM ${value.toLocaleString()}` : (premium === 0 ? 'RM --' : 'Lapsed');
-                }
-
-                const cx = xCoordinates[i];
-                const cy = toSvgY(value);
-
-                document.getElementById(`node-${i}`).setAttribute('cx', cx);
-                document.getElementById(`node-${i}`).setAttribute('cy', cy);
-
-                // Build modern coordinate map trace
-                activeCoords.push({ x: cx, y: cy });
-            }
-
-            // Construct smooth continuous spline strings
-            const smoothSplinePath = getSmoothBezierPath(activeCoords);
-
-            document.getElementById('main-ribbon').setAttribute('d', smoothSplinePath);
-            document.getElementById('glow-ribbon').setAttribute('d', smoothSplinePath);
-
-            if((valuesList[3] <= 0 || valuesList[4] <= 0) && premium > 0) {
-                document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
-                document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
-            } else {
-                document.getElementById('gradient-end').setAttribute('stop-color', '#00d2ff');
-                document.getElementById('glow-gradient-end').setAttribute('stop-color', '#00d2ff');
-            }
+        if (isDownslope && premium > 0) {
+            // Update gradient nodes to transition into premium orange
+            document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
+            document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
+            // Dynamically override CSS layout variable so terminal nodes turn orange seamlessly
+            document.documentElement.style.setProperty('--secondary-glow', 'var(--warning-glow)');
+        } else {
+            // Reset to classic glowing cyber blueprint blue when performing well
+            document.getElementById('gradient-end').setAttribute('stop-color', '#00d2ff');
+            document.getElementById('glow-gradient-end').setAttribute('stop-color', '#00d2ff');
+            document.documentElement.style.setProperty('--secondary-glow', '#00d2ff');
         }
+    }
 
-        setMode('premium');
-    </script>
+    setMode('premium');
+</script>
+
 </body>
 </html>
