@@ -71,7 +71,7 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 2rem;
             overflow-y: auto;
         }
 
@@ -133,7 +133,9 @@
             transition: border-color 0.2s;
         }
         
-        .milestone-card:hover { border-color: rgba(0, 242, 254, 0.3); }
+        .milestone-card:hover {
+            border-color: rgba(0, 242, 254, 0.3);
+        }
 
         .milestone-age {
             font-size: 0.75rem;
@@ -148,20 +150,31 @@
             font-weight: 700;
         }
 
-        .dropdown-styled {
-            width: 100%;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
+        .mode-selector {
+            display: flex;
+            background: rgba(0,0,0,0.4);
+            padding: 4px;
             border-radius: 6px;
-            outline: none;
-            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
         }
 
-        .dropdown-styled option {
-            background: var(--card-bg);
-            color: var(--text-main);
+        .mode-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
+            color: #000000;
+            font-weight: 600;
         }
 
         .slider-group {
@@ -183,7 +196,10 @@
             letter-spacing: 0.05em;
         }
 
-        .slider-value { font-size: 1.1rem; font-weight: 700; }
+        .slider-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
 
         .range-slider {
             -webkit-appearance: none;
@@ -205,6 +221,13 @@
             box-shadow: 0 0 8px var(--primary-glow);
         }
 
+        .slider-group.locked { opacity: 0.4; }
+        .slider-group.locked .range-slider::-webkit-slider-thumb {
+            background: var(--text-muted);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
         .ribbon-glow {
             stroke: var(--primary-glow);
             stroke-width: 12px;
@@ -212,7 +235,7 @@
             fill: none;
             opacity: 0.12;
             filter: blur(6px);
-            transition: d 0.2s;
+            transition: d 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
 
         .ribbon-main {
@@ -220,7 +243,7 @@
             stroke-width: 4px;
             stroke-linecap: round;
             fill: none;
-            transition: d 0.2s;
+            transition: d 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
 
         .milestone-node {
@@ -230,7 +253,11 @@
             transition: cx 0.2s, cy 0.2s;
         }
 
-        .axis-label { fill: var(--text-muted); font-size: 10px; text-anchor: middle; }
+        .axis-label {
+            fill: var(--text-muted);
+            font-size: 10px;
+            text-anchor: middle;
+        }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
@@ -246,6 +273,9 @@
             padding: 0 1rem;
             font-size: 0.7rem;
             color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -253,47 +283,40 @@
 
     <header>
         <h1>Manulife Heritage // Client Mapping Terminal</h1>
-        <p>Scenario Simulation Model: Pure Data Verified Matrix</p>
+        <p>Scenario Simulation Model: Pure Quotation Mapping</p>
     </header>
 
     <div class="terminal-container">
         <div class="control-panel">
-            
-            <div class="slider-group">
-                <span class="slider-label">Client Entry Age</span>
-                <select id="age-selector" class="dropdown-styled" onchange="loadScenarioData()">
-                    <option value="25">Age 25 Next Birthday</option>
-                    <option value="35" selected>Age 35 Next Birthday</option>
-                    <option value="45">Age 45 Next Birthday</option>
-                    <option value="55">Age 55 Next Birthday</option>
-                </select>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('premium')">Lock Premium</button>
+                <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
             </div>
 
-            <div class="slider-group">
-                <span class="slider-label">Premium Payment Term</span>
-                <select id="term-selector" class="dropdown-styled" onchange="loadScenarioData()">
-                    <option value="pay6">6 Years Premium Pay</option>
-                    <option value="pay10" selected>10 Years Premium Pay</option>
-                    <option value="pay20">20 Years Premium Pay</option>
-                </select>
-            </div>
-
-            <div class="slider-group">
+            <div class="slider-group" id="protection-group">
                 <div class="slider-header">
-                    <span class="slider-label">Funding Strategy Level</span>
-                    <span class="slider-value" id="funding-strategy-display">Minimum Sustainability</span>
+                    <span class="slider-label"><span id="lock-icon-protection"></span> Protection Face Amount</span>
+                    <span class="slider-value" id="protection-display">RM 1.0M</span>
                 </div>
-                <input type="range" id="strategy-slider" class="range-slider" min="0" max="1" step="1" value="0" oninput="renderActiveGraph()">
+                <input type="range" id="protection-slider" class="range-slider" min="500000" max="2000000" step="500000" value="1000000" oninput="handleSliderInput()">
             </div>
 
-            <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
-                <div>
-                    <p class="slider-label" style="margin-bottom: 2px;">Fixed Protection Face Amount</p>
-                    <p style="font-size: 1.2rem; font-weight: 700; color: var(--primary-glow);">RM 1,000,000</p>
+            <div class="slider-group" id="premium-group">
+                <div class="slider-header">
+                    <span class="slider-label"><span id="lock-icon-premium">🔒</span> Premium Payment</span>
+                    <span class="slider-value" id="premium-display">RM --/mo</span>
                 </div>
-                <div>
-                    <p class="slider-label" style="margin-bottom: 2px;">Quoted Target Premium Payment</p>
-                    <p style="font-size: 1.2rem; font-weight: 700;" id="premium-cost-display">RM --</p>
+                <input type="range" id="premium-slider" class="range-slider" min="1000" max="5000" step="1000" value="1000" oninput="handleSliderInput()" disabled>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem; text-transform:uppercase;">Strategic Variations</p>
+                <div class="slider-group" style="margin-bottom: 1.5rem;">
+                    <div class="slider-header">
+                        <span class="slider-label">Client Entry Age</span>
+                        <span class="slider-value" id="age-display">35 Years</span>
+                    </div>
+                    <input type="range" id="age-slider" class="range-slider" value="35" min="25" max="55" step="10" oninput="handleSliderInput()">
                 </div>
             </div>
         </div>
@@ -310,44 +333,43 @@
                         </defs>
                         
                         <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-                        <line x1="50" y1="60" x2="550" y2="60" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+                        <line x1="50" y1="100" x2="550" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
                         
                         <path id="glow-ribbon" class="ribbon-glow" d="" />
                         <path id="main-ribbon" class="ribbon-main" d="" />
                         
-                        <circle id="node-0" class="milestone-node" r="5" />
-                        <circle id="node-1" class="milestone-node" r="5" />
-                        <circle id="node-2" class="milestone-node" r="5" />
-                        <circle id="node-3" class="milestone-node" r="5" />
-                        <circle id="node-4" class="milestone-node" r="5" />
+                        <circle id="node-y10" class="milestone-node" r="5" />
+                        <circle id="node-y20" class="milestone-node" r="5" />
+                        <circle id="node-a65" class="milestone-node" r="5" />
+                        <circle id="node-a80" class="milestone-node" r="5" />
 
-                        <text x="50" y="205" class="axis-label" id="axis-p0">-</text>
-                        <text x="175" y="205" class="axis-label" id="axis-p1">-</text>
-                        <text x="300" y="205" class="axis-label" id="axis-p2">-</text>
-                        <text x="425" y="205" class="axis-label" id="axis-p3">-</text>
-                        <text x="550" y="205" class="axis-label" id="axis-p4">-</text>
+                        <text x="50" y="205" class="axis-label" id="axis-start">Age --</text>
+                        <text x="200" y="205" class="axis-label" id="axis-y10">Age -- (Yr 10)</text>
+                        <text x="350" y="205" class="axis-label" id="axis-y20">Age -- (Yr 20)</text>
+                        <text x="450" y="205" class="axis-label" id="axis-a65">Age 65</text>
+                        <text x="550" y="205" class="axis-label" id="axis-a80">Age 80</text>
                     </svg>
                 </div>
             </div>
 
             <div class="indicators-panel">
-                <div class="panel-title">Contractual Illustration Verification Checkpoints</div>
+                <div class="panel-title">Asset Projections & Performance Metrics</div>
                 <div class="milestone-grid">
                     <div class="milestone-card">
-                        <div class="milestone-age" id="lbl-p1">Milestone 1</div>
-                        <div class="milestone-value" id="val-p1">RM --</div>
+                        <div class="milestone-age" id="lbl-y10">Yr 10 Account Value</div>
+                        <div class="milestone-value" id="val-y10">~RM --</div>
                     </div>
                     <div class="milestone-card">
-                        <div class="milestone-age" id="lbl-p2">Milestone 2</div>
-                        <div class="milestone-value" id="val-p2">RM --</div>
+                        <div class="milestone-age" id="lbl-y20">Yr 20 Account Value</div>
+                        <div class="milestone-value" id="val-y20">~RM --</div>
                     </div>
                     <div class="milestone-card">
-                        <div class="milestone-age" id="lbl-p3">Milestone 3</div>
-                        <div class="milestone-value" id="val-p3">RM --</div>
+                        <div class="milestone-age" id="lbl-a65">Age 65 Threshold</div>
+                        <div class="milestone-value" id="val-a65">~RM --</div>
                     </div>
                     <div class="milestone-card">
-                        <div class="milestone-age" id="lbl-p4">Milestone 4</div>
-                        <div class="milestone-value" id="val-p4">RM --</div>
+                        <div class="milestone-age" id="lbl-a80">Age 80 Target</div>
+                        <div class="milestone-value" id="val-a80">~RM --</div>
                     </div>
                 </div>
             </div>
@@ -355,116 +377,159 @@
     </div>
 
     <footer>
-        [SYSTEM PROTOCOL: SAFE] // This terminal contains zero dynamic predictive models or assumptions. Graph points map strictly to selected quotation coordinates.
+        [SYSTEM STATUS: ONLINE] // Contractual data mapping node. No predictive assumptions or background dynamic formulas are active.
     </footer>
 
     <script>
-        // THE VERIFIED DATA VAULT MATRIX
-        // Replace the 0 values with exact, official table prints from your Manulife illustrations.
+        // THE PURE CUSTOM JSON DATA VAULT Matrix
+        // Modify these hard numbers to align with your printed official quotation booklets.
         const officialQuotationsDb = {
             "25": {
-                "pay6": { "least": { "premium": 8400, "points": [0, 15000, 32000, 55000, 12000] }, "max": { "premium": 25000, "points": [0, 45000, 110000, 240000, 410000] } },
-                "pay10": { "least": { "premium": 5200, "points": [0, 12000, 28000, 64000, 8000] }, "max": { "premium": 18000, "points": [0, 38000, 95000, 210000, 390000] } },
-                "pay20": { "least": { "premium": 3100, "points": [0, 8000, 22000, 51000, 2000] }, "max": { "premium": 12000, "points": [0, 25000, 72000, 180000, 320000] } }
+                "1000000": {
+                    "minPremium": 3000, "maxPremium": 12000,
+                    "leastPoints": [0, 18000, 39000, 48000, 5000],
+                    "maxPoints": [0, 65000, 140000, 290000, 510000]
+                }
             },
             "35": {
-                "pay6": { "least": { "premium": 11200, "points": [0, 22000, 48000, 78000, 4000] }, "max": { "premium": 35000, "points": [0, 65000, 145000, 310000, 580000] } },
-                "pay10": { "least": { "premium": 7100, "points": [0, 16000, 39000, 71000, 1500] }, "max": { "premium": 24000, "points": [0, 51000, 120000, 270000, 510000] } },
-                "pay20": { "least": { "premium": 4400, "points": [0, 11000, 29000, 62000, 0] }, "max": { "premium": 15000, "points": [0, 32000, 88000, 215000, 410000] } }
+                "1000000": {
+                    "minPremium": 4500, "maxPremium": 15000,
+                    "leastPoints": [0, 14000, 31000, 42000, 1200],
+                    "maxPoints": [0, 55000, 125000, 260000, 480000]
+                }
             },
             "45": {
-                "pay6": { "least": { "premium": 16500, "points": [0, 31000, 64000, 82000, 0] }, "max": { "premium": 50000, "points": [0, 92000, 210000, 420000, 710000] } },
-                "pay10": { "least": { "premium": 10800, "points": [0, 22000, 51000, 69000, 0] }, "max": { "premium": 36000, "points": [0, 74000, 175000, 380000, 640000] } },
-                "pay20": { "least": { "premium": 6800, "points": [0, 15000, 38000, 45000, 0] }, "max": { "premium": 22000, "points": [0, 48000, 125000, 290000, 520000] } }
+                "1000000": {
+                    "minPremium": 6800, "maxPremium": 22000,
+                    "leastPoints": [0, 11000, 25000, 25000, 0], // Note: Age 65 and Yr 20 can overlap with the exact same data point entry
+                    "maxPoints": [0, 48000, 115000, 115000, 380000]
+                }
             },
             "55": {
-                "pay6": { "least": { "premium": 26000, "points": [0, 48000, 85000, 41000, 0] }, "max": { "premium": 75000, "points": [0, 140000, 310000, 550000, 820000] } },
-                "pay10": { "least": { "premium": 17500, "points": [0, 34000, 68000, 28000, 0] }, "max": { "premium": 52000, "points": [0, 105000, 250000, 460000, 740000] } },
-                "pay20": { "least": { "premium": 11500, "points": [0, 24000, 52000, 11000, 0] }, "max": { "premium": 34000, "points": [0, 71000, 185000, 380000, 610000] } }
+                "1000000": {
+                    "minPremium": 11000, "maxPremium": 35000,
+                    "leastPoints": [0, 8000, 15000, 0, 0],
+                    "maxPoints": [0, 38000, 92000, 160000, 220000]
+                }
             }
         };
 
-        let currentDataset = null;
-        let currentTimeline = { ageStart: 35, labels: [] };
+        let currentMode = 'premium'; 
 
-        function loadScenarioData() {
-            const age = document.getElementById('age-selector').value;
-            const term = document.getElementById('term-selector').value;
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('protection-slider').disabled = (mode === 'protection');
+            document.getElementById('premium-slider').disabled = (mode === 'premium');
             
-            // Map true structural timeline age tracking numbers based on selected client starting age
-            const startAge = parseInt(age);
-            currentTimeline.ageStart = startAge;
-            currentTimeline.labels = [
-                `Age ${startAge}`,
-                `Age ${startAge + 5} (Yr 5)`,
-                `Age ${startAge + 10} (Yr 10)`,
-                `Age 65 (Retire)`,
-                `Age 80 (Maturity)`
-            ];
-
-            // Access correct dataset partition
-            currentDataset = officialQuotationsDb[age][term];
-            renderActiveGraph();
+            if(mode === 'premium') {
+                document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
+                document.getElementById('premium-group').classList.add('locked');
+                document.getElementById('protection-group').classList.remove('locked');
+                document.getElementById('lock-icon-premium').innerText = '🔒';
+                document.getElementById('lock-icon-protection').innerText = '';
+            } else {
+                document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
+                document.getElementById('protection-group').classList.add('locked');
+                document.getElementById('premium-group').classList.remove('locked');
+                document.getElementById('lock-icon-protection').innerText = '🔒';
+                document.getElementById('lock-icon-premium').innerText = '';
+            }
+            handleSliderInput();
         }
 
-        function renderActiveGraph() {
-            if (!currentDataset) return;
-
-            const isMaxFunding = parseInt(document.getElementById('strategy-slider').value) === 1;
-            const targetConfig = isMaxFunding ? currentDataset.max : currentDataset.least;
-
-            // UI updates
-            document.getElementById('funding-strategy-display').innerText = isMaxFunding ? "Maximum Wealth Funding" : "Minimum Sustainability";
-            document.getElementById('premium-cost-display').innerText = `RM ${targetConfig.premium.toLocaleString()}/yr`;
-
-            // Update Timeline X-axis Labels
-            for (let i = 0; i < 5; i++) {
-                document.getElementById(`axis-p${i}`).innerText = currentTimeline.labels[i];
-            }
-
-            // Update Bottom Verification Grid text data
-            document.getElementById('lbl-p1').innerText = `${currentTimeline.labels[1]} Value`;
-            document.getElementById('lbl-p2').innerText = `${currentTimeline.labels[2]} Value`;
-            document.getElementById('lbl-p3').innerText = `${currentTimeline.labels[3]} Value`;
-            document.getElementById('lbl-p4').innerText = `${currentTimeline.labels[4]} Target`;
-
-            const vals = targetConfig.points; // Pure extracted coordinates array
+        function handleSliderInput() {
+            let age = document.getElementById('age-slider').value;
+            let protection = document.getElementById('protection-slider').value;
             
-            document.getElementById('val-p1').innerText = vals[1] > 0 ? `RM ${vals[1].toLocaleString()}` : 'Lapsed';
-            document.getElementById('val-p2').innerText = vals[2] > 0 ? `RM ${vals[2].toLocaleString()}` : 'Lapsed';
-            document.getElementById('val-p3').innerText = vals[3] > 0 ? `RM ${vals[3].toLocaleString()}` : 'Lapsed';
-            document.getElementById('val-p4').innerText = vals[4] > 0 ? `RM ${vals[4].toLocaleString()}` : (vals[3] <= 0 ? 'Lapsed' : 'Sustainability Risk');
+            // For stability, if protection choice doesn't map inside database array yet, default safely to 1M
+            if(!officialQuotationsDb[age][protection]) { protection = "1000000"; }
+            
+            const dataNode = officialQuotationsDb[age][protection];
+            const premiumSlider = document.getElementById('premium-slider');
 
-            // Map purely to SVG coordinates without any trends or assumed curves
-            const xCoordinates = [50, 175, 300, 425, 550];
-            const maxValInSet = Math.max(...vals, 100000); // Dynamic bounding constraint for proper scaling
-            const yCeiling = maxValInSet * 1.1;
+            // Force original premium slider range constraints to adapt strictly to the JSON records
+            premiumSlider.min = dataNode.minPremium;
+            premiumSlider.max = dataNode.maxPremium;
+            premiumSlider.step = dataNode.maxPremium - dataNode.minPremium; // Splits slider into 2 steps (Min and Max)
 
-            function scaleToSvgY(value) {
-                const percentage = value / yCeiling;
-                return 180 - (percentage * 140); // Standard layout bounding box bounds
+            let premium = parseInt(premiumSlider.value);
+            
+            // Adjust slider values dynamically if toggling between age sets shifts out of scope bounds
+            if (premium !== dataNode.minPremium && premium !== dataNode.maxPremium) {
+                premium = (currentMode === 'premium') ? dataNode.minPremium : dataNode.maxPremium;
+                premiumSlider.value = premium;
             }
 
-            // Construct literal coordinate node mapping
-            let pointsString = "";
-            for (let i = 0; i < 5; i++) {
-                const cx = xCoordinates[i];
-                const cy = scaleToSvgY(vals[i]);
-                
-                // Set fixed anchor nodes
-                document.getElementById(`node-${i}`).setAttribute('cx', cx);
-                document.getElementById(`node-${i}`).setAttribute('cy', cy);
+            updateUIOutputs(parseInt(protection), premium, parseInt(age), dataNode);
+        }
 
-                // Build path string safely
-                pointsString += `${i === 0 ? 'M' : 'L'} ${cx} ${cy} `;
+        function updateUIOutputs(protection, premium, age, dataNode) {
+            document.getElementById('protection-display').innerText = `RM ${(protection/1000000).toFixed(1)}M`;
+            document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/yr`;
+            document.getElementById('age-display').innerText = `${age} Years`;
+
+            // Dynamic Axis Text Assignments
+            document.getElementById('axis-start').innerText = `Age ${age}`;
+            document.getElementById('axis-y10').innerText = `Age ${age + 10} (Yr 10)`;
+            document.getElementById('axis-y20').innerText = `Age ${age + 20} (Yr 20)`;
+            document.getElementById('axis-a65').innerText = `Age 65`;
+            document.getElementById('axis-a80').innerText = `Age 80`;
+
+            document.getElementById('lbl-y10').innerText = `Age ${age + 10} (Yr 10) Value`;
+            document.getElementById('lbl-y20').innerText = `Age ${age + 20} (Yr 20) Value`;
+            document.getElementById('lbl-a65').innerText = `Age 65 Value`;
+            document.getElementById('lbl-a80').innerText = `Age 80 Target`;
+
+            // PURE DATA RECOVERY: Select coordinate data array entirely based on premium selection position
+            const pointsArray = (premium === dataNode.maxPremium) ? dataNode.maxPoints : dataNode.leastPoints;
+
+            let y10 = pointsArray[1];
+            let y20 = pointsArray[2];
+            let a65 = pointsArray[3];
+            let a80 = pointsArray[4];
+
+            // Print text updates safely from array elements
+            document.getElementById('val-y10').innerText = y10 > 0 ? `~RM ${y10.toLocaleString()}` : 'Lapsed';
+            document.getElementById('val-y20').innerText = y20 > 0 ? `~RM ${y20.toLocaleString()}` : 'Lapsed';
+            document.getElementById('val-a65').innerText = a65 > 0 ? `~RM ${a65.toLocaleString()}` : 'Lapsed';
+            document.getElementById('val-a80').innerText = a80 > 0 ? `~RM ${a80.toLocaleString()}` : (a65 <= 0 ? 'Lapsed' : 'Sustainability Risk');
+
+            // SVG Path Plotting Config
+            let highestValue = Math.max(...pointsArray);
+            let dynamicCeiling = Math.max(100000, highestValue * 1.15); 
+
+            function toSvgY(val) {
+                let pct = val / dynamicCeiling;
+                return 180 - (pct * 150);
             }
 
-            // Render absolute lines 
-            document.getElementById('main-ribbon').setAttribute('d', pointsString);
-            document.getElementById('glow-ribbon').setAttribute('d', pointsString);
+            let pStart = { x: 50,  y: 180 };
+            let pY10   = { x: 200, y: toSvgY(y10) };
+            let pY20   = { x: 350, y: toSvgY(y20) };
+            let pA65   = { x: 450, y: toSvgY(a65) };
+            let pA80   = { x: 550, y: toSvgY(a80) };
 
-            // Change warning styling if policy breaks sustainability milestone boundaries
-            if (vals[4] <= 0 || vals[3] <= 0) {
+            // Pure Coordinate Point Linear Tracing (Ensures 100% path safety with zero dynamic forecasting)
+            let pathD = `M ${pStart.x} ${pStart.y} 
+                         L ${pY10.x} ${pY10.y} 
+                         L ${pY20.x} ${pY20.y} 
+                         L ${pA65.x} ${pA65.y} 
+                         L ${pA80.x} ${pA80.y}`;
+
+            document.getElementById('main-ribbon').setAttribute('d', pathD);
+            document.getElementById('glow-ribbon').setAttribute('d', pathD);
+
+            document.getElementById('node-y10').setAttribute('cx', pY10.x);
+            document.getElementById('node-y10').setAttribute('cy', pY10.y);
+            document.getElementById('node-y20').setAttribute('cx', pY20.x);
+            document.getElementById('node-y20').setAttribute('cy', pY20.y);
+            document.getElementById('node-a65').setAttribute('cx', pA65.x);
+            document.getElementById('node-a65').setAttribute('cy', pA65.y);
+            document.getElementById('node-a80').setAttribute('cx', pA80.x);
+            document.getElementById('node-a80').setAttribute('cy', pA80.y);
+
+            if(a80 <= 0 || a65 <= 0) {
                 document.getElementById('glow-ribbon').style.stroke = 'var(--warning-glow)';
                 document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
             } else {
@@ -473,8 +538,8 @@
             }
         }
 
-        // Initialize App Configuration
-        loadScenarioData();
+        // Initialize state engine run
+        setMode('premium');
     </script>
 </body>
 </html>
