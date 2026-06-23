@@ -632,10 +632,10 @@
 function recalibrateSliderBounds() {
     let ageValue = parseInt(document.getElementById('age-selector').value);
     let termKey = document.getElementById('term-selector').value;
-    // Capture the current value of your protection slider
+    // 1. Capture the actual value from the protection slider
     let protectionValue = parseInt(document.getElementById('protection-slider').value);
 
-    // FIX: Match BOTH age AND protection amount
+    // 2. FIX: Match BOTH age AND protection amount in the database lookup
     const matchedAgeBlock = officialQuotationsDb.find(item => 
         item.entryAge === ageValue && item.fixedProtection === protectionValue
     );
@@ -654,15 +654,15 @@ function recalibrateSliderBounds() {
     }
     executeSimulationEngine();
 }
-
- function executeSimulationEngine() {
+      
+function executeSimulationEngine() {
     let ageValue = parseInt(document.getElementById('age-selector').value);
     let termKey = document.getElementById('term-selector').value;
     let simulatedPremium = parseInt(document.getElementById('premium-slider').value);
-    // Capture the current value of your protection slider
+    // 1. Capture the actual value from the protection slider here too
     let protectionValue = parseInt(document.getElementById('protection-slider').value);
 
-    // FIX: Match BOTH age AND protection amount
+    // 2. FIX: Match BOTH age AND protection amount here as well
     const matchedAgeBlock = officialQuotationsDb.find(item => 
         item.entryAge === ageValue && item.fixedProtection === protectionValue
     );
@@ -674,46 +674,46 @@ function recalibrateSliderBounds() {
         return;
     }
 
-        const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
-        const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
-        const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
-        const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
+    const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
+    const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
+    const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+    const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
 
-        let baseScenario, topScenario, proportion;
+    let baseScenario, topScenario, proportion;
 
-        if (simulatedPremium <= pMin) {
-            baseScenario = targetTermData.sustainable70Scenario;
-            topScenario = targetTermData.leastPremiumScenario;
-            proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
-        } else if (simulatedPremium <= pMid) {
-            baseScenario = targetTermData.leastPremiumScenario;
-            topScenario = targetTermData.midPremiumScenario;
-            proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
-        } else {
-            baseScenario = targetTermData.midPremiumScenario;
-            topScenario = targetTermData.maxPremiumScenario;
-            proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
-        }
-
-        let simulatedMilestones = [];
-        for (let i = 0; i < 6; i++) {
-            let v1 = baseScenario.milestones[i].accountValue;
-            let v2 = topScenario.milestones[i].accountValue;
-            let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
-            
-            simulatedMilestones.push({
-                policyYear: baseScenario.milestones[i].policyYear,
-                ageNext: baseScenario.milestones[i].ageNext,
-                accountValue: interpolatedValue
-            });
-        }
-
-        const isExactAnchor = (simulatedPremium === pFloor || simulatedPremium === pMin || simulatedPremium === pMid || simulatedPremium === pMax);
-        document.getElementById('badge-pi').classList.toggle('active-pi', isExactAnchor);
-        document.getElementById('badge-sim').classList.toggle('active-sim', !isExactAnchor);
-
-        updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
+    if (simulatedPremium <= pMin) {
+        baseScenario = targetTermData.sustainable70Scenario;
+        topScenario = targetTermData.leastPremiumScenario;
+        proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
+    } else if (simulatedPremium <= pMid) {
+        baseScenario = targetTermData.leastPremiumScenario;
+        topScenario = targetTermData.midPremiumScenario;
+        proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
+    } else {
+        baseScenario = targetTermData.midPremiumScenario;
+        topScenario = targetTermData.maxPremiumScenario;
+        proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
     }
+
+    let simulatedMilestones = [];
+    for (let i = 0; i < 6; i++) {
+        let v1 = baseScenario.milestones[i].accountValue;
+        let v2 = topScenario.milestones[i].accountValue;
+        let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
+        
+        simulatedMilestones.push({
+            policyYear: baseScenario.milestones[i].policyYear,
+            ageNext: baseScenario.milestones[i].ageNext,
+            accountValue: interpolatedValue
+        });
+    }
+
+    const isExactAnchor = (simulatedPremium === pFloor || simulatedPremium === pMin || simulatedPremium === pMid || simulatedPremium === pMax);
+    document.getElementById('badge-pi').classList.toggle('active-pi', isExactAnchor);
+    document.getElementById('badge-sim').classList.toggle('active-sim', !isExactAnchor);
+
+    updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
+}
 
     function renderEmptyState() {
         document.getElementById('premium-display').innerText = "Data Stream Empty";
