@@ -317,7 +317,7 @@
                     <span class="slider-label"><span id="lock-icon-premium">🔒</span> Premium Payment</span>
                     <span class="slider-value" id="premium-display">RM --/yr</span>
                 </div>
-                <input type="range" id="premium-slider" class="range-slider" min="0" max="1" step="1" value="0" oninput="handleSliderInput()" disabled>
+                <input type="range" id="premium-slider" class="range-slider" min="0" max="2" step="1" value="0" oninput="handleSliderInput()" disabled>
             </div>
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
@@ -336,9 +336,9 @@
                 <div class="slider-group">
                     <span class="slider-label">Premium Payment Term</span>
                     <select id="term-selector" class="select-styled" onchange="handleSliderInput()">
-                        <option value="pay6">6 Years Premium Pay</option>
+                        <option value="pay6" selected>6 Years Premium Pay</option>
                         <option value="pay10">10 Years Premium Pay</option>
-                        <option value="pay20" selected>20 Years Premium Pay</option>
+                        <option value="pay20">20 Years Premium Pay</option>
                     </select>
                 </div>
             </div>
@@ -452,7 +452,7 @@
                             { "policyYear": 35, "ageNext": 80, "accountValue": 614673 }
                         ]
                     },
-                      "midPremiumScenario": {
+                    "midPremiumScenario": {
                         "premiumAmount": 60300, 
                         "billingFrequency": "Annual",
                         "milestones": [
@@ -460,7 +460,7 @@
                             { "policyYear": 5, "ageNext": 50, "accountValue": 266548 },
                             { "policyYear": 10, "ageNext": 55, "accountValue": 356149 },
                             { "policyYear": 20, "ageNext": 65, "accountValue": 431367 },
-                            { "policyYear": 35, "ageNext": 80, "accountValue": 343467
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 343467 } // FIXED: Added missing closing curly bracket here
                         ]
                     },
                     "leastPremiumScenario": {
@@ -532,6 +532,7 @@
         handleSliderInput();
     }
 
+    // FIXED: Upgraded slider reader to accurately index 3 different properties
     function handleSliderInput() {
         let ageValue = parseInt(document.getElementById('age-selector').value);
         let termKey = document.getElementById('term-selector').value;
@@ -539,7 +540,20 @@
 
         const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
         const targetTermData = matchedAgeBlock.premiumTerms[termKey];
-        const scenarioData = (strategyIndex === 1) ? targetTermData.maxPremiumScenario : targetTermData.leastPremiumScenario;
+        
+        let scenarioData;
+        if (strategyIndex === 0) {
+            scenarioData = targetTermData.leastPremiumScenario;
+        } else if (strategyIndex === 1) {
+            scenarioData = targetTermData.midPremiumScenario;
+        } else {
+            scenarioData = targetTermData.maxPremiumScenario;
+        }
+
+        // Graceful validation fallback if other nodes don't have midPremiumScenario fields yet
+        if (!scenarioData) {
+            scenarioData = targetTermData.leastPremiumScenario;
+        }
 
         updateUIOutputs(scenarioData);
     }
@@ -588,15 +602,12 @@
         document.getElementById('main-ribbon').setAttribute('d', smoothSplinePath);
         document.getElementById('glow-ribbon').setAttribute('d', smoothSplinePath);
 
-        // Check if the tail end is actively sloping downward
         const isDownslope = (valuesList[4] < valuesList[3]) || (valuesList[3] < valuesList[2]);
 
         if (isDownslope && premium > 0) {
-            // ONLY modify the ending color coordinates of the SVG linear gradients
             document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
             document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
             
-            // Turn ONLY the specific dropping nodes orange, leaving early nodes clean blue
             for(let i = 3; i < 5; i++) {
                 if(valuesList[i] < valuesList[i-1]) {
                     document.getElementById(`node-${i}`).style.stroke = 'var(--warning-glow)';
@@ -605,11 +616,9 @@
                 }
             }
         } else {
-            // Reset right side to cyber blue when performance trends upward
             document.getElementById('gradient-end').setAttribute('stop-color', '#00d2ff');
             document.getElementById('glow-gradient-end').setAttribute('stop-color', '#00d2ff');
             
-            // Ensure all nodes use standard blue highlights
             for(let i = 0; i < 5; i++) {
                 document.getElementById(`node-${i}`).style.stroke = '';
             }
@@ -618,7 +627,6 @@
 
     setMode('premium');
 </script>
-
 
 </body>
 </html>
