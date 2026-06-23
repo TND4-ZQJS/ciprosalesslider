@@ -374,7 +374,7 @@
                     <span class="slider-label"><span id="lock-icon-protection"></span> Protection Face Amount</span>
                     <span class="slider-value" id="protection-display">RM 1.0M</span>
                 </div>
-                <input type="range" id="protection-slider" class="range-slider" min="500000" max="3000000" step="500000" value="1000000" oninput="executeSimulationEngine()">
+                <input type="range" id="protection-slider" class="range-slider" min="500000" max="3000000" step="500000" value="1000000" oninput="<input type="range" id="protection-slider" class="range-slider" min="1000000" max="1500000" step="500000" value="1000000" oninput="recalibrateSliderBounds()">
             </div>
 
             <div class="slider-group" id="premium-group">
@@ -607,27 +607,29 @@
         return pathString;
     }
 
-    function setMode(mode) {
-        currentMode = mode;
-        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('protection-slider').disabled = (mode === 'protection');
-        document.getElementById('premium-slider').disabled = (mode === 'premium');
-        
-        if(mode === 'premium') {
-            document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
-            document.getElementById('premium-group').classList.add('locked');
-            document.getElementById('protection-group').classList.remove('locked');
-            document.getElementById('lock-icon-premium').innerText = '🔒';
-            document.getElementById('lock-icon-protection').innerText = '';
-        } else {
-            document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
-            document.getElementById('protection-group').classList.add('locked');
-            document.getElementById('premium-group').classList.remove('locked');
-            document.getElementById('lock-icon-protection').innerText = '🔒';
-            document.getElementById('lock-icon-premium').innerText = '';
-        }
-        executeSimulationEngine();
+function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('protection-slider').disabled = (mode === 'protection');
+    document.getElementById('premium-slider').disabled = (mode === 'premium');
+    
+    if(mode === 'premium') {
+        document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
+        document.getElementById('premium-group').classList.add('locked');
+        document.getElementById('protection-group').classList.remove('locked');
+        document.getElementById('lock-icon-premium').innerText = '🔒';
+        document.getElementById('lock-icon-protection').innerText = '';
+    } else {
+        document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
+        document.getElementById('protection-group').classList.add('locked');
+        document.getElementById('premium-group').classList.remove('locked');
+        document.getElementById('lock-icon-protection').innerText = '🔒';
+        document.getElementById('lock-icon-premium').innerText = '';
     }
+    
+    // FIX: Force the slider ranges to rebuild based on the active mode state
+    recalibrateSliderBounds(); 
+}
 
 function recalibrateSliderBounds() {
     let ageValue = parseInt(document.getElementById('age-selector').value);
