@@ -58,7 +58,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* PREMIUM STATUS TELEMETRY PANEL */
         .telemetry-rack {
             display: flex;
             gap: 1rem;
@@ -171,15 +170,15 @@
 
         .milestone-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.25rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
         }
 
         .milestone-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 1.25rem;
+            padding: 1.15rem;
             text-align: left;
             transition: all 0.3s ease;
         }
@@ -189,7 +188,6 @@
             background-color: rgba(255, 255, 255, 0.01);
         }
 
-        /* SUSTAINABILITY WARNING CONTAINER STYLES */
         .milestone-card.unsustainable-alert {
             border-color: rgba(255, 77, 77, 0.4) !important;
             background: linear-gradient(135deg, rgba(255, 77, 77, 0.03), rgba(13, 18, 34, 0.9));
@@ -210,7 +208,7 @@
             margin-bottom: 0.5rem;
         }
 
-        .milestone-value { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; transition: color 0.3s ease, font-size 0.3s ease; }
+        .milestone-value { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; transition: color 0.3s ease, font-size 0.3s ease; }
 
         .mode-selector {
             display: flex;
@@ -313,7 +311,6 @@
             cursor: not-allowed;
         }
 
-        /* PREMIUM VECTOR GRAPHIC OVERLAYS */
         .ribbon-glow {
             stroke: url(#glowGradient);
             stroke-width: 14px; 
@@ -424,20 +421,18 @@
                                     <feMergeNode in="SourceGraphic" />
                                 </feMerge>
                             </filter>
-
                             <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#8A2BE2" /> 
                                 <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
                             </linearGradient>
-
                             <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stop-color="#aa55ff" />
                                 <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
                             </linearGradient>
                         </defs>
                         
-                        <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="50" y1="100" x2="550" y2="100" stroke="rgba(255,255,255,0.01)" stroke-width="1"/>
+                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.01)" stroke-width="1"/>
                         
                         <path id="glow-ribbon" class="ribbon-glow" d="" />
                         <path id="main-ribbon" class="ribbon-main" d="" />
@@ -447,12 +442,14 @@
                         <circle id="node-2" class="milestone-node" r="5" />
                         <circle id="node-3" class="milestone-node" r="5" />
                         <circle id="node-4" class="milestone-node" r="5" />
+                        <circle id="node-5" class="milestone-node" r="5" />
 
-                        <text x="50" y="205" class="axis-label" id="axis-0">Yr 1</text>
-                        <text x="175" y="205" class="axis-label" id="axis-1">Yr 5</text>
-                        <text x="300" y="205" class="axis-label" id="axis-2">Yr 10</text>
-                        <text x="425" y="205" class="axis-label" id="axis-3">Yr 20</text>
-                        <text x="550" y="205" class="axis-label" id="axis-4">Yr 35</text>
+                        <text x="40" y="205" class="axis-label" id="axis-0">Yr 1</text>
+                        <text x="144" y="205" class="axis-label" id="axis-1">Yr 5</text>
+                        <text x="248" y="205" class="axis-label" id="axis-2">Yr 10</text>
+                        <text x="352" y="205" class="axis-label" id="axis-3">Yr 20</text>
+                        <text x="456" y="205" class="axis-label" id="axis-4">Yr 25</text>
+                        <text x="560" y="205" class="axis-label" id="axis-5">Yr 35</text>
                     </svg>
                 </div>
             </div>
@@ -473,8 +470,12 @@
                         <div class="milestone-value" id="val-3">RM --</div>
                     </div>
                     <div class="milestone-card" id="card-4">
-                        <div class="milestone-age" id="lbl-4">Policy Year 35</div>
+                        <div class="milestone-age" id="lbl-4">Policy Year 25</div>
                         <div class="milestone-value" id="val-4">RM --</div>
+                    </div>
+                    <div class="milestone-card" id="card-5">
+                        <div class="milestone-age" id="lbl-5">Policy Year 35</div>
+                        <div class="milestone-value" id="val-5">RM --</div>
                     </div>
                 </div>
             </div>
@@ -482,32 +483,14 @@
     </div>
 
     <footer>
-        [SYSTEM STATUS: ONLINE] // Real-time Proportional Interpolation Engine Active. Custom values are mathematical approximations between PI anchors.
+        [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
     </footer>
 
   <script>
     const officialQuotationsDb = [
         {
-            "entryAge": 25, "gender": "Male", "fixedProtection": 1000000,
-            "premiumTerms": {
-                "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
-            }
-        },
-        {
-            "entryAge": 35, "gender": "Male", "fixedProtection": 1000000,
-            "premiumTerms": {
-                "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
-            }
-        },
-        {
             "entryAge": 45, "gender": "Male", "fixedProtection": 1000000,
             "premiumTerms": {
-                "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
                 "pay6": {
                     "maxPremiumScenario": {
                         "premiumAmount": 68654, 
@@ -516,6 +499,7 @@
                             { "policyYear": 5, "ageNext": 50, "accountValue": 307238 },
                             { "policyYear": 10, "ageNext": 55, "accountValue": 415625 },
                             { "policyYear": 20, "ageNext": 65, "accountValue": 524325 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 560000 },
                             { "policyYear": 35, "ageNext": 80, "accountValue": 614673 }
                         ]
                     },
@@ -526,6 +510,7 @@
                             { "policyYear": 5, "ageNext": 50, "accountValue": 266548 },
                             { "policyYear": 10, "ageNext": 55, "accountValue": 356149 },
                             { "policyYear": 20, "ageNext": 65, "accountValue": 431367 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 410000 },
                             { "policyYear": 35, "ageNext": 80, "accountValue": 343467 }
                         ]
                     },
@@ -536,6 +521,7 @@
                             { "policyYear": 5, "ageNext": 50, "accountValue": 225679 },
                             { "policyYear": 10, "ageNext": 55, "accountValue": 296411 },
                             { "policyYear": 20, "ageNext": 65, "accountValue": 337998 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 280000 },
                             { "policyYear": 35, "ageNext": 80, "accountValue": 71064 }
                         ]
                     },
@@ -546,18 +532,11 @@
                             { "policyYear": 5, "ageNext": 50, "accountValue": 180000 },
                             { "policyYear": 10, "ageNext": 55, "accountValue": 230000 },
                             { "policyYear": 20, "ageNext": 65, "accountValue": 250000 }, 
-                            { "policyYear": 35, "ageNext": 80, "accountValue": 0 }       
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 150000 }, // Safe here
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 0 }       // Lapses by age 80
                         ]
                     }
                 }
-            }
-        },
-        {
-            "entryAge": 55, "gender": "Male", "fixedProtection": 1000000,
-            "premiumTerms": {
-                "pay6": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                "pay10": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } },
-                "pay20": { "maxPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] }, "leastPremiumScenario": { "premiumAmount": 0, "milestones": [{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 },{ "accountValue": 0 }] } }
             }
         }
     ];
@@ -603,10 +582,11 @@
         let termKey = document.getElementById('term-selector').value;
 
         const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
+        if(!matchedAgeBlock) { renderEmptyState(); return; }
+        
         const targetTermData = matchedAgeBlock.premiumTerms[termKey];
 
-        if (targetTermData && targetTermData.sustainable70Scenario && targetTermData.sustainable70Scenario.premiumAmount > 0) {
-            // New floor is now targeted at the absolute bottom
+        if (targetTermData && targetTermData.sustainable70Scenario) {
             const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
             const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
             
@@ -624,14 +604,14 @@
         let simulatedPremium = parseInt(document.getElementById('premium-slider').value);
 
         const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
+        if(!matchedAgeBlock) { renderEmptyState(); return; }
         const targetTermData = matchedAgeBlock.premiumTerms[termKey];
 
-        if (!targetTermData || !targetTermData.sustainable70Scenario || targetTermData.sustainable70Scenario.premiumAmount === 0) {
+        if (!targetTermData || !targetTermData.sustainable70Scenario) {
             renderEmptyState();
             return;
         }
 
-        // Setup the three-bracket scale configurations
         const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
         const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
         const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
@@ -639,14 +619,13 @@
 
         let baseScenario, topScenario, proportion;
 
-        // Mathematical evaluation across the 3 distinct tracking corridors
         if (simulatedPremium <= pMin) {
             baseScenario = targetTermData.sustainable70Scenario;
             topScenario = targetTermData.leastPremiumScenario;
             proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
         } else if (simulatedPremium <= pMid) {
             baseScenario = targetTermData.leastPremiumScenario;
-            topScenario = targetTermData.midPremiumScenario || targetTermData.leastPremiumScenario;
+            topScenario = targetTermData.midPremiumScenario;
             proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
         } else {
             baseScenario = targetTermData.midPremiumScenario;
@@ -655,10 +634,9 @@
         }
 
         let simulatedMilestones = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 6; i++) {
             let v1 = baseScenario.milestones[i].accountValue;
             let v2 = topScenario.milestones[i].accountValue;
-            
             let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
             
             simulatedMilestones.push({
@@ -669,13 +647,8 @@
         }
 
         const isExactAnchor = (simulatedPremium === pFloor || simulatedPremium === pMin || simulatedPremium === pMid || simulatedPremium === pMax);
-        if (isExactAnchor) {
-            document.getElementById('badge-pi').classList.add('active-pi');
-            document.getElementById('badge-sim').classList.remove('active-sim');
-        } else {
-            document.getElementById('badge-pi').classList.remove('active-pi');
-            document.getElementById('badge-sim').classList.add('active-sim');
-        }
+        document.getElementById('badge-pi').classList.toggle('active-pi', isExactAnchor);
+        document.getElementById('badge-sim').classList.toggle('active-sim', !isExactAnchor);
 
         updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
     }
@@ -684,7 +657,7 @@
         document.getElementById('premium-display').innerText = "Data Stream Empty";
         document.getElementById('badge-pi').classList.remove('active-pi');
         document.getElementById('badge-sim').classList.remove('active-sim');
-        for (let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= 5; i++) {
             document.getElementById(`val-${i}`).innerText = "RM --";
             document.getElementById(`card-${i}`).classList.remove('unsustainable-alert');
         }
@@ -695,7 +668,7 @@
     function updateUIOutputs(premium, milestones, pMinBoundary) {
         document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/yr`;
 
-        const xCoordinates = [50, 175, 300, 425, 550];
+        const xCoordinates = [40, 144, 248, 352, 456, 560]; // Transformed layout geometry across 6 points
         const activeCoords = [];
         const valuesList = milestones.map(m => m.accountValue);
         const maxValInSet = Math.max(...valuesList, 100000);
@@ -705,7 +678,7 @@
             return 180 - ((val / yCeiling) * 150);
         }
 
-        for(let i = 0; i < 5; i++) {
+        for(let i = 0; i < 6; i++) {
             const milestone = milestones[i];
             const value = milestone.accountValue;
             
@@ -714,10 +687,10 @@
             if (i > 0) {
                 document.getElementById(`lbl-${i}`).innerText = `Age ${milestone.ageNext} (Policy Yr ${milestone.policyYear}) Value`;
                 
-                // CRITICAL SAFETY CHECK: If we step below the pMin sustainable line, flag age 80 card
-                if (i === 4 && premium < pMinBoundary) {
-                    document.getElementById(`val-${4}`).innerText = "Not Sustainable";
-                    document.getElementById(`card-${4}`).classList.add('unsustainable-alert');
+                // Track dynamic structural stability state
+                if (i === 5 && premium < pMinBoundary) {
+                    document.getElementById(`val-5`).innerText = "Not Sustainable";
+                    document.getElementById(`card-5`).classList.add('unsustainable-alert');
                 } else {
                     document.getElementById(`val-${i}`).innerText = `RM ${value.toLocaleString()}`;
                     document.getElementById(`card-${i}`).classList.remove('unsustainable-alert');
@@ -736,32 +709,20 @@
         document.getElementById('main-ribbon').setAttribute('d', smoothSplinePath);
         document.getElementById('glow-ribbon').setAttribute('d', smoothSplinePath);
 
-        // Vector Alert Highlighting Engine
-        const isDownslope = (valuesList[4] < valuesList[3]) || (valuesList[3] < valuesList[2]) || (premium < pMinBoundary);
-
+        const isDownslope = (premium < pMinBoundary);
         if (isDownslope) {
             document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
             document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
-            for(let i = 1; i < 5; i++) {
-                if(valuesList[i] < valuesList[i-1] || (i === 4 && premium < pMinBoundary)) {
-                    document.getElementById(`node-${i}`).style.stroke = 'var(--neon-red)';
-                } else {
-                    document.getElementById(`node-${i}`).style.stroke = 'var(--secondary-glow)';
-                }
-            }
+            document.getElementById(`node-5`).style.stroke = 'var(--neon-red)';
         } else {
             document.getElementById('gradient-end').setAttribute('stop-color', '#00d2ff');
             document.getElementById('glow-gradient-end').setAttribute('stop-color', '#00d2ff');
-            for(let i = 0; i < 5; i++) {
-                document.getElementById(`node-${i}`).style.stroke = '';
-            }
+            for(let i = 0; i < 6; i++) { document.getElementById(`node-${i}`).style.stroke = ''; }
         }
     }
 
-    // Run baseline execution
     recalibrateSliderBounds();
     setMode('premium');
 </script>
-
 </body>
 </html>
