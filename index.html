@@ -367,13 +367,30 @@
             </div>
 
             <div class="slider-group" id="premium-group">
-                <div class="slider-header">
-                    <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
-                    <span class="slider-value" id="premium-display">RM --/yr</span>
-                </div>
-                <!-- REFACTORED TO CONTINUOUS DYNAMIC RANGE -->
-                <input type="range" id="premium-slider" class="range-slider" min="52000" max="68654" step="1" value="52000" oninput="executeSimulationEngine()" disabled>
-            </div>
+    <div class="slider-header">
+        <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
+        <span class="slider-value" id="premium-display">RM --/yr</span>
+    </div>
+    
+    <!-- Cleaned Input Core Tracking -->
+    <input type="range" id="premium-slider" class="range-slider" min="0" max="100" step="1" value="0" list="premium-ticks" oninput="executeSimulationEngine()" disabled>
+    
+    <!-- Keep this empty; JS will bind the positions dynamically -->
+    <datalist id="premium-ticks">
+        <option id="tick-lapse"></option>
+        <option id="tick-min"></option>
+        <option id="tick-mid"></option>
+        <option id="tick-max"></option>
+    </datalist>
+
+    <div class="slider-tier-labels">
+        <span id="lbl-tier-lapse" class="tier-anchor critical-alert" onclick="snapToTier('lapse')">⚠️ LAPSE ZONE</span>
+        <span id="lbl-tier-min" class="tier-anchor" onclick="snapToTier('min')">MIN</span>
+        <span id="lbl-tier-mid" class="tier-anchor" onclick="snapToTier('mid')">MID</span>
+        <span id="lbl-tier-max" class="tier-anchor" onclick="snapToTier('max')">MAX</span>
+    </div>
+</div>
+
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
                 <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Structural Variables</p>
@@ -576,24 +593,35 @@
     }
 
     // TRACKS REAL BOUNDS AND APPLIES THEM TO THE SLIDER DOM PROPERTIES
-    function recalibrateSliderBounds() {
-        let ageValue = parseInt(document.getElementById('age-selector').value);
-        let termKey = document.getElementById('term-selector').value;
+  function recalibrateSliderBounds() {
+    let ageValue = parseInt(document.getElementById('age-selector').value);
+    let termKey = document.getElementById('term-selector').value;
 
-        const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
-        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+    const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
+    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
 
-        if (targetTermData && targetTermData.leastPremiumScenario && targetTermData.leastPremiumScenario.premiumAmount > 0) {
-            const minPremium = targetTermData.leastPremiumScenario.premiumAmount;
-            const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
-            
-            const pSlider = document.getElementById('premium-slider');
-            pSlider.min = minPremium;
-            pSlider.max = maxPremium;
-            pSlider.value = minPremium; 
-        }
-        executeSimulationEngine();
+    if (targetTermData && targetTermData.leastPremiumScenario && targetTermData.leastPremiumScenario.premiumAmount > 0) {
+        const minPremium = targetTermData.leastPremiumScenario.premiumAmount;
+        const midPremium = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : minPremium;
+        const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
+        
+        // Match the RM 17,000 underfunded gap
+        const lapseFloor = minPremium - 17000;
+
+        const pSlider = document.getElementById('premium-slider');
+        pSlider.min = lapseFloor;
+        pSlider.max = maxPremium;
+        pSlider.value = minPremium; // Start default resting at official MIN
+
+        // FIX: Re-bind DOM node parameters dynamically to stop ghost-snapping bugs
+        document.getElementById('tick-lapse').setAttribute('value', lapseFloor);
+        document.getElementById('tick-min').setAttribute('value', minPremium);
+        document.getElementById('tick-mid').setAttribute('value', midPremium);
+        document.getElementById('tick-max').setAttribute('value', maxPremium);
     }
+    executeSimulationEngine();
+}
+
 
     // CORE FLUID INTERPOLATION MATRIX
     function executeSimulationEngine() {
