@@ -629,40 +629,50 @@
         executeSimulationEngine();
     }
 
-    function recalibrateSliderBounds() {
-        let ageValue = parseInt(document.getElementById('age-selector').value);
-        let termKey = document.getElementById('term-selector').value;
+function recalibrateSliderBounds() {
+    let ageValue = parseInt(document.getElementById('age-selector').value);
+    let termKey = document.getElementById('term-selector').value;
+    // Capture the current value of your protection slider
+    let protectionValue = parseInt(document.getElementById('protection-slider').value);
 
-        const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
-        if(!matchedAgeBlock) { renderEmptyState(); return; }
+    // FIX: Match BOTH age AND protection amount
+    const matchedAgeBlock = officialQuotationsDb.find(item => 
+        item.entryAge === ageValue && item.fixedProtection === protectionValue
+    );
+    if(!matchedAgeBlock) { renderEmptyState(); return; }
+    
+    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+
+    if (targetTermData && targetTermData.sustainable70Scenario) {
+        const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
+        const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
         
-        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
-
-        if (targetTermData && targetTermData.sustainable70Scenario) {
-            const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
-            const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
-            
-            const pSlider = document.getElementById('premium-slider');
-            pSlider.min = floorPremium;
-            pSlider.max = maxPremium;
-            pSlider.value = floorPremium; 
-        }
-        executeSimulationEngine();
+        const pSlider = document.getElementById('premium-slider');
+        pSlider.min = floorPremium;
+        pSlider.max = maxPremium;
+        pSlider.value = floorPremium; 
     }
+    executeSimulationEngine();
+}
 
-    function executeSimulationEngine() {
-        let ageValue = parseInt(document.getElementById('age-selector').value);
-        let termKey = document.getElementById('term-selector').value;
-        let simulatedPremium = parseInt(document.getElementById('premium-slider').value);
+ function executeSimulationEngine() {
+    let ageValue = parseInt(document.getElementById('age-selector').value);
+    let termKey = document.getElementById('term-selector').value;
+    let simulatedPremium = parseInt(document.getElementById('premium-slider').value);
+    // Capture the current value of your protection slider
+    let protectionValue = parseInt(document.getElementById('protection-slider').value);
 
-        const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
-        if(!matchedAgeBlock) { renderEmptyState(); return; }
-        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+    // FIX: Match BOTH age AND protection amount
+    const matchedAgeBlock = officialQuotationsDb.find(item => 
+        item.entryAge === ageValue && item.fixedProtection === protectionValue
+    );
+    if(!matchedAgeBlock) { renderEmptyState(); return; }
+    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
 
-        if (!targetTermData || !targetTermData.sustainable70Scenario) {
-            renderEmptyState();
-            return;
-        }
+    if (!targetTermData || !targetTermData.sustainable70Scenario) {
+        renderEmptyState();
+        return;
+    }
 
         const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
         const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
