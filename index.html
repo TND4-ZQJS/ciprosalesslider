@@ -18,6 +18,7 @@
             --warning-glow: #ff9f43;
             --neon-green: #00ff88;
             --neon-amber: #ffaa00;
+            --neon-red: #ff4d4d;
         }
 
         * {
@@ -188,6 +189,19 @@
             background-color: rgba(255, 255, 255, 0.01);
         }
 
+        /* SUSTAINABILITY WARNING CONTAINER STYLES */
+        .milestone-card.unsustainable-alert {
+            border-color: rgba(255, 77, 77, 0.4) !important;
+            background: linear-gradient(135deg, rgba(255, 77, 77, 0.03), rgba(13, 18, 34, 0.9));
+            box-shadow: inset 0 0 15px rgba(255, 77, 77, 0.05);
+        }
+
+        .milestone-card.unsustainable-alert .milestone-value {
+            color: var(--neon-red) !important;
+            font-size: 1.15rem;
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
+        }
+
         .milestone-age {
             font-size: 0.72rem;
             color: var(--text-muted);
@@ -196,7 +210,7 @@
             margin-bottom: 0.5rem;
         }
 
-        .milestone-value { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; }
+        .milestone-value { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; transition: color 0.3s ease, font-size 0.3s ease; }
 
         .mode-selector {
             display: flex;
@@ -367,30 +381,12 @@
             </div>
 
             <div class="slider-group" id="premium-group">
-    <div class="slider-header">
-        <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
-        <span class="slider-value" id="premium-display">RM --/yr</span>
-    </div>
-    
-    <!-- Cleaned Input Core Tracking -->
-    <input type="range" id="premium-slider" class="range-slider" min="0" max="100" step="1" value="0" list="premium-ticks" oninput="executeSimulationEngine()" disabled>
-    
-    <!-- Keep this empty; JS will bind the positions dynamically -->
-    <datalist id="premium-ticks">
-        <option id="tick-lapse"></option>
-        <option id="tick-min"></option>
-        <option id="tick-mid"></option>
-        <option id="tick-max"></option>
-    </datalist>
-
-    <div class="slider-tier-labels">
-        <span id="lbl-tier-lapse" class="tier-anchor critical-alert" onclick="snapToTier('lapse')">⚠️ LAPSE ZONE</span>
-        <span id="lbl-tier-min" class="tier-anchor" onclick="snapToTier('min')">MIN</span>
-        <span id="lbl-tier-mid" class="tier-anchor" onclick="snapToTier('mid')">MID</span>
-        <span id="lbl-tier-max" class="tier-anchor" onclick="snapToTier('max')">MAX</span>
-    </div>
-</div>
-
+                <div class="slider-header">
+                    <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
+                    <span class="slider-value" id="premium-display">RM --/yr</span>
+                </div>
+                <input type="range" id="premium-slider" class="range-slider" min="45000" max="68654" step="1" value="45000" oninput="executeSimulationEngine()" disabled>
+            </div>
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
                 <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Structural Variables</p>
@@ -464,19 +460,19 @@
             <div class="indicators-panel">
                 <div class="panel-title">Asset Projections & Performance Metrics</div>
                 <div class="milestone-grid">
-                    <div class="milestone-card">
+                    <div class="milestone-card" id="card-1">
                         <div class="milestone-age" id="lbl-1">Policy Year 5</div>
                         <div class="milestone-value" id="val-1">RM --</div>
                     </div>
-                    <div class="milestone-card">
+                    <div class="milestone-card" id="card-2">
                         <div class="milestone-age" id="lbl-2">Policy Year 10</div>
                         <div class="milestone-value" id="val-2">RM --</div>
                     </div>
-                    <div class="milestone-card">
+                    <div class="milestone-card" id="card-3">
                         <div class="milestone-age" id="lbl-3">Policy Year 20</div>
                         <div class="milestone-value" id="val-3">RM --</div>
                     </div>
-                    <div class="milestone-card">
+                    <div class="milestone-card" id="card-4">
                         <div class="milestone-age" id="lbl-4">Policy Year 35</div>
                         <div class="milestone-value" id="val-4">RM --</div>
                     </div>
@@ -542,6 +538,16 @@
                             { "policyYear": 20, "ageNext": 65, "accountValue": 337998 },
                             { "policyYear": 35, "ageNext": 80, "accountValue": 71064 }
                         ]
+                    },
+                    "sustainable70Scenario": {
+                        "premiumAmount": 45000, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 22000 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 180000 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 230000 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 250000 }, 
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 0 }       
+                        ]
                     }
                 }
             }
@@ -592,38 +598,26 @@
         executeSimulationEngine();
     }
 
-    // TRACKS REAL BOUNDS AND APPLIES THEM TO THE SLIDER DOM PROPERTIES
-  function recalibrateSliderBounds() {
-    let ageValue = parseInt(document.getElementById('age-selector').value);
-    let termKey = document.getElementById('term-selector').value;
+    function recalibrateSliderBounds() {
+        let ageValue = parseInt(document.getElementById('age-selector').value);
+        let termKey = document.getElementById('term-selector').value;
 
-    const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
-    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+        const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
+        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
 
-    if (targetTermData && targetTermData.leastPremiumScenario && targetTermData.leastPremiumScenario.premiumAmount > 0) {
-        const minPremium = targetTermData.leastPremiumScenario.premiumAmount;
-        const midPremium = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : minPremium;
-        const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
-        
-        // Match the RM 17,000 underfunded gap
-        const lapseFloor = minPremium - 17000;
-
-        const pSlider = document.getElementById('premium-slider');
-        pSlider.min = lapseFloor;
-        pSlider.max = maxPremium;
-        pSlider.value = minPremium; // Start default resting at official MIN
-
-        // FIX: Re-bind DOM node parameters dynamically to stop ghost-snapping bugs
-        document.getElementById('tick-lapse').setAttribute('value', lapseFloor);
-        document.getElementById('tick-min').setAttribute('value', minPremium);
-        document.getElementById('tick-mid').setAttribute('value', midPremium);
-        document.getElementById('tick-max').setAttribute('value', maxPremium);
+        if (targetTermData && targetTermData.sustainable70Scenario && targetTermData.sustainable70Scenario.premiumAmount > 0) {
+            // New floor is now targeted at the absolute bottom
+            const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
+            const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
+            
+            const pSlider = document.getElementById('premium-slider');
+            pSlider.min = floorPremium;
+            pSlider.max = maxPremium;
+            pSlider.value = floorPremium; 
+        }
+        executeSimulationEngine();
     }
-    executeSimulationEngine();
-}
 
-
-    // CORE FLUID INTERPOLATION MATRIX
     function executeSimulationEngine() {
         let ageValue = parseInt(document.getElementById('age-selector').value);
         let termKey = document.getElementById('term-selector').value;
@@ -632,20 +626,25 @@
         const matchedAgeBlock = officialQuotationsDb.find(item => item.entryAge === ageValue);
         const targetTermData = matchedAgeBlock.premiumTerms[termKey];
 
-        // Guard structure for unpopulated arrays
-        if (!targetTermData || !targetTermData.leastPremiumScenario || targetTermData.leastPremiumScenario.premiumAmount === 0) {
+        if (!targetTermData || !targetTermData.sustainable70Scenario || targetTermData.sustainable70Scenario.premiumAmount === 0) {
             renderEmptyState();
             return;
         }
 
-        const pMin = targetTermData.leastPremiumScenario.premiumAmount;
-        const pMid = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
-        const pMax = targetTermData.maxPremiumScenario.premiumAmount;
+        // Setup the three-bracket scale configurations
+        const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
+        const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
+        const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+        const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
 
         let baseScenario, topScenario, proportion;
 
-        // Determine if target falls between Lower or Upper data halves
-        if (simulatedPremium <= pMid) {
+        // Mathematical evaluation across the 3 distinct tracking corridors
+        if (simulatedPremium <= pMin) {
+            baseScenario = targetTermData.sustainable70Scenario;
+            topScenario = targetTermData.leastPremiumScenario;
+            proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
+        } else if (simulatedPremium <= pMid) {
             baseScenario = targetTermData.leastPremiumScenario;
             topScenario = targetTermData.midPremiumScenario || targetTermData.leastPremiumScenario;
             proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
@@ -655,13 +654,11 @@
             proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
         }
 
-        // Generate synthetic milestones structure
         let simulatedMilestones = [];
         for (let i = 0; i < 5; i++) {
             let v1 = baseScenario.milestones[i].accountValue;
             let v2 = topScenario.milestones[i].accountValue;
             
-            // Linear spatial interpolation formula
             let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
             
             simulatedMilestones.push({
@@ -671,8 +668,7 @@
             });
         }
 
-        // TELEMETRY PANEL GLOW CONTROLLER
-        const isExactAnchor = (simulatedPremium === pMin || simulatedPremium === pMid || simulatedPremium === pMax);
+        const isExactAnchor = (simulatedPremium === pFloor || simulatedPremium === pMin || simulatedPremium === pMid || simulatedPremium === pMax);
         if (isExactAnchor) {
             document.getElementById('badge-pi').classList.add('active-pi');
             document.getElementById('badge-sim').classList.remove('active-sim');
@@ -681,7 +677,7 @@
             document.getElementById('badge-sim').classList.add('active-sim');
         }
 
-        updateUIOutputs(simulatedPremium, simulatedMilestones);
+        updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
     }
 
     function renderEmptyState() {
@@ -690,12 +686,13 @@
         document.getElementById('badge-sim').classList.remove('active-sim');
         for (let i = 1; i <= 4; i++) {
             document.getElementById(`val-${i}`).innerText = "RM --";
+            document.getElementById(`card-${i}`).classList.remove('unsustainable-alert');
         }
         document.getElementById('main-ribbon').setAttribute('d', '');
         document.getElementById('glow-ribbon').setAttribute('d', '');
     }
 
-    function updateUIOutputs(premium, milestones) {
+    function updateUIOutputs(premium, milestones, pMinBoundary) {
         document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/yr`;
 
         const xCoordinates = [50, 175, 300, 425, 550];
@@ -716,7 +713,15 @@
 
             if (i > 0) {
                 document.getElementById(`lbl-${i}`).innerText = `Age ${milestone.ageNext} (Policy Yr ${milestone.policyYear}) Value`;
-                document.getElementById(`val-${i}`).innerText = `RM ${value.toLocaleString()}`;
+                
+                // CRITICAL SAFETY CHECK: If we step below the pMin sustainable line, flag age 80 card
+                if (i === 4 && premium < pMinBoundary) {
+                    document.getElementById(`val-${4}`).innerText = "Not Sustainable";
+                    document.getElementById(`card-${4}`).classList.add('unsustainable-alert');
+                } else {
+                    document.getElementById(`val-${i}`).innerText = `RM ${value.toLocaleString()}`;
+                    document.getElementById(`card-${i}`).classList.remove('unsustainable-alert');
+                }
             }
 
             const cx = xCoordinates[i];
@@ -731,15 +736,15 @@
         document.getElementById('main-ribbon').setAttribute('d', smoothSplinePath);
         document.getElementById('glow-ribbon').setAttribute('d', smoothSplinePath);
 
-        // Advanced structural decay checking (downward trajectory alert system)
-        const isDownslope = (valuesList[4] < valuesList[3]) || (valuesList[3] < valuesList[2]);
+        // Vector Alert Highlighting Engine
+        const isDownslope = (valuesList[4] < valuesList[3]) || (valuesList[3] < valuesList[2]) || (premium < pMinBoundary);
 
         if (isDownslope) {
             document.getElementById('gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
             document.getElementById('glow-gradient-end').setAttribute('stop-color', 'var(--warning-glow)');
-            for(let i = 3; i < 5; i++) {
-                if(valuesList[i] < valuesList[i-1]) {
-                    document.getElementById(`node-${i}`).style.stroke = 'var(--warning-glow)';
+            for(let i = 1; i < 5; i++) {
+                if(valuesList[i] < valuesList[i-1] || (i === 4 && premium < pMinBoundary)) {
+                    document.getElementById(`node-${i}`).style.stroke = 'var(--neon-red)';
                 } else {
                     document.getElementById(`node-${i}`).style.stroke = 'var(--secondary-glow)';
                 }
