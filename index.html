@@ -382,7 +382,8 @@
                     <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
                     <span class="slider-value" id="premium-display">RM --/yr</span>
                 </div>
-                <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" oninput="executeSimulationEngine()" disabled>
+                    <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
+                    <datalist id="pi-points"></datalist>
             </div>
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
@@ -640,40 +641,59 @@
     }
 
     function recalibrateSliderBounds() {
-        const ageSlider = document.getElementById('age-selector');
-        const termSlider = document.getElementById('term-selector');
-        const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
+    const ageSlider = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const protectionSlider = document.getElementById('protection-slider');
+    const premiumSlider = document.getElementById('premium-slider');
 
-        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
 
-        let ageValue = parseInt(ageSlider.value);
-        let termKey = termSlider.value;
-        let protectionValue = parseInt(protectionSlider.value);
+    let ageValue = parseInt(ageSlider.value);
+    let termKey = termSlider.value;
+    let protectionValue = parseInt(protectionSlider.value);
 
-        const matchedAgeBlock = officialQuotationsDb.find(item => 
-            item.entryAge === ageValue && item.fixedProtection === protectionValue
-        );
+    const matchedAgeBlock = officialQuotationsDb.find(item => 
+        item.entryAge === ageValue && item.fixedProtection === protectionValue
+    );
+    
+    if (!matchedAgeBlock) { renderEmptyState(); return; }
+    
+    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+
+    if (targetTermData && targetTermData.sustainable70Scenario) {
+        const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
+        const pMin = targetTermData.leastPremiumScenario.premiumAmount;
+        const pMid = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+        const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
         
-        if (!matchedAgeBlock) { renderEmptyState(); return; }
+        // 1. Update Slider Scale Boundaries
+        premiumSlider.min = floorPremium;
+        premiumSlider.max = maxPremium;
         
-        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
-
-        if (targetTermData && targetTermData.sustainable70Scenario) {
-            const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
-            const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
-            
-            premiumSlider.min = floorPremium;
-            premiumSlider.max = maxPremium;
-            
-            // Retain the current position if it matches safety thresholds, else baseline it
-            let currentSliderVal = parseInt(premiumSlider.value);
-            if (currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
-                premiumSlider.value = floorPremium; 
-            }
+        // 2. Retain current position if safe, else baseline to floor
+        let currentSliderVal = parseInt(premiumSlider.value);
+        if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
+            premiumSlider.value = floorPremium; 
         }
-        executeSimulationEngine();
+
+        // 3. Dynamic Datalist Rebuild for "Based on PI" Snap Points
+        const datalist = document.getElementById('pi-points');
+        if (datalist) {
+            datalist.innerHTML = ''; // Wipe old markers out of memory
+            
+            // Map the 4 distinct premium tiers
+            const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
+            
+            // Generate option fragments and append to DOM
+            premiumMilestones.forEach(premium => {
+                const option = document.createElement('option');
+                option.value = premium;
+                datalist.appendChild(option);
+            });
+        }
     }
+    executeSimulationEngine();
+}
           
     function executeSimulationEngine() {
         const ageSlider = document.getElementById('age-selector');
