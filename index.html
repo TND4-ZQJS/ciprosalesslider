@@ -884,28 +884,36 @@ function updateUIOutputs(premium, milestones, pMinBoundary) {
         if (termData.midPremiumScenario) pMid = termData.midPremiumScenario.premiumAmount || pMid;
     }
 
-    // 3. DUAL-ZONE CEILING MATH (With Over-compression Safeguard)
+// 3. DUAL-ZONE CEILING MATH (With Exponential Easing for Visual Impact)
     let yCeiling;
     const isFocusGrowth = (premium > pMid);
 
     if (isFocusGrowth && pMax > pMid) {
-        const zoneProgress = Math.min(Math.max((premium - pMid) / (pMax - pMid), 0), 1); 
+        // Standard progress calculation (0.0 at Point 4 to 1.0 at Point 5)
+        const linearProgress = Math.min(Math.max((premium - pMid) / (pMax - pMid), 0), 1); 
         
-        // Lowering buffer gradually from 1.25 down to 1.05 
-        // (1.05 ensures yCeiling NEVER drops below localMax, so points stay on-screen)
-        const dynamicBuffer = 1.25 - (zoneProgress * 0.20); 
+        // EXPONENTIAL EASING: Cubic easing (power of 3) creates an explosive finish.
+        // It keeps the graph relatively stable early on, then aggressively slams the 
+        // ceiling down at the very end of the slider track.
+        const exponentialProgress = Math.pow(linearProgress, 3);
+        
+        // The buffer aggressively drops from 1.25 down to 1.02.
+        // Because the denominator (yCeiling) shrinks exponentially while the account value
+        // is rising, the final milestone point will visually rocket toward the ceiling.
+        const dynamicBuffer = 1.25 - (exponentialProgress * 0.23); 
         
         yCeiling = localMax * dynamicBuffer;
     } else {
-        yCeiling = localMax * 1.25; // Generous overhead headroom for zone 1
+        // ZONE 1: Standard layout headroom when premium is lower
+        yCeiling = localMax * 1.25; 
     }
 
-    // 4. SAFE VIEWPORT GRID COORDINATES (No negative numbers)
-    // This keeps the curve comfortably visible inside a standard 600px width layout
+// 4. HIGH-DRAMA VIEWPORT GRID COORDINATES
     let xCoordinates = [40, 150, 260, 370, 480, 570]; 
     if (isFocusGrowth) {
-        // Shift slightly to give emphasis to later years, but keep all nodes on-canvas (> 0)
-        xCoordinates = [15, 100, 210, 330, 460, 580];
+        // Squeeze early years (0, 1, 5) tightly to the left to give the 
+        // last 3 milestones (Years 20, 25, 35) massive horizontal breathing room to scale up
+        xCoordinates = [20, 80, 150, 260, 400, 580];
     }
 
     // 5. SVG GRID Y-COORDINATE PLOTTER
