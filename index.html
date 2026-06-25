@@ -696,73 +696,93 @@
 }
           
     function executeSimulationEngine() {
-        const ageSlider = document.getElementById('age-selector');
-        const termSlider = document.getElementById('term-selector');
-        const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
+    const ageSlider = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const protectionSlider = document.getElementById('protection-slider');
+    const premiumSlider = document.getElementById('premium-slider');
 
-        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
 
-        let ageValue = parseInt(ageSlider.value);
-        let termKey = termSlider.value;
-        let simulatedPremium = parseInt(premiumSlider.value);
-        let protectionValue = parseInt(protectionSlider.value);
+    let ageValue = parseInt(ageSlider.value);
+    let termKey = termSlider.value;
+    let simulatedPremium = parseInt(premiumSlider.value);
+    let protectionValue = parseInt(protectionSlider.value);
 
-        const matchedAgeBlock = officialQuotationsDb.find(item => 
-            item.entryAge === ageValue && item.fixedProtection === protectionValue
-        );
-        
-        if (!matchedAgeBlock) { renderEmptyState(); return; }
-        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+    const matchedAgeBlock = officialQuotationsDb.find(item => 
+        item.entryAge === ageValue && item.fixedProtection === protectionValue
+    );
+    
+    if (!matchedAgeBlock) { renderEmptyState(); return; }
+    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
 
-        if (!targetTermData || !targetTermData.sustainable70Scenario) {
-            renderEmptyState();
-            return;
-        }
-
-        const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
-        const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
-        const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
-        const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
-
-        let baseScenario, topScenario, proportion;
-
-        if (simulatedPremium <= pMin) {
-            baseScenario = targetTermData.sustainable70Scenario;
-            topScenario = targetTermData.leastPremiumScenario;
-            proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
-        } else if (simulatedPremium <= pMid) {
-            baseScenario = targetTermData.leastPremiumScenario;
-            topScenario = targetTermData.midPremiumScenario;
-            proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
-        } else {
-            baseScenario = targetTermData.midPremiumScenario;
-            topScenario = targetTermData.maxPremiumScenario;
-            proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
-        }
-
-        let simulatedMilestones = [];
-        for (let i = 0; i < 6; i++) {
-            let v1 = baseScenario.milestones[i].accountValue;
-            let v2 = topScenario.milestones[i].accountValue;
-            let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
-            
-            simulatedMilestones.push({
-                policyYear: baseScenario.milestones[i].policyYear,
-                ageNext: baseScenario.milestones[i].ageNext,
-                accountValue: interpolatedValue
-            });
-        }
-
-        const isExactAnchor = (simulatedPremium === pFloor || simulatedPremium === pMin || simulatedPremium === pMid || simulatedPremium === pMax);
-        const badgePi = document.getElementById('badge-pi');
-        const badgeSim = document.getElementById('badge-sim');
-        
-        if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
-        if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
-
-        updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
+    if (!targetTermData || !targetTermData.sustainable70Scenario) {
+        renderEmptyState();
+        return;
     }
+
+    const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
+    const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
+    const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+    const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
+
+    // =========================================================================
+    // iPad TOUCH-SCREEN PROXIMITY SNAP ENGINE
+    // =========================================================================
+    const premiumMilestones = [pFloor, pMin, pMid, pMax];
+    const sliderRange = pMax - pFloor;
+    const snapThreshold = sliderRange * 0.015; // 1.5% magnetic range threshold
+    
+    let isExactAnchor = false;
+
+    for (let milestone of premiumMilestones) {
+        if (Math.abs(simulatedPremium - milestone) <= snapThreshold) {
+            // Magnetically snap the physical input slider view & math variable
+            premiumSlider.value = milestone;
+            simulatedPremium = milestone;
+            isExactAnchor = true;
+            break; // Lock target and exit snap validation loop
+        }
+    }
+    // =========================================================================
+
+    let baseScenario, topScenario, proportion;
+
+    if (simulatedPremium <= pMin) {
+        baseScenario = targetTermData.sustainable70Scenario;
+        topScenario = targetTermData.leastPremiumScenario;
+        proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
+    } else if (simulatedPremium <= pMid) {
+        baseScenario = targetTermData.leastPremiumScenario;
+        topScenario = targetTermData.midPremiumScenario;
+        proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
+    } else {
+        baseScenario = targetTermData.midPremiumScenario;
+        topScenario = targetTermData.maxPremiumScenario;
+        proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
+    }
+
+    let simulatedMilestones = [];
+    for (let i = 0; i < 6; i++) {
+        let v1 = baseScenario.milestones[i].accountValue;
+        let v2 = topScenario.milestones[i].accountValue;
+        let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
+        
+        simulatedMilestones.push({
+            policyYear: baseScenario.milestones[i].policyYear,
+            ageNext: baseScenario.milestones[i].ageNext,
+            accountValue: interpolatedValue
+        });
+    }
+
+    // Toggle layouts cleanly based on snap capture engine status
+    const badgePi = document.getElementById('badge-pi');
+    const badgeSim = document.getElementById('badge-sim');
+    
+    if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
+    if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
+
+    updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
+}
 
     function renderEmptyState() {
         const premiumDisplay = document.getElementById('premium-display');
