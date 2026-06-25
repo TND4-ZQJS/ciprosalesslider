@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Manulife Heritage - Advanced Simulation Terminal</title>
-   <style>
+    <style>
         :root {
             --bg-color: #060913;
             --card-bg: #0d1222;
@@ -36,6 +36,8 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         header {
@@ -151,7 +153,6 @@
             width: 100%;
             height: 100%;
             overflow: visible;
-            /* CRITICAL: Hardware acceleration for clean camera zooming */
             will-change: viewBox;
             transition: viewBox 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -243,6 +244,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
+            transition: opacity 0.3s ease;
         }
 
         .slider-header {
@@ -284,6 +286,7 @@
 
         .range-slider {
             -webkit-appearance: none;
+            appearance: none;
             width: 100%;
             height: 5px;
             border-radius: 3px;
@@ -319,7 +322,7 @@
             stroke-width: 14px; 
             stroke-linecap: round;
             fill: none;
-            opacity: 0.6; 
+            opacity: 0.4; 
             filter: url(#neonGlowBlur); 
             transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -344,7 +347,7 @@
             font-size: 10px; 
             text-anchor: middle; 
             font-weight: 500;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: all 0.4s ease;
         }
 
         footer {
@@ -360,29 +363,23 @@
             letter-spacing: 0.02em;
         }
 
-        /* =========================================================================
-           DYNAMIC GROWTH FOCUS TRANSITION (APPLE-STYLE VIEWPORT ZOOM)
-           ========================================================================= */
-        
-        /* 1. Gracefully hide or fade components belonging to early flat timeline periods */
+        /* iPad Interactive Transforms */
         .graph-wrapper.focus-growth .early-milestone {
-            opacity: 0.05;
-            pointer-events: none;
-            transform: scale(0.95);
+            opacity: 0.15;
+            filter: grayscale(80%);
         }
 
-        /* 2. Style adjustment for remaining high-value nodes during focus mode */
         .graph-wrapper.focus-growth .growth-milestone {
             stroke: var(--neon-green);
             filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.4));
         }
 
-        /* 3. Smooth transition tracking for dynamic shadow paths underneath curves */
         .shadow-area-path {
             fill: url(#areaGradient);
+            opacity: 0.15;
             transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
         }
-</style>
+    </style>
 </head>
 <body>
 
@@ -414,8 +411,8 @@
                     <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
                     <span class="slider-value" id="premium-display">RM --/yr</span>
                 </div>
-                    <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
-                    <datalist id="pi-points"></datalist>
+                <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
+                <datalist id="pi-points"></datalist>
             </div>
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
@@ -445,10 +442,10 @@
         <div class="display-viewport">
             <div class="graph-wrapper">
                 <div class="chart-container">
-                    <svg viewBox="0 0 600 220">
+                    <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="8" result="blurOut" />
+                                <feGaussianBlur stdDeviation="6" result="blurOut" />
                                 <feMerge>
                                     <feMergeNode in="blurOut" />
                                     <feMergeNode in="SourceGraphic" />
@@ -462,27 +459,32 @@
                                 <stop offset="0%" stop-color="#aa55ff" />
                                 <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
                             </linearGradient>
+                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
+                            </linearGradient>
                         </defs>
                         
-                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.01)" stroke-width="1"/>
+                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
                         
+                        <path id="shadow-area" class="shadow-area-path" d="" />
                         <path id="glow-ribbon" class="ribbon-glow" d="" />
                         <path id="main-ribbon" class="ribbon-main" d="" />
                         
-                        <circle id="node-0" class="milestone-node" r="5" />
-                        <circle id="node-1" class="milestone-node" r="5" />
-                        <circle id="node-2" class="milestone-node" r="5" />
-                        <circle id="node-3" class="milestone-node" r="5" />
-                        <circle id="node-4" class="milestone-node" r="5" />
-                        <circle id="node-5" class="milestone-node" r="5" />
+                        <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
+                        <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
+                        <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
+                        <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
+                        <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
+                        <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
 
-                        <text x="40" y="205" class="axis-label" id="axis-0">Yr 1</text>
-                        <text x="144" y="205" class="axis-label" id="axis-1">Yr 5</text>
-                        <text x="248" y="205" class="axis-label" id="axis-2">Yr 10</text>
-                        <text x="352" y="205" class="axis-label" id="axis-3">Yr 20</text>
-                        <text x="456" y="205" class="axis-label" id="axis-4">Yr 25</text>
-                        <text x="560" y="205" class="axis-label" id="axis-5">Yr 35</text>
+                        <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
+                        <text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
+                        <text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
+                        <text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
+                        <text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
+                        <text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
                     </svg>
                 </div>
             </div>
@@ -518,6 +520,7 @@
     <footer>
         [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
     </footer>
+
 <script>
     // Official Quotations Database Engine
     const officialQuotationsDb = [
@@ -673,163 +676,150 @@
     }
 
     function recalibrateSliderBounds() {
-    const ageSlider = document.getElementById('age-selector');
-    const termSlider = document.getElementById('term-selector');
-    const protectionSlider = document.getElementById('protection-slider');
-    const premiumSlider = document.getElementById('premium-slider');
+        const ageSlider = document.getElementById('age-selector');
+        const termSlider = document.getElementById('term-selector');
+        const protectionSlider = document.getElementById('protection-slider');
+        const premiumSlider = document.getElementById('premium-slider');
 
-    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
 
-    let ageValue = parseInt(ageSlider.value);
-    let termKey = termSlider.value;
-    let protectionValue = parseInt(protectionSlider.value);
+        let ageValue = parseInt(ageSlider.value);
+        let termKey = termSlider.value;
+        let protectionValue = parseInt(protectionSlider.value);
 
-    const matchedAgeBlock = officialQuotationsDb.find(item => 
-        item.entryAge === ageValue && item.fixedProtection === protectionValue
-    );
-    
-    if (!matchedAgeBlock) { renderEmptyState(); return; }
-    
-    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
-
-    if (targetTermData && targetTermData.sustainable70Scenario) {
-        const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
-        const pMin = targetTermData.leastPremiumScenario.premiumAmount;
-        const pMid = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
-        const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
+        const matchedAgeBlock = officialQuotationsDb.find(item => 
+            item.entryAge === ageValue && item.fixedProtection === protectionValue
+        );
         
-        // 1. Update Slider Scale Boundaries
-        premiumSlider.min = floorPremium;
-        premiumSlider.max = maxPremium;
+        if (!matchedAgeBlock) { renderEmptyState(); return; }
         
-        // 2. Retain current position if safe, else baseline to floor
-        let currentSliderVal = parseInt(premiumSlider.value);
-        if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
-            premiumSlider.value = floorPremium; 
+        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+
+        if (targetTermData && targetTermData.sustainable70Scenario) {
+            const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
+            const pMin = targetTermData.leastPremiumScenario.premiumAmount;
+            const pMid = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+            const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
+            
+            premiumSlider.min = floorPremium;
+            premiumSlider.max = maxPremium;
+            
+            let currentSliderVal = parseInt(premiumSlider.value);
+            if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
+                premiumSlider.value = floorPremium; 
+            }
+
+            const datalist = document.getElementById('pi-points');
+            if (datalist) {
+                datalist.innerHTML = ''; 
+                const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
+                premiumMilestones.forEach(premium => {
+                    const option = document.createElement('option');
+                    option.value = premium;
+                    datalist.appendChild(option);
+                });
+            }
+        }
+        executeSimulationEngine();
+    }
+              
+    function executeSimulationEngine() {
+        const ageSlider = document.getElementById('age-selector');
+        const termSlider = document.getElementById('term-selector');
+        const protectionSlider = document.getElementById('protection-slider');
+        const premiumSlider = document.getElementById('premium-slider');
+
+        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+
+        let ageValue = parseInt(ageSlider.value);
+        let termKey = termSlider.value;
+        let simulatedPremium = parseInt(premiumSlider.value);
+        let protectionValue = parseInt(protectionSlider.value);
+
+        const matchedAgeBlock = officialQuotationsDb.find(item => 
+            item.entryAge === ageValue && item.fixedProtection === protectionValue
+        );
+        
+        if (!matchedAgeBlock) { renderEmptyState(); return; }
+        const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+
+        if (!targetTermData || !targetTermData.sustainable70Scenario) {
+            renderEmptyState();
+            return;
         }
 
-        // 3. Dynamic Datalist Rebuild for "Based on PI" Snap Points
-        const datalist = document.getElementById('pi-points');
-        if (datalist) {
-            datalist.innerHTML = ''; // Wipe old markers out of memory
+        const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
+        const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
+        const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+        const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
+
+        // iPad Touch Snapping Engine
+        const premiumMilestones = [pFloor, pMin, pMid, pMax];
+        const sliderRange = pMax - pFloor;
+        const snapThreshold = sliderRange * 0.025; // Optimized snap window
+        
+        let isExactAnchor = false;
+
+        for (let milestone of premiumMilestones) {
+            if (Math.abs(simulatedPremium - milestone) <= snapThreshold) {
+                premiumSlider.value = milestone;
+                simulatedPremium = milestone;
+                isExactAnchor = true;
+                break;
+            }
+        }
+
+        const svgElement = document.querySelector('.chart-container svg');
+        const graphWrapper = document.querySelector('.graph-wrapper');
+
+        if (svgElement && graphWrapper) {
+            if (simulatedPremium > pMid) {
+                graphWrapper.classList.add('focus-growth');
+                // Corrected iPad ViewBox Aspect Zoom Coordinates
+                svgElement.setAttribute('viewBox', '200 20 400 200'); 
+            } else {
+                graphWrapper.classList.remove('focus-growth');
+                svgElement.setAttribute('viewBox', '0 0 600 220'); 
+            }
+        }    
+
+        let baseScenario, topScenario, proportion;
+
+        if (simulatedPremium <= pMin) {
+            baseScenario = targetTermData.sustainable70Scenario;
+            topScenario = targetTermData.leastPremiumScenario;
+            proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
+        } else if (simulatedPremium <= pMid) {
+            baseScenario = targetTermData.leastPremiumScenario;
+            topScenario = targetTermData.midPremiumScenario;
+            proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
+        } else {
+            baseScenario = targetTermData.midPremiumScenario;
+            topScenario = targetTermData.maxPremiumScenario;
+            proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
+        }
+
+        let simulatedMilestones = [];
+        for (let i = 0; i < 6; i++) {
+            let v1 = baseScenario.milestones[i].accountValue;
+            let v2 = topScenario.milestones[i].accountValue;
+            let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
             
-            // Map the 4 distinct premium tiers
-            const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
-            
-            // Generate option fragments and append to DOM
-            premiumMilestones.forEach(premium => {
-                const option = document.createElement('option');
-                option.value = premium;
-                datalist.appendChild(option);
+            simulatedMilestones.push({
+                policyYear: baseScenario.milestones[i].policyYear,
+                ageNext: baseScenario.milestones[i].ageNext,
+                accountValue: interpolatedValue
             });
         }
-    }
-    executeSimulationEngine();
-}
-          
-    function executeSimulationEngine() {
-    const ageSlider = document.getElementById('age-selector');
-    const termSlider = document.getElementById('term-selector');
-    const protectionSlider = document.getElementById('protection-slider');
-    const premiumSlider = document.getElementById('premium-slider');
 
-    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
-
-    let ageValue = parseInt(ageSlider.value);
-    let termKey = termSlider.value;
-    let simulatedPremium = parseInt(premiumSlider.value);
-    let protectionValue = parseInt(protectionSlider.value);
-
-    const matchedAgeBlock = officialQuotationsDb.find(item => 
-        item.entryAge === ageValue && item.fixedProtection === protectionValue
-    );
-    
-    if (!matchedAgeBlock) { renderEmptyState(); return; }
-    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
-
-    if (!targetTermData || !targetTermData.sustainable70Scenario) {
-        renderEmptyState();
-        return;
-    }
-
-    const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
-    const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
-    const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
-    const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
-
-    // =========================================================================
-    // iPad TOUCH-SCREEN PROXIMITY SNAP ENGINE
-    // =========================================================================
-    const premiumMilestones = [pFloor, pMin, pMid, pMax];
-    const sliderRange = pMax - pFloor;
-    const snapThreshold = sliderRange * 0.015; // 1.5% magnetic range threshold
-    
-    let isExactAnchor = false;
-
-    for (let milestone of premiumMilestones) {
-        if (Math.abs(simulatedPremium - milestone) <= snapThreshold) {
-            // Magnetically snap the physical input slider view & math variable
-            premiumSlider.value = milestone;
-            simulatedPremium = milestone;
-            isExactAnchor = true;
-            break; // Lock target and exit snap validation loop
-        }
-    }
-    const svgElement = document.querySelector('.chart-container svg');
-    const graphWrapper = document.querySelector('.graph-wrapper');
-
-    if (svgElement && graphWrapper) {
-        // Trigger focus zoom mode when sliding between Mid and Max premium
-        if (simulatedPremium > pMid) {
-            graphWrapper.classList.add('focus-growth');
-            // Shift ViewBox coordinates: Pan right, crop early years
-            svgElement.setAttribute('viewBox', '350 50 650 450'); 
-        } else {
-            graphWrapper.classList.remove('focus-growth');
-            // Revert back to standard complete timeline frame view
-            svgElement.setAttribute('viewBox', '0 0 1000 500'); 
-        }
-    }    
-    // =========================================================================
-
-    let baseScenario, topScenario, proportion;
-
-    if (simulatedPremium <= pMin) {
-        baseScenario = targetTermData.sustainable70Scenario;
-        topScenario = targetTermData.leastPremiumScenario;
-        proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
-    } else if (simulatedPremium <= pMid) {
-        baseScenario = targetTermData.leastPremiumScenario;
-        topScenario = targetTermData.midPremiumScenario;
-        proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
-    } else {
-        baseScenario = targetTermData.midPremiumScenario;
-        topScenario = targetTermData.maxPremiumScenario;
-        proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
-    }
-
-    let simulatedMilestones = [];
-    for (let i = 0; i < 6; i++) {
-        let v1 = baseScenario.milestones[i].accountValue;
-        let v2 = topScenario.milestones[i].accountValue;
-        let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
+        const badgePi = document.getElementById('badge-pi');
+        const badgeSim = document.getElementById('badge-sim');
         
-        simulatedMilestones.push({
-            policyYear: baseScenario.milestones[i].policyYear,
-            ageNext: baseScenario.milestones[i].ageNext,
-            accountValue: interpolatedValue
-        });
+        if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
+        if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
+
+        updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
     }
-
-    // Toggle layouts cleanly based on snap capture engine status
-    const badgePi = document.getElementById('badge-pi');
-    const badgeSim = document.getElementById('badge-sim');
-    
-    if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
-    if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
-
-    updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
-}
 
     function renderEmptyState() {
         const premiumDisplay = document.getElementById('premium-display');
@@ -849,8 +839,10 @@
         
         const mainRibbon = document.getElementById('main-ribbon');
         const glowRibbon = document.getElementById('glow-ribbon');
+        const shadowArea = document.getElementById('shadow-area');
         if (mainRibbon) mainRibbon.setAttribute('d', '');
         if (glowRibbon) glowRibbon.setAttribute('d', '');
+        if (shadowArea) shadowArea.setAttribute('d', '');
     }
 
     function updateUIOutputs(premium, milestones, pMinBoundary) {
@@ -914,9 +906,16 @@
         const smoothSplinePath = getSmoothBezierPath(activeCoords);
         const mainRibbon = document.getElementById('main-ribbon');
         const glowRibbon = document.getElementById('glow-ribbon');
+        const shadowArea = document.getElementById('shadow-area');
         
         if (mainRibbon) mainRibbon.setAttribute('d', smoothSplinePath);
         if (glowRibbon) glowRibbon.setAttribute('d', smoothSplinePath);
+        
+        // Dynamically closing vector path area mapping calculations
+        if (shadowArea && activeCoords.length > 0) {
+            const closedPath = `${smoothSplinePath} L ${activeCoords[activeCoords.length - 1].x} 180 L ${activeCoords[0].x} 180 Z`;
+            shadowArea.setAttribute('d', closedPath);
+        }
 
         const isDownslope = (premium < pMinBoundary);
         const gradEnd = document.getElementById('gradient-end');
@@ -937,7 +936,6 @@
         }
     }
 
-    // Single clear entry execution trigger on frame initialization
     document.addEventListener("DOMContentLoaded", () => {
         setMode('premium');
     });
