@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manulife Heritage - Smooth Plotter</title>
-    <style>
+    <title>Manulife Heritage - Advanced Simulation Terminal</title>
+   <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #151c2c;
+            --bg-color: #060913;
+            --card-bg: #0d1222;
+            --border-color: rgba(255, 255, 255, 0.06);
             --text-main: #ffffff;
-            --text-muted: #8a99ad;
-            --primary-glow: #00f2fe;
-            --secondary-glow: #4facfe;
+            --text-muted: #62728b;
+            
+            /* Premium High-Grade Visual Palette */
+            --primary-glow: #8A2BE2;    
+            --secondary-glow: #00d2ff;  
             --warning-glow: #ff9f43;
+            --neon-green: #00ff88;
+            --neon-amber: #ffaa00;
+            --neon-red: #ff4d4d;
         }
 
         * {
@@ -25,63 +31,194 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            padding: 2rem;
+            overflow: hidden;
         }
 
         header {
-            margin-bottom: 2rem;
-            text-align: center;
+            height: 65px;
+            min-height: 65px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            background-color: var(--card-bg);
         }
 
         header h1 {
-            font-size: 1.8rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.01em;
             background: linear-gradient(to right, var(--primary-glow), var(--secondary-glow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        header p {
+        .telemetry-rack {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .dashboard-container {
+        .status-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            transition: all 0.4s;
+        }
+
+        .status-badge.active-pi {
+            color: var(--neon-green);
+            background: rgba(0, 255, 136, 0.04);
+            border-color: rgba(0, 255, 136, 0.25);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.1);
+        }
+
+        .status-badge.active-sim {
+            color: var(--neon-amber);
+            background: rgba(255, 170, 0, 0.04);
+            border-color: rgba(255, 170, 0, 0.25);
+            box-shadow: 0 0 12px rgba(255, 170, 0, 0.1);
+            animation: statusPulse 2s infinite alternate;
+        }
+
+        @keyframes statusPulse {
+            0% { box-shadow: 0 0 4px rgba(255, 170, 0, 0.05); }
+            100% { box-shadow: 0 0 14px rgba(255, 170, 0, 0.2); }
+        }
+
+        .terminal-container {
+            flex: 1;
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        @media (min-width: 768px) {
-            .dashboard-container {
-                grid-template-columns: 400px 1fr;
-            }
+            grid-template-columns: 380px 1fr;
+            overflow: hidden;
         }
 
         .control-panel {
             background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow-y: auto;
         }
+
+        .display-viewport {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .graph-wrapper {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(13, 18, 34, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            height: 240px;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            /* CRITICAL: Hardware acceleration for clean camera zooming */
+            will-change: viewBox;
+            transition: viewBox 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .indicators-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background-color: var(--bg-color);
+        }
+
+        .panel-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+
+        .milestone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .milestone-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.15rem;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        
+        .milestone-card:hover { 
+            border-color: rgba(138, 43, 226, 0.3);
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        .milestone-card.unsustainable-alert {
+            border-color: rgba(255, 77, 77, 0.4) !important;
+            background: linear-gradient(135deg, rgba(255, 77, 77, 0.03), rgba(13, 18, 34, 0.9));
+            box-shadow: inset 0 0 15px rgba(255, 77, 77, 0.05);
+        }
+
+        .milestone-card.unsustainable-alert .milestone-value {
+            color: var(--neon-red) !important;
+            font-size: 1.15rem;
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
+        }
+
+        .milestone-age {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .milestone-value { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; transition: color 0.3s ease, font-size 0.3s ease; }
 
         .mode-selector {
             display: flex;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.5);
             padding: 4px;
             border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
 
         .mode-btn {
@@ -89,25 +226,23 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 10px;
-            border-radius: 6px;
+            padding: 9px;
+            border-radius: 5px;
             cursor: pointer;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s;
         }
 
         .mode-btn.active {
-            background: linear-gradient(135deg, var(--secondary-glow), var(--primary-glow));
-            color: var(--bg-color);
-            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            color: #000000;
         }
 
         .slider-group {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            position: relative;
+            gap: 0.6rem;
         }
 
         .slider-header {
@@ -118,344 +253,694 @@
 
         .slider-label {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .slider-value {
-            font-size: 1.4rem;
-            font-weight: 700;
+        .slider-value { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+        .select-styled {
+            width: 100%;
+            padding: 11px 14px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%236f7e94' d='M0 0l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .select-styled option {
+            background-color: var(--card-bg);
             color: var(--text-main);
         }
 
         .range-slider {
             -webkit-appearance: none;
             width: 100%;
-            height: 6px;
+            height: 5px;
             border-radius: 3px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
             outline: none;
         }
 
         .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: var(--primary-glow);
+            background: var(--secondary-glow);
             cursor: pointer;
-            box-shadow: 0 0 10px var(--primary-glow);
+            box-shadow: 0 0 10px var(--secondary-glow);
+            transition: transform 0.1s;
         }
 
-        .slider-group.locked { opacity: 0.4; }
-        .slider-group.locked .range-slider::-webkit-slider-thumb { background: var(--text-muted); box-shadow: none; cursor: not-allowed; }
-
-        .visual-display {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            min-height: 400px;
+        .range-slider::-webkit-slider-thumb:active {
+            transform: scale(1.25);
         }
 
-        .chart-container {
-            width: 100%;
-            height: 260px;
-            position: relative;
+        .slider-group.locked { opacity: 0.35; }
+        .slider-group.locked .range-slider::-webkit-slider-thumb {
+            background: var(--text-muted);
+            box-shadow: none;
+            cursor: not-allowed;
         }
-
-        svg { width: 100%; height: 100%; overflow: visible; }
 
         .ribbon-glow {
-            stroke: var(--primary-glow);
-            stroke-width: 12px;
+            stroke: url(#glowGradient);
+            stroke-width: 14px; 
             stroke-linecap: round;
             fill: none;
-            opacity: 0.15;
-            filter: blur(8px);
-            transition: d 0.3s ease-out, stroke 0.3s;
+            opacity: 0.6; 
+            filter: url(#neonGlowBlur); 
+            transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .ribbon-main {
             stroke: url(#ribbonGradient);
-            stroke-width: 5px;
+            stroke-width: 3.5px;
             stroke-linecap: round;
             fill: none;
-            transition: d 0.3s ease-out;
+            transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .milestone-node {
             fill: var(--card-bg);
-            stroke: var(--primary-glow);
-            stroke-width: 3px;
-            transition: cx 0.3s ease-out, cy 0.3s ease-out, stroke 0.3s;
+            stroke: var(--secondary-glow);
+            stroke-width: 2.5px;
+            transition: cx 0.2s cubic-bezier(0.16, 1, 0.3, 1), cy 0.2s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s, opacity 0.3s;
         }
 
-        .axis-label { fill: var(--text-muted); font-size: 11px; text-anchor: middle; }
-
-        .milestone-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 1.5rem;
-            margin-top: 1rem;
+        .axis-label { 
+            fill: var(--text-muted); 
+            font-size: 10px; 
+            text-anchor: middle; 
+            font-weight: 500;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
-
-        .milestone-card { text-align: center; }
-        .milestone-age { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-        .milestone-value { font-size: 1.1rem; font-weight: 600; }
 
         footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.3);
-            line-height: 1.4;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            height: 30px;
+            min-height: 30px;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
         }
-    </style>
+
+        /* =========================================================================
+           DYNAMIC GROWTH FOCUS TRANSITION (APPLE-STYLE VIEWPORT ZOOM)
+           ========================================================================= */
+        
+        /* 1. Gracefully hide or fade components belonging to early flat timeline periods */
+        .graph-wrapper.focus-growth .early-milestone {
+            opacity: 0.05;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        /* 2. Style adjustment for remaining high-value nodes during focus mode */
+        .graph-wrapper.focus-growth .growth-milestone {
+            stroke: var(--neon-green);
+            filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.4));
+        }
+
+        /* 3. Smooth transition tracking for dynamic shadow paths underneath curves */
+        .shadow-area-path {
+            fill: url(#areaGradient);
+            transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+        }
+</style>
 </head>
 <body>
 
     <header>
-        <h1>Manulife Heritage Dashboard</h1>
-        <p>Interactive Visual Concept Map • Horizon Target: Age 80 Next Birthday</p>
+        <h1>Manulife Heritage // Client Mapping Terminal</h1>
+        <div class="telemetry-rack">
+            <div id="badge-pi" class="status-badge"><div class="dot"></div>Based on PI</div>
+            <div id="badge-sim" class="status-badge"><div class="dot"></div>Simulation Mode</div>
+        </div>
     </header>
 
-    <div class="dashboard-container">
-        <!-- Controls -->
+    <div class="terminal-container">
         <div class="control-panel">
             <div class="mode-selector">
                 <button class="mode-btn active" onclick="setMode('premium')">Lock Premium</button>
                 <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
             </div>
 
-            <!-- Protection Slider -->
             <div class="slider-group" id="protection-group">
                 <div class="slider-header">
-                    <span class="slider-label">Protection Face Amount</span>
-                    <span class="slider-value" id="protection-display">RM 1.2M</span>
+                    <span class="slider-label"><span id="lock-icon-protection"></span> Protection Face Amount</span>
+                    <span class="slider-value" id="protection-display">RM 1.0M</span>
                 </div>
-                <input type="range" id="protection-slider" class="range-slider" min="500000" max="2000000" step="100000" value="1200000" oninput="handleSliderInput()">
+                <input type="range" id="protection-slider" class="range-slider" min="1000000" max="1500000" step="500000" value="1000000" oninput="recalibrateSliderBounds()">
             </div>
 
-            <!-- Premium Slider -->
             <div class="slider-group" id="premium-group">
                 <div class="slider-header">
-                    <span class="slider-label">🔒 Premium Amount</span>
-                    <span class="slider-value" id="premium-display">RM 1,200/mo</span>
+                    <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
+                    <span class="slider-value" id="premium-display">RM --/yr</span>
                 </div>
-                <input type="range" id="premium-slider" class="range-slider" min="500" max="2500" step="100" value="1200" oninput="handleSliderInput()" disabled>
+                    <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
+                    <datalist id="pi-points"></datalist>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Structural Variables</p>
+                
+                <div class="slider-group">
+                    <span class="slider-label">Client Entry Age</span>
+                    <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                        <option value="25">25 Years</option>
+                        <option value="35">35 Years</option>
+                        <option value="45" selected>45 Years</option>
+                        <option value="55">55 Years</option>
+                    </select>
+                </div>
+
+                <div class="slider-group">
+                    <span class="slider-label">Premium Payment Term</span>
+                    <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                        <option value="pay6" selected>6 Years Premium Pay</option>
+                        <option value="pay10">10 Years Premium Pay</option>
+                        <option value="pay20">20 Years Premium Pay</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <!-- Output Visualization -->
-        <div class="visual-display">
-            <div class="chart-container">
-                <svg viewBox="0 0 600 220">
-                    <defs>
-                        <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#4facfe" />
-                            <stop offset="100%" id="gradient-end" stop-color="#00f2fe" />
-                        </linearGradient>
-                    </defs>
-                    <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-                    
-                    <path id="glow-ribbon" class="ribbon-glow" d="" />
-                    <path id="main-ribbon" class="ribbon-main" d="" />
-                    
-                    <circle id="node-y10" class="milestone-node" r="6" />
-                    <circle id="node-y20" class="milestone-node" r="6" />
-                    <circle id="node-a65" class="milestone-node" r="6" />
-                    <circle id="node-a80" class="milestone-node" r="6" />
+        <div class="display-viewport">
+            <div class="graph-wrapper">
+                <div class="chart-container">
+                    <svg viewBox="0 0 600 220">
+                        <defs>
+                            <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="8" result="blurOut" />
+                                <feMerge>
+                                    <feMergeNode in="blurOut" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#8A2BE2" /> 
+                                <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
+                            </linearGradient>
+                            <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#aa55ff" />
+                                <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.01)" stroke-width="1"/>
+                        
+                        <path id="glow-ribbon" class="ribbon-glow" d="" />
+                        <path id="main-ribbon" class="ribbon-main" d="" />
+                        
+                        <circle id="node-0" class="milestone-node" r="5" />
+                        <circle id="node-1" class="milestone-node" r="5" />
+                        <circle id="node-2" class="milestone-node" r="5" />
+                        <circle id="node-3" class="milestone-node" r="5" />
+                        <circle id="node-4" class="milestone-node" r="5" />
+                        <circle id="node-5" class="milestone-node" r="5" />
 
-                    <text x="50" y="205" class="axis-label">Age 35</text>
-                    <text x="200" y="205" class="axis-label">Age 45 (Yr 10)</text>
-                    <text x="350" y="205" class="axis-label">Age 55 (Yr 20)</text>
-                    <text x="450" y="205" class="axis-label">Age 65</text>
-                    <text x="550" y="205" class="axis-label">Age 80 (Maturity)</text>
-                </svg>
+                        <text x="40" y="205" class="axis-label" id="axis-0">Yr 1</text>
+                        <text x="144" y="205" class="axis-label" id="axis-1">Yr 5</text>
+                        <text x="248" y="205" class="axis-label" id="axis-2">Yr 10</text>
+                        <text x="352" y="205" class="axis-label" id="axis-3">Yr 20</text>
+                        <text x="456" y="205" class="axis-label" id="axis-4">Yr 25</text>
+                        <text x="560" y="205" class="axis-label" id="axis-5">Yr 35</text>
+                    </svg>
+                </div>
             </div>
 
-            <!-- Milestone Cards -->
-            <div class="milestone-grid">
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 45 (Yr 10)</div>
-                    <div class="milestone-value" id="val-y10">~RM --</div>
-                </div>
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 55 (Yr 20)</div>
-                    <div class="milestone-value" id="val-y20">~RM --</div>
-                </div>
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 65 (Retire)</div>
-                    <div class="milestone-value" id="val-a65">~RM --</div>
-                </div>
-                <div class="milestone-card">
-                    <div class="milestone-age">Age 80 (Maturity)</div>
-                    <div class="milestone-value" id="val-a80">~RM --</div>
+            <div class="indicators-panel">
+                <div class="panel-title">Asset Projections & Performance Metrics</div>
+                <div class="milestone-grid">
+                    <div class="milestone-card" id="card-1">
+                        <div class="milestone-age" id="lbl-1">Policy Year 5</div>
+                        <div class="milestone-value" id="val-1">RM --</div>
+                    </div>
+                    <div class="milestone-card" id="card-2">
+                        <div class="milestone-age" id="lbl-2">Policy Year 10</div>
+                        <div class="milestone-value" id="val-2">RM --</div>
+                    </div>
+                    <div class="milestone-card" id="card-3">
+                        <div class="milestone-age" id="lbl-3">Policy Year 20</div>
+                        <div class="milestone-value" id="val-3">RM --</div>
+                    </div>
+                    <div class="milestone-card" id="card-4">
+                        <div class="milestone-age" id="lbl-4">Policy Year 25</div>
+                        <div class="milestone-value" id="val-4">RM --</div>
+                    </div>
+                    <div class="milestone-card" id="card-5">
+                        <div class="milestone-age" id="lbl-5">Policy Year 35</div>
+                        <div class="milestone-value" id="val-5">RM --</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <footer>
-        📊 <strong>Interactive Concept Map:</strong> Calculated utilizing linear interpolation based on custom Manulife Heritage baseline scenarios (5% illustrated investment return layout). Values map as indicators (~RM) to convey high-level portfolio trends. Refer to official documentation for binding policies.
+        [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
     </footer>
-
-    <script>
-        // --- CHOOSE YOUR DATA ANCHORS HERE ---
-        // You can change these exact numbers below to match your real quotations perfectly.
-        const quoteData = {
-            // Under Low Protection (RM 500,000)
-            500000: {
-                premium: 500, // Matching baseline premium entry
-                y10: 55000,   // Change this to the real Year 10 Ledger Value
-                y20: 135000,  // Change this to the real Year 20 Ledger Value
-                a65: 210000,  // Change this to the real Age 65 Ledger Value
-                a80: 180000   // Change this to the real Age 80 Ledger Value
-            },
-            // Under Mid Protection (RM 1,200,000)
-            1200000: {
-                premium: 1200,
-                y10: 128000,
-                y20: 310000,
-                a65: 480000,
-                a80: 390000
-            },
-            // Under High Protection (RM 2,000,000)
-            2000000: {
-                premium: 2000,
-                y10: 210000,
-                y20: 495000,
-                a65: 760000,
-                a80: 510000
+<script>
+    // Official Quotations Database Engine
+    const officialQuotationsDb = [
+        {
+            "entryAge": 45, "gender": "Male", "fixedProtection": 1000000,
+            "premiumTerms": {
+                "pay6": {
+                    "maxPremiumScenario": {
+                        "premiumAmount": 68654, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 35910 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 307238 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 415625 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 524325 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 560000 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 614673 }
+                        ]
+                    },
+                    "midPremiumScenario": {
+                        "premiumAmount": 60300, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 31116 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 266548 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 356149 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 431367 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 410000 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 343467 }
+                        ]
+                    },
+                    "leastPremiumScenario": {
+                        "premiumAmount": 52000, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 26302 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 225679 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 296411 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 337998 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 280000 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 71064 }
+                        ]
+                    },
+                    "sustainable70Scenario": {
+                        "premiumAmount": 35000, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 16440 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 141970 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 174055 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 146760 }, 
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 10640 }, 
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 0 }      
+                        ]
+                    }
+                }
             }
-        };
+        },
+        {
+            "entryAge": 45, "gender": "Male", "fixedProtection": 1500000,
+            "premiumTerms": {
+                "pay6": {
+                    "maxPremiumScenario": {
+                        "premiumAmount": 102845, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 53889 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 461021 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 623803 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 787440 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 793512 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 925647 }
+                        ]
+                    },
+                    "midPremiumScenario": {
+                        "premiumAmount": 81572, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 41549 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 356271 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 470690 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 548131 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 465585 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 227466 }
+                        ]
+                    },
+                    "leastPremiumScenario": {
+                        "premiumAmount": 77000, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 38896 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 333758 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 437784 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 496700 },
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 395108 },
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 77414 }
+                        ]
+                    },
+                    "sustainable70Scenario": {
+                        "premiumAmount": 52000, 
+                        "milestones": [
+                            { "policyYear": 1, "ageNext": 46, "accountValue": 24394 },
+                            { "policyYear": 5, "ageNext": 50, "accountValue": 210658 },
+                            { "policyYear": 10, "ageNext": 55, "accountValue": 257849 },
+                            { "policyYear": 20, "ageNext": 65, "accountValue": 215468 }, 
+                            { "policyYear": 25, "ageNext": 70, "accountValue": 9735 }, 
+                            { "policyYear": 35, "ageNext": 80, "accountValue": 0 }      
+                        ]
+                    }
+                }
+            }
+        }
+    ];
 
-        let currentMode = 'premium';
+    let currentMode = 'premium'; 
 
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('protection-slider').disabled = (mode === 'protection');
-            document.getElementById('premium-slider').disabled = (mode === 'premium');
+    function getSmoothBezierPath(coords) {
+        if (coords.length === 0) return "";
+        let pathString = `M ${coords[0].x} ${coords[0].y}`;
+        for (let i = 0; i < coords.length - 1; i++) {
+            const current = coords[i];
+            const next = coords[i + 1];
+            const controlOffset = (next.x - current.x) * 0.35;
+            pathString += ` C ${current.x + controlOffset} ${current.y}, ${next.x - controlOffset} ${next.y}, ${next.x} ${next.y}`;
+        }
+        return pathString;
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        
+        const pSlider = document.getElementById('premium-slider');
+        const protSlider = document.getElementById('protection-slider');
+        
+        if (protSlider) protSlider.disabled = (mode === 'protection');
+        if (pSlider) pSlider.disabled = (mode === 'premium');
+        
+        const activeBtn = document.querySelector(`[onclick="setMode('${mode}')"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+        
+        const premiumGroup = document.getElementById('premium-group');
+        const protectionGroup = document.getElementById('protection-group');
+        const lockPremium = document.getElementById('lock-icon-premium');
+        const lockProtection = document.getElementById('lock-icon-protection');
+
+        if (mode === 'premium') {
+            if (premiumGroup) premiumGroup.classList.add('locked');
+            if (protectionGroup) protectionGroup.classList.remove('locked');
+            if (lockPremium) lockPremium.innerText = '🔒';
+            if (lockProtection) lockProtection.innerText = '';
+        } else {
+            if (protectionGroup) protectionGroup.classList.add('locked');
+            if (premiumGroup) premiumGroup.classList.remove('locked');
+            if (lockProtection) lockProtection.innerText = '🔒';
+            if (lockPremium) lockPremium.innerText = '';
+        }
+        
+        recalibrateSliderBounds(); 
+    }
+
+    function recalibrateSliderBounds() {
+    const ageSlider = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const protectionSlider = document.getElementById('protection-slider');
+    const premiumSlider = document.getElementById('premium-slider');
+
+    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+
+    let ageValue = parseInt(ageSlider.value);
+    let termKey = termSlider.value;
+    let protectionValue = parseInt(protectionSlider.value);
+
+    const matchedAgeBlock = officialQuotationsDb.find(item => 
+        item.entryAge === ageValue && item.fixedProtection === protectionValue
+    );
+    
+    if (!matchedAgeBlock) { renderEmptyState(); return; }
+    
+    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+
+    if (targetTermData && targetTermData.sustainable70Scenario) {
+        const floorPremium = targetTermData.sustainable70Scenario.premiumAmount;
+        const pMin = targetTermData.leastPremiumScenario.premiumAmount;
+        const pMid = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+        const maxPremium = targetTermData.maxPremiumScenario.premiumAmount;
+        
+        // 1. Update Slider Scale Boundaries
+        premiumSlider.min = floorPremium;
+        premiumSlider.max = maxPremium;
+        
+        // 2. Retain current position if safe, else baseline to floor
+        let currentSliderVal = parseInt(premiumSlider.value);
+        if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
+            premiumSlider.value = floorPremium; 
+        }
+
+        // 3. Dynamic Datalist Rebuild for "Based on PI" Snap Points
+        const datalist = document.getElementById('pi-points');
+        if (datalist) {
+            datalist.innerHTML = ''; // Wipe old markers out of memory
             
-            if(mode === 'premium') {
-                document.querySelector('[onclick="setMode(\'premium\')"]').classList.add('active');
-                document.getElementById('premium-group').classList.add('locked');
-                document.getElementById('protection-group').classList.remove('locked');
-            } else {
-                document.querySelector('[onclick="setMode(\'protection\')"]').classList.add('active');
-                document.getElementById('protection-group').classList.add('locked');
-                document.getElementById('premium-group').classList.remove('locked');
-            }
-            handleSliderInput();
-        }
-
-        function handleSliderInput() {
-            let protection = parseInt(document.getElementById('protection-slider').value);
-            let premium = parseInt(document.getElementById('premium-slider').value);
-
-            if (currentMode === 'premium') {
-                // Lock Premium mode: Protection moves, premium follows a direct lookup map ratio
-                // Simple proportional slider mapping
-                let pct = (protection - 500000) / (2000000 - 500000);
-                premium = 500 + Math.round(pct * 15) * 100; 
-                document.getElementById('premium-slider').value = premium;
-            } else {
-                // Lock Protection mode: Premium moves, protection follows a direct lookup map ratio
-                let pct = (premium - 500) / (2500 - 500);
-                protection = 500000 + Math.round(pct * 15) * 100000;
-                document.getElementById('protection-slider').value = protection;
-            }
-
-            updateUIOutputs(protection, premium);
-        }
-
-        // Standard linear mathematical interpolation to estimate points in between your quotes
-        function interpolate(x, x1, x2, y1, y2) {
-            if (x1 === x2) return y1;
-            return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1);
-        }
-
-        function getInterpolatedMilestones(protection) {
-            const keys = Object.keys(quoteData).map(Number).sort((a, b) => a - b);
+            // Map the 4 distinct premium tiers
+            const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
             
-            // Boundary checks
-            if (protection <= keys[0]) return quoteData[keys[0]];
-            if (protection >= keys[keys.length - 1]) return quoteData[keys[keys.length - 1]];
+            // Generate option fragments and append to DOM
+            premiumMilestones.forEach(premium => {
+                const option = document.createElement('option');
+                option.value = premium;
+                datalist.appendChild(option);
+            });
+        }
+    }
+    executeSimulationEngine();
+}
+          
+    function executeSimulationEngine() {
+    const ageSlider = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const protectionSlider = document.getElementById('protection-slider');
+    const premiumSlider = document.getElementById('premium-slider');
+
+    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+
+    let ageValue = parseInt(ageSlider.value);
+    let termKey = termSlider.value;
+    let simulatedPremium = parseInt(premiumSlider.value);
+    let protectionValue = parseInt(protectionSlider.value);
+
+    const matchedAgeBlock = officialQuotationsDb.find(item => 
+        item.entryAge === ageValue && item.fixedProtection === protectionValue
+    );
+    
+    if (!matchedAgeBlock) { renderEmptyState(); return; }
+    const targetTermData = matchedAgeBlock.premiumTerms[termKey];
+
+    if (!targetTermData || !targetTermData.sustainable70Scenario) {
+        renderEmptyState();
+        return;
+    }
+
+    const pFloor = targetTermData.sustainable70Scenario.premiumAmount;
+    const pMin   = targetTermData.leastPremiumScenario.premiumAmount;
+    const pMid   = targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMin;
+    const pMax   = targetTermData.maxPremiumScenario.premiumAmount;
+
+    // =========================================================================
+    // iPad TOUCH-SCREEN PROXIMITY SNAP ENGINE
+    // =========================================================================
+    const premiumMilestones = [pFloor, pMin, pMid, pMax];
+    const sliderRange = pMax - pFloor;
+    const snapThreshold = sliderRange * 0.015; // 1.5% magnetic range threshold
+    
+    let isExactAnchor = false;
+
+    for (let milestone of premiumMilestones) {
+        if (Math.abs(simulatedPremium - milestone) <= snapThreshold) {
+            // Magnetically snap the physical input slider view & math variable
+            premiumSlider.value = milestone;
+            simulatedPremium = milestone;
+            isExactAnchor = true;
+            break; // Lock target and exit snap validation loop
+        }
+    }
+    const svgElement = document.querySelector('.chart-container svg');
+    const graphWrapper = document.querySelector('.graph-wrapper');
+
+    if (svgElement && graphWrapper) {
+        // Trigger focus zoom mode when sliding between Mid and Max premium
+        if (simulatedPremium > pMid) {
+            graphWrapper.classList.add('focus-growth');
+            // Shift ViewBox coordinates: Pan right, crop early years
+            svgElement.setAttribute('viewBox', '350 50 650 450'); 
+        } else {
+            graphWrapper.classList.remove('focus-growth');
+            // Revert back to standard complete timeline frame view
+            svgElement.setAttribute('viewBox', '0 0 1000 500'); 
+        }
+    }    
+    // =========================================================================
+
+    let baseScenario, topScenario, proportion;
+
+    if (simulatedPremium <= pMin) {
+        baseScenario = targetTermData.sustainable70Scenario;
+        topScenario = targetTermData.leastPremiumScenario;
+        proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
+    } else if (simulatedPremium <= pMid) {
+        baseScenario = targetTermData.leastPremiumScenario;
+        topScenario = targetTermData.midPremiumScenario;
+        proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
+    } else {
+        baseScenario = targetTermData.midPremiumScenario;
+        topScenario = targetTermData.maxPremiumScenario;
+        proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
+    }
+
+    let simulatedMilestones = [];
+    for (let i = 0; i < 6; i++) {
+        let v1 = baseScenario.milestones[i].accountValue;
+        let v2 = topScenario.milestones[i].accountValue;
+        let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
+        
+        simulatedMilestones.push({
+            policyYear: baseScenario.milestones[i].policyYear,
+            ageNext: baseScenario.milestones[i].ageNext,
+            accountValue: interpolatedValue
+        });
+    }
+
+    // Toggle layouts cleanly based on snap capture engine status
+    const badgePi = document.getElementById('badge-pi');
+    const badgeSim = document.getElementById('badge-sim');
+    
+    if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
+    if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
+
+    updateUIOutputs(simulatedPremium, simulatedMilestones, pMin);
+}
+
+    function renderEmptyState() {
+        const premiumDisplay = document.getElementById('premium-display');
+        if (premiumDisplay) premiumDisplay.innerText = "Data Stream Empty";
+        
+        const badgePi = document.getElementById('badge-pi');
+        const badgeSim = document.getElementById('badge-sim');
+        if (badgePi) badgePi.classList.remove('active-pi');
+        if (badgeSim) badgeSim.classList.remove('active-sim');
+
+        for (let i = 1; i <= 5; i++) {
+            const valEl = document.getElementById(`val-${i}`);
+            const cardEl = document.getElementById(`card-${i}`);
+            if (valEl) valEl.innerText = "RM --";
+            if (cardEl) cardEl.classList.remove('unsustainable-alert');
+        }
+        
+        const mainRibbon = document.getElementById('main-ribbon');
+        const glowRibbon = document.getElementById('glow-ribbon');
+        if (mainRibbon) mainRibbon.setAttribute('d', '');
+        if (glowRibbon) glowRibbon.setAttribute('d', '');
+    }
+
+    function updateUIOutputs(premium, milestones, pMinBoundary) {
+        const protectionSlider = document.getElementById('protection-slider');
+        if (!protectionSlider) return;
+
+        const currentProtection = parseInt(protectionSlider.value);
+        const formattedProtection = `RM ${(currentProtection / 1000000).toFixed(1)}M`;
+        
+        const protectionDisplay = document.getElementById('protection-display');
+        const premiumDisplay = document.getElementById('premium-display');
+        if (protectionDisplay) protectionDisplay.innerText = formattedProtection;
+        if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
+
+        const xCoordinates = [40, 144, 248, 352, 456, 560]; 
+        const activeCoords = [];
+        const valuesList = milestones.map(m => m.accountValue);
+        const maxValInSet = Math.max(...valuesList, 100000);
+        const yCeiling = maxValInSet * 1.15;
+
+        function toSvgY(val) {
+            return 180 - ((val / yCeiling) * 150);
+        }
+
+        for (let i = 0; i < 6; i++) {
+            const milestone = milestones[i];
+            const value = milestone.accountValue;
             
-            // Find bounding anchor indices
-            let lower = keys[0], upper = keys[1];
-            if (protection > keys[1]) {
-                lower = keys[1];
-                upper = keys[2];
+            const axisEl = document.getElementById(`axis-${i}`);
+            if (axisEl) axisEl.innerText = `Age ${milestone.ageNext} (Yr ${milestone.policyYear})`;
+
+            if (i > 0) {
+                const lblEl = document.getElementById(`lbl-${i}`);
+                const valEl = document.getElementById(`val-${i}`);
+                const cardEl = document.getElementById(`card-${i}`);
+
+                if (lblEl) lblEl.innerText = `Age ${milestone.ageNext} (Policy Yr ${milestone.policyYear}) Value`;
+                
+                if (valEl && cardEl) {
+                    if (i === 5 && premium < pMinBoundary) {
+                        valEl.innerText = "Not Sustainable";
+                        cardEl.classList.add('unsustainable-alert');
+                    } else {
+                        valEl.innerText = `RM ${value.toLocaleString()}`;
+                        cardEl.classList.remove('unsustainable-alert');
+                    }
+                }
             }
 
-            let d1 = quoteData[lower];
-            let d2 = quoteData[upper];
+            const cx = xCoordinates[i];
+            const cy = toSvgY(value);
+            const nodeEl = document.getElementById(`node-${i}`);
 
-            return {
-                y10: interpolate(protection, lower, upper, d1.y10, d2.y10),
-                y20: interpolate(protection, lower, upper, d1.y20, d2.y20),
-                a65: interpolate(protection, lower, upper, d1.a65, d2.a65),
-                a80: interpolate(protection, lower, upper, d1.a80, d2.a80)
-            };
+            if (nodeEl) {
+                nodeEl.setAttribute('cx', cx);
+                nodeEl.setAttribute('cy', cy);
+            }
+            activeCoords.push({ x: cx, y: cy });
         }
 
-        function updateUIOutputs(protection, premium) {
-            document.getElementById('protection-display').innerText = `RM ${(protection/1000000).toFixed(1)}M`;
-            document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/mo`;
+        const smoothSplinePath = getSmoothBezierPath(activeCoords);
+        const mainRibbon = document.getElementById('main-ribbon');
+        const glowRibbon = document.getElementById('glow-ribbon');
+        
+        if (mainRibbon) mainRibbon.setAttribute('d', smoothSplinePath);
+        if (glowRibbon) glowRibbon.setAttribute('d', smoothSplinePath);
 
-            // Pull clean plotted milestone indicators
-            let values = getInterpolatedMilestones(protection);
+        const isDownslope = (premium < pMinBoundary);
+        const gradEnd = document.getElementById('gradient-end');
+        const glowGradEnd = document.getElementById('glow-gradient-end');
 
-            // Format numbers to clean rounded presentation outputs
-            document.getElementById('val-y10').innerText = `~RM ${(Math.round(values.y10/1000)*1000).toLocaleString()}`;
-            document.getElementById('val-y20').innerText = `~RM ${(Math.round(values.y20/1000)*1000).toLocaleString()}`;
-            document.getElementById('val-a65').innerText = `~RM ${(Math.round(values.a65/1000)*1000).toLocaleString()}`;
-            document.getElementById('val-a80').innerText = `~RM ${(Math.round(values.a80/1000)*1000).toLocaleString()}`;
-
-            // Scale calculations inside viewport bounding matrix
-            let maxValPossible = 900000; 
-            function toSvgY(val) { return 180 - ((val / maxValPossible) * 150); }
-
-            let pStart = { x: 50,  y: 180 };
-            let pY10   = { x: 200, y: toSvgY(values.y10) };
-            let pY20   = { x: 350, y: toSvgY(values.y20) };
-            let pA65   = { x: 450, y: toSvgY(values.a65) };
-            let pA80   = { x: 550, y: toSvgY(values.a80) };
-
-            // Pure curve plotting syntax
-            let pathD = `M ${pStart.x} ${pStart.y} 
-                         Q 125 ${toSvgY(values.y10*0.75)}, ${pY10.x} ${pY10.y} 
-                         T ${pY20.x} ${pY20.y} 
-                         Q 400 ${toSvgY(Math.max(values.y20, values.a65)*1.03)}, ${pA65.x} ${pA65.y} 
-                         S 500 ${toSvgY(values.a80 * 1.08)}, ${pA80.x} ${pA80.y}`;
-
-            document.getElementById('main-ribbon').setAttribute('d', pathD);
-            document.getElementById('glow-ribbon').setAttribute('d', pathD);
-
-            document.getElementById('node-y10').setAttribute('cx', pY10.x);
-            document.getElementById('node-y10').setAttribute('cy', pY10.y);
-            document.getElementById('node-y20').setAttribute('cx', pY20.x);
-            document.getElementById('node-y20').setAttribute('cy', pY20.y);
-            document.getElementById('node-a65').setAttribute('cx', pA65.x);
-            document.getElementById('node-a65').setAttribute('cy', pA65.y);
-            document.getElementById('node-a80').setAttribute('cx', pA80.x);
-            document.getElementById('node-a80').setAttribute('cy', pA80.y);
+        if (isDownslope) {
+            if (gradEnd) gradEnd.setAttribute('stop-color', 'var(--warning-glow)');
+            if (glowGradEnd) glowGradEnd.setAttribute('stop-color', 'var(--warning-glow)');
+            const node5 = document.getElementById(`node-5`);
+            if (node5) node5.style.stroke = 'var(--neon-red)';
+        } else {
+            if (gradEnd) gradEnd.setAttribute('stop-color', '#00d2ff');
+            if (glowGradEnd) glowGradEnd.setAttribute('stop-color', '#00d2ff');
+            for (let i = 0; i < 6; i++) { 
+                const nodeEl = document.getElementById(`node-${i}`);
+                if (nodeEl) nodeEl.style.stroke = ''; 
+            }
         }
+    }
 
+    // Single clear entry execution trigger on frame initialization
+    document.addEventListener("DOMContentLoaded", () => {
         setMode('premium');
-    </script>
+    });
+</script>
 </body>
 </html>
