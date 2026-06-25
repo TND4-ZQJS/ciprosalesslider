@@ -855,59 +855,64 @@ function updateUIOutputs(premium, milestones, pMinBoundary) {
     document.getElementById('protection-display').innerText = formattedProtection;
     document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/yr`;
 
-    // 1. EXTRACT VALUES FROM LIVE MILESTONES PASSED TO THE FUNCTION
-    const valuesList = milestones.map(m => m.accountValue || 0);
-    const localMax = Math.max(...valuesList, 1000);
+    // 1. SAFELY CLEAN & PARSE MILESTONE DATA (Handles both Numbers and Strings)
+    const valuesList = milestones.map(m => {
+        if (typeof m.accountValue === 'number') return m.accountValue;
+        if (typeof m.accountValue === 'string') {
+            const cleaned = m.accountValue.replace(/[^0-9.]/g, '');
+            return parseFloat(cleaned) || 0;
+        }
+        return 0;
+    });
+    
+    // Establish a true, uncompromised peak value from the current view
+    const localMax = Math.max(...valuesList, 100000);
 
-    // 2. FIND SCENARIO BOUNDARIES FOR THE SLIDER ZONE TRICK
+    // 2. STABLE SYSTEM BOUNDARIES
+    let pMid = pMinBoundary || 1500;
+    let pMax = premium > pMid ? premium * 1.3 : 300000;
+
     const ageSlider = document.getElementById('age-selector');
     const termSlider = document.getElementById('term-selector');
-    
-    let pMid = pMinBoundary || 1500;
-    let pMax = premium > pMid ? premium * 1.2 : 300000; // Dynamic fallback ceiling
-
-    // Try to find the database match for exact thresholds, but don't rely on it for coordinates
     const matchedAgeBlock = officialQuotationsDb.find(item => 
         item.entryAge === parseInt(ageSlider.value) && item.fixedProtection === currentProtection
     );
     
     if (matchedAgeBlock && matchedAgeBlock.premiumTerms[termSlider.value]) {
         const termData = matchedAgeBlock.premiumTerms[termSlider.value];
-        if (termData.maxPremiumScenario) {
-            pMax = termData.maxPremiumScenario.premiumAmount || pMax;
-        }
-        if (termData.midPremiumScenario) {
-            pMid = termData.midPremiumScenario.premiumAmount || pMid;
-        }
+        if (termData.maxPremiumScenario) pMax = termData.maxPremiumScenario.premiumAmount || pMax;
+        if (termData.midPremiumScenario) pMid = termData.midPremiumScenario.premiumAmount || pMid;
     }
 
-    // 3. DUAL-ZONE MATH USING LIVE LOCAL MAX
+    // 3. DUAL-ZONE CEILING MATH (With Over-compression Safeguard)
     let yCeiling;
     const isFocusGrowth = (premium > pMid);
 
     if (isFocusGrowth && pMax > pMid) {
-        // ZONE 2: Sliding past Point 4 toward Point 5
-        // Calculate slider progress safely between 0 and 1
         const zoneProgress = Math.min(Math.max((premium - pMid) / (pMax - pMid), 0), 1); 
         
-        // As you slide to the end, drop the buffer from 1.15 down to 1.01
-        const dynamicBuffer = 1.15 - (zoneProgress * 0.14); 
+        // Lowering buffer gradually from 1.25 down to 1.05 
+        // (1.05 ensures yCeiling NEVER drops below localMax, so points stay on-screen)
+        const dynamicBuffer = 1.25 - (zoneProgress * 0.20); 
         
         yCeiling = localMax * dynamicBuffer;
     } else {
-        // ZONE 1: Standard tracking below point 4
-        yCeiling = localMax * 1.15;
+        yCeiling = localMax * 1.25; // Generous overhead headroom for zone 1
     }
 
-    // Ultimate structural safety check
-    if (!yCeiling || isNaN(yCeiling) || yCeiling <= 0) {
-        yCeiling = localMax * 1.15;
+    // 4. SAFE VIEWPORT GRID COORDINATES (No negative numbers)
+    // This keeps the curve comfortably visible inside a standard 600px width layout
+    let xCoordinates = [40, 150, 260, 370, 480, 570]; 
+    if (isFocusGrowth) {
+        // Shift slightly to give emphasis to later years, but keep all nodes on-canvas (> 0)
+        xCoordinates = [15, 100, 210, 330, 460, 580];
     }
 
-    // 4. SVG PLOTTING MATH
+    // 5. SVG GRID Y-COORDINATE PLOTTER
     function toSvgY(val) {
         const cleanVal = isNaN(val) ? 0 : val;
-        return 180 - ((cleanVal / yCeiling) * 150);
+        // Baseline grid floor at 180, charting max canvas upward height boundary at 140
+        return 180 - ((cleanVal / yCeiling) * 140);
     }
 
     
