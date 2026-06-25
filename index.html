@@ -477,12 +477,13 @@
                         <circle id="node-4" class="milestone-node" r="5" />
                         <circle id="node-5" class="milestone-node" r="5" />
 
-                        <text x="40" y="205" class="axis-label" id="axis-0">Yr 1</text>
-                        <text x="144" y="205" class="axis-label" id="axis-1">Yr 5</text>
-                        <text x="248" y="205" class="axis-label" id="axis-2">Yr 10</text>
-                        <text x="352" y="205" class="axis-label" id="axis-3">Yr 20</text>
-                        <text x="456" y="205" class="axis-label" id="axis-4">Yr 25</text>
-                        <text x="560" y="205" class="axis-label" id="axis-5">Yr 35</text>
+                        <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
+<text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
+<text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
+
+<text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
+<text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
+<text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
                     </svg>
                 </div>
             </div>
@@ -775,21 +776,28 @@
             break; // Lock target and exit snap validation loop
         }
     }
+   // =========================================================================
+    // ACCURATE 600x220 VIEWBOX FOCUS TRANSITION
+    // =========================================================================
     const svgElement = document.querySelector('.chart-container svg');
     const graphWrapper = document.querySelector('.graph-wrapper');
 
     if (svgElement && graphWrapper) {
-        // Trigger focus zoom mode when sliding between Mid and Max premium
         if (simulatedPremium > pMid) {
             graphWrapper.classList.add('focus-growth');
-            // Shift ViewBox coordinates: Pan right, crop early years
-            svgElement.setAttribute('viewBox', '350 50 650 450'); 
+            
+            // FOCUS STATE: Cut early years out. 
+            // Pan horizontally right to X=240 (Yr 10), shift canvas frame down to Y=20, 
+            // and crop view down to a 360x200 window.
+            svgElement.setAttribute('viewBox', '240 20 360 200'); 
         } else {
             graphWrapper.classList.remove('focus-growth');
-            // Revert back to standard complete timeline frame view
-            svgElement.setAttribute('viewBox', '0 0 1000 500'); 
+            
+            // BASELINE RESET: Lock back onto your exact native HTML dimensions
+            svgElement.setAttribute('viewBox', '0 0 600 220'); 
         }
-    }    
+    }
+    // =========================================================================
     // =========================================================================
 
     let baseScenario, topScenario, proportion;
