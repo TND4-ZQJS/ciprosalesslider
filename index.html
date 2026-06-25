@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manulife Heritage - Advanced Simulation Terminal</title>
-    <style>
+   <style>
         :root {
             --bg-color: #060913;
             --card-bg: #0d1222;
@@ -151,6 +151,9 @@
             width: 100%;
             height: 100%;
             overflow: visible;
+            /* CRITICAL: Hardware acceleration for clean camera zooming */
+            will-change: viewBox;
+            transition: viewBox 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .indicators-panel {
@@ -318,7 +321,7 @@
             fill: none;
             opacity: 0.6; 
             filter: url(#neonGlowBlur); 
-            transition: d 0.1s ease;
+            transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .ribbon-main {
@@ -326,17 +329,23 @@
             stroke-width: 3.5px;
             stroke-linecap: round;
             fill: none;
-            transition: d 0.1s ease;
+            transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .milestone-node {
             fill: var(--card-bg);
             stroke: var(--secondary-glow);
             stroke-width: 2.5px;
-            transition: cx 0.1s ease, cy 0.1s ease, stroke 0.3s;
+            transition: cx 0.2s cubic-bezier(0.16, 1, 0.3, 1), cy 0.2s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s, opacity 0.3s;
         }
 
-        .axis-label { fill: var(--text-muted); font-size: 10px; text-anchor: middle; font-weight: 500; }
+        .axis-label { 
+            fill: var(--text-muted); 
+            font-size: 10px; 
+            text-anchor: middle; 
+            font-weight: 500;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
 
         footer {
             height: 30px;
@@ -350,7 +359,30 @@
             color: var(--text-muted);
             letter-spacing: 0.02em;
         }
-    </style>
+
+        /* =========================================================================
+           DYNAMIC GROWTH FOCUS TRANSITION (APPLE-STYLE VIEWPORT ZOOM)
+           ========================================================================= */
+        
+        /* 1. Gracefully hide or fade components belonging to early flat timeline periods */
+        .graph-wrapper.focus-growth .early-milestone {
+            opacity: 0.05;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        /* 2. Style adjustment for remaining high-value nodes during focus mode */
+        .graph-wrapper.focus-growth .growth-milestone {
+            stroke: var(--neon-green);
+            filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.4));
+        }
+
+        /* 3. Smooth transition tracking for dynamic shadow paths underneath curves */
+        .shadow-area-path {
+            fill: url(#areaGradient);
+            transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+        }
+</style>
 </head>
 <body>
 
@@ -743,6 +775,21 @@
             break; // Lock target and exit snap validation loop
         }
     }
+    const svgElement = document.querySelector('.chart-container svg');
+    const graphWrapper = document.querySelector('.graph-wrapper');
+
+    if (svgElement && graphWrapper) {
+        // Trigger focus zoom mode when sliding between Mid and Max premium
+        if (simulatedPremium > pMid) {
+            graphWrapper.classList.add('focus-growth');
+            // Shift ViewBox coordinates: Pan right, crop early years
+            svgElement.setAttribute('viewBox', '350 50 650 450'); 
+        } else {
+            graphWrapper.classList.remove('focus-growth');
+            // Revert back to standard complete timeline frame view
+            svgElement.setAttribute('viewBox', '0 0 1000 500'); 
+        }
+    }    
     // =========================================================================
 
     let baseScenario, topScenario, proportion;
