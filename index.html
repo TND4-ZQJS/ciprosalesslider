@@ -859,32 +859,48 @@ function updateUIOutputs(premium, milestones, pMinBoundary) {
 
     const valuesList = milestones.map(m => m.accountValue);
     
-    // Check if we are in the focus growth zone (High Premium)
+// 1. FIND THE SCENARIO BOUNDARIES
     const ageSlider = document.getElementById('age-selector');
     const termSlider = document.getElementById('term-selector');
     const matchedAgeBlock = officialQuotationsDb.find(item => 
         item.entryAge === parseInt(ageSlider.value) && item.fixedProtection === currentProtection
     );
-    const targetTermData = matchedAgeBlock ? matchedAgeBlock.premiumTerms[termSlider.value] : null;
-    const pMid = targetTermData && targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMinBoundary;
     
-    const isFocusGrowth = (premium > pMid);
+    let absoluteMaxPossible = 100000;
+    let pMin = pMinBoundary;
+    let pMid = pMinBoundary;
+    let pMax = 200000;
 
-    // DYNAMIC X-COORDINATE MATRIX
-    // If focused, stretch out the last 3 milestones across the viewport width
-    let xCoordinates = [40, 144, 248, 352, 456, 560]; 
-    if (isFocusGrowth) {
-        // Shifting early years off-canvas left, expanding late years across the 600px width
-        xCoordinates = [-150, -20, 110, 240, 410, 560];
+    if (matchedAgeBlock && matchedAgeBlock.premiumTerms[termSlider.value]) {
+        const termData = matchedAgeBlock.premiumTerms[termSlider.value];
+        const maxMilestones = termData.maxPremiumScenario.milestones;
+        
+        absoluteMaxPossible = Math.max(...maxMilestones.map(m => m.accountValue));
+        pMin = termData.leastPremiumScenario.premiumAmount;
+        pMid = termData.midPremiumScenario ? termData.midPremiumScenario.premiumAmount : pMin;
+        pMax = termData.maxPremiumScenario.premiumAmount;
     }
 
-    // DYNAMIC Y-CEILING CALCULATION
-    // Lower the ceiling buffer when focused to force the maximum value to shoot up higher
-    const maxValInSet = Math.max(...valuesList, 100000);
-    const yCeiling = isFocusGrowth ? maxValInSet * 1.02 : maxValInSet * 1.15;
+    // 2. DUAL-ZONE CEILING FORMULA
+    let yCeiling;
+    const isFocusGrowth = (premium > pMid);
 
+    if (isFocusGrowth) {
+        // ZONE 2: Sliding past Point 4 (pMid) toward Point 5 (pMax)
+        // As premium increases, the ceiling dynamically shrinks from 1.15 down to 1.01.
+        // This forces the node to aggressively crash upward against the top of the canvas.
+        const zoneProgress = (premium - pMid) / (pMax - pMid); // Ranges from 0.0 to 1.0
+        const dynamicBuffer = 1.15 - (zoneProgress * 0.14); // Shrinks from 1.15 to 1.01
+        
+        yCeiling = absoluteMaxPossible * dynamicBuffer;
+    } else {
+        // ZONE 1: Standard tracking (Below Point 4)
+        // Keeps the graph frame completely stable for normal comparisons
+        yCeiling = absoluteMaxPossible * 1.15;
+    }
+
+    // 3. SVG PLOTTING MATH
     function toSvgY(val) {
-        // Standard plot baseline at 180, charting area heights limits at 150
         return 180 - ((val / yCeiling) * 150);
     }
 
