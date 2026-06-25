@@ -845,96 +845,121 @@
         if (shadowArea) shadowArea.setAttribute('d', '');
     }
 
-    function updateUIOutputs(premium, milestones, pMinBoundary) {
-        const protectionSlider = document.getElementById('protection-slider');
-        if (!protectionSlider) return;
+function updateUIOutputs(premium, milestones, pMinBoundary) {
+    const protectionSlider = document.getElementById('protection-slider');
+    if (!protectionSlider) return;
 
-        const currentProtection = parseInt(protectionSlider.value);
-        const formattedProtection = `RM ${(currentProtection / 1000000).toFixed(1)}M`;
+    const currentProtection = parseInt(protectionSlider.value);
+    const formattedProtection = `RM ${(currentProtection / 1000000).toFixed(1)}M`;
+    
+    const protectionDisplay = document.getElementById('protection-display');
+    const premiumDisplay = document.getElementById('premium-display');
+    if (protectionDisplay) protectionDisplay.innerText = formattedProtection;
+    if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
+
+    const valuesList = milestones.map(m => m.accountValue);
+    
+    // Check if we are in the focus growth zone (High Premium)
+    const ageSlider = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const matchedAgeBlock = officialQuotationsDb.find(item => 
+        item.entryAge === parseInt(ageSlider.value) && item.fixedProtection === currentProtection
+    );
+    const targetTermData = matchedAgeBlock ? matchedAgeBlock.premiumTerms[termSlider.value] : null;
+    const pMid = targetTermData && targetTermData.midPremiumScenario ? targetTermData.midPremiumScenario.premiumAmount : pMinBoundary;
+    
+    const isFocusGrowth = (premium > pMid);
+
+    // DYNAMIC X-COORDINATE MATRIX
+    // If focused, stretch out the last 3 milestones across the viewport width
+    let xCoordinates = [40, 144, 248, 352, 456, 560]; 
+    if (isFocusGrowth) {
+        // Shifting early years off-canvas left, expanding late years across the 600px width
+        xCoordinates = [-150, -20, 110, 240, 410, 560];
+    }
+
+    // DYNAMIC Y-CEILING CALCULATION
+    // Lower the ceiling buffer when focused to force the maximum value to shoot up higher
+    const maxValInSet = Math.max(...valuesList, 100000);
+    const yCeiling = isFocusGrowth ? maxValInSet * 1.02 : maxValInSet * 1.15;
+
+    function toSvgY(val) {
+        // Standard plot baseline at 180, charting area heights limits at 150
+        return 180 - ((val / yCeiling) * 150);
+    }
+
+    const activeCoords = [];
+
+    for (let i = 0; i < 6; i++) {
+        const milestone = milestones[i];
+        const value = milestone.accountValue;
         
-        const protectionDisplay = document.getElementById('protection-display');
-        const premiumDisplay = document.getElementById('premium-display');
-        if (protectionDisplay) protectionDisplay.innerText = formattedProtection;
-        if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
-
-        const xCoordinates = [40, 144, 248, 352, 456, 560]; 
-        const activeCoords = [];
-        const valuesList = milestones.map(m => m.accountValue);
-        const maxValInSet = Math.max(...valuesList, 100000);
-        const yCeiling = maxValInSet * 1.15;
-
-        function toSvgY(val) {
-            return 180 - ((val / yCeiling) * 150);
+        const axisEl = document.getElementById(`axis-${i}`);
+        if (axisEl) {
+            axisEl.innerText = `Age ${milestone.ageNext} (Yr ${milestone.policyYear})`;
+            axisEl.setAttribute('x', xCoordinates[i]); // Dynamically transition text position
         }
 
-        for (let i = 0; i < 6; i++) {
-            const milestone = milestones[i];
-            const value = milestone.accountValue;
+        if (i > 0) {
+            const lblEl = document.getElementById(`lbl-${i}`);
+            const valEl = document.getElementById(`val-${i}`);
+            const cardEl = document.getElementById(`card-${i}`);
+
+            if (lblEl) lblEl.innerText = `Age ${milestone.ageNext} (Policy Yr ${milestone.policyYear}) Value`;
             
-            const axisEl = document.getElementById(`axis-${i}`);
-            if (axisEl) axisEl.innerText = `Age ${milestone.ageNext} (Yr ${milestone.policyYear})`;
-
-            if (i > 0) {
-                const lblEl = document.getElementById(`lbl-${i}`);
-                const valEl = document.getElementById(`val-${i}`);
-                const cardEl = document.getElementById(`card-${i}`);
-
-                if (lblEl) lblEl.innerText = `Age ${milestone.ageNext} (Policy Yr ${milestone.policyYear}) Value`;
-                
-                if (valEl && cardEl) {
-                    if (i === 5 && premium < pMinBoundary) {
-                        valEl.innerText = "Not Sustainable";
-                        cardEl.classList.add('unsustainable-alert');
-                    } else {
-                        valEl.innerText = `RM ${value.toLocaleString()}`;
-                        cardEl.classList.remove('unsustainable-alert');
-                    }
+            if (valEl && cardEl) {
+                if (i === 5 && premium < pMinBoundary) {
+                    valEl.innerText = "Not Sustainable";
+                    cardEl.classList.add('unsustainable-alert');
+                } else {
+                    valEl.innerText = `RM ${value.toLocaleString()}`;
+                    cardEl.classList.remove('unsustainable-alert');
                 }
             }
+        }
 
-            const cx = xCoordinates[i];
-            const cy = toSvgY(value);
+        const cx = xCoordinates[i];
+        const cy = toSvgY(value);
+        const nodeEl = document.getElementById(`node-${i}`);
+
+        if (nodeEl) {
+            nodeEl.setAttribute('cx', cx);
+            nodeEl.setAttribute('cy', cy);
+        }
+        activeCoords.push({ x: cx, y: cy });
+    }
+
+    const smoothSplinePath = getSmoothBezierPath(activeCoords);
+    const mainRibbon = document.getElementById('main-ribbon');
+    const glowRibbon = document.getElementById('glow-ribbon');
+    const shadowArea = document.getElementById('shadow-area');
+    
+    if (mainRibbon) mainRibbon.setAttribute('d', smoothSplinePath);
+    if (glowRibbon) glowRibbon.setAttribute('d', smoothSplinePath);
+    
+    if (shadowArea && activeCoords.length > 0) {
+        const closedPath = `${smoothSplinePath} L ${activeCoords[activeCoords.length - 1].x} 180 L ${activeCoords[0].x} 180 Z`;
+        shadowArea.setAttribute('d', closedPath);
+    }
+
+    const isDownslope = (premium < pMinBoundary);
+    const gradEnd = document.getElementById('gradient-end');
+    const glowGradEnd = document.getElementById('glow-gradient-end');
+
+    if (isDownslope) {
+        if (gradEnd) gradEnd.setAttribute('stop-color', 'var(--warning-glow)');
+        if (glowGradEnd) glowGradEnd.setAttribute('stop-color', 'var(--warning-glow)');
+        const node5 = document.getElementById(`node-5`);
+        if (node5) node5.style.stroke = 'var(--neon-red)';
+    } else {
+        if (gradEnd) gradEnd.setAttribute('stop-color', '#00d2ff');
+        if (glowGradEnd) glowGradEnd.setAttribute('stop-color', '#00d2ff');
+        for (let i = 0; i < 6; i++) { 
             const nodeEl = document.getElementById(`node-${i}`);
-
-            if (nodeEl) {
-                nodeEl.setAttribute('cx', cx);
-                nodeEl.setAttribute('cy', cy);
-            }
-            activeCoords.push({ x: cx, y: cy });
-        }
-
-        const smoothSplinePath = getSmoothBezierPath(activeCoords);
-        const mainRibbon = document.getElementById('main-ribbon');
-        const glowRibbon = document.getElementById('glow-ribbon');
-        const shadowArea = document.getElementById('shadow-area');
-        
-        if (mainRibbon) mainRibbon.setAttribute('d', smoothSplinePath);
-        if (glowRibbon) glowRibbon.setAttribute('d', smoothSplinePath);
-        
-        // Dynamically closing vector path area mapping calculations
-        if (shadowArea && activeCoords.length > 0) {
-            const closedPath = `${smoothSplinePath} L ${activeCoords[activeCoords.length - 1].x} 180 L ${activeCoords[0].x} 180 Z`;
-            shadowArea.setAttribute('d', closedPath);
-        }
-
-        const isDownslope = (premium < pMinBoundary);
-        const gradEnd = document.getElementById('gradient-end');
-        const glowGradEnd = document.getElementById('glow-gradient-end');
-
-        if (isDownslope) {
-            if (gradEnd) gradEnd.setAttribute('stop-color', 'var(--warning-glow)');
-            if (glowGradEnd) glowGradEnd.setAttribute('stop-color', 'var(--warning-glow)');
-            const node5 = document.getElementById(`node-5`);
-            if (node5) node5.style.stroke = 'var(--neon-red)';
-        } else {
-            if (gradEnd) gradEnd.setAttribute('stop-color', '#00d2ff');
-            if (glowGradEnd) glowGradEnd.setAttribute('stop-color', '#00d2ff');
-            for (let i = 0; i < 6; i++) { 
-                const nodeEl = document.getElementById(`node-${i}`);
-                if (nodeEl) nodeEl.style.stroke = ''; 
-            }
+            if (nodeEl) nodeEl.style.stroke = ''; 
         }
     }
+}
 
     document.addEventListener("DOMContentLoaded", () => {
         setMode('premium');
