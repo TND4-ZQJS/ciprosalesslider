@@ -852,67 +852,64 @@ function updateUIOutputs(premium, milestones, pMinBoundary) {
     const currentProtection = parseInt(protectionSlider.value);
     const formattedProtection = `RM ${(currentProtection / 1000000).toFixed(1)}M`;
     
-    const protectionDisplay = document.getElementById('protection-display');
-    const premiumDisplay = document.getElementById('premium-display');
-    if (protectionDisplay) protectionDisplay.innerText = formattedProtection;
-    if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
+    document.getElementById('protection-display').innerText = formattedProtection;
+    document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/yr`;
 
-    const valuesList = milestones.map(m => m.accountValue);
-    
-// 1. FIND THE SCENARIO BOUNDARIES (With solid fallbacks to prevent NaN)
+    // 1. EXTRACT VALUES FROM LIVE MILESTONES PASSED TO THE FUNCTION
+    const valuesList = milestones.map(m => m.accountValue || 0);
+    const localMax = Math.max(...valuesList, 1000);
+
+    // 2. FIND SCENARIO BOUNDARIES FOR THE SLIDER ZONE TRICK
     const ageSlider = document.getElementById('age-selector');
     const termSlider = document.getElementById('term-selector');
+    
+    let pMid = pMinBoundary || 1500;
+    let pMax = premium > pMid ? premium * 1.2 : 300000; // Dynamic fallback ceiling
+
+    // Try to find the database match for exact thresholds, but don't rely on it for coordinates
     const matchedAgeBlock = officialQuotationsDb.find(item => 
         item.entryAge === parseInt(ageSlider.value) && item.fixedProtection === currentProtection
     );
     
-    let absoluteMaxPossible = 100000;
-    let pMin = pMinBoundary || 1000;
-    let pMid = pMinBoundary || 1500;
-    let pMax = 300000; // Safe ceiling fallback
-
     if (matchedAgeBlock && matchedAgeBlock.premiumTerms[termSlider.value]) {
         const termData = matchedAgeBlock.premiumTerms[termSlider.value];
-        
-        if (termData.maxPremiumScenario && termData.maxPremiumScenario.milestones) {
-            const maxMilestones = termData.maxPremiumScenario.milestones;
-            absoluteMaxPossible = Math.max(...maxMilestones.map(m => m.accountValue || 0), 100000);
-            pMax = termData.maxPremiumScenario.premiumAmount || (pMin * 3);
+        if (termData.maxPremiumScenario) {
+            pMax = termData.maxPremiumScenario.premiumAmount || pMax;
         }
-        
         if (termData.midPremiumScenario) {
-            pMid = termData.midPremiumScenario.premiumAmount || pMin;
-        } else {
-            pMid = pMin * 1.5; // Fallback intermediate step if mid scenario missing
+            pMid = termData.midPremiumScenario.premiumAmount || pMid;
         }
     }
 
-    // 2. DUAL-ZONE CEILING FORMULA (With Zero-Division Protection)
+    // 3. DUAL-ZONE MATH USING LIVE LOCAL MAX
     let yCeiling;
     const isFocusGrowth = (premium > pMid);
 
     if (isFocusGrowth && pMax > pMid) {
-        // ZONE 2: Sliding past Point 4 (pMid) toward Point 5 (pMax)
-        // Clamp progress between 0.0 and 1.0 just in case premium exceeds pMax
+        // ZONE 2: Sliding past Point 4 toward Point 5
+        // Calculate slider progress safely between 0 and 1
         const zoneProgress = Math.min(Math.max((premium - pMid) / (pMax - pMid), 0), 1); 
-        const dynamicBuffer = 1.15 - (zoneProgress * 0.13); // Shrinks from 1.15 to 1.02
         
-        yCeiling = absoluteMaxPossible * dynamicBuffer;
+        // As you slide to the end, drop the buffer from 1.15 down to 1.01
+        const dynamicBuffer = 1.15 - (zoneProgress * 0.14); 
+        
+        yCeiling = localMax * dynamicBuffer;
     } else {
-        // ZONE 1: Standard tracking (Below Point 4)
-        yCeiling = absoluteMaxPossible * 1.15;
+        // ZONE 1: Standard tracking below point 4
+        yCeiling = localMax * 1.15;
     }
 
-    // Double-check to ensure yCeiling is never 0 or NaN
-    if (!yCeiling || isNaN(yCeiling)) {
-        yCeiling = 100000 * 1.15;
+    // Ultimate structural safety check
+    if (!yCeiling || isNaN(yCeiling) || yCeiling <= 0) {
+        yCeiling = localMax * 1.15;
     }
 
-    // 3. SVG PLOTTING MATH
+    // 4. SVG PLOTTING MATH
     function toSvgY(val) {
         const cleanVal = isNaN(val) ? 0 : val;
         return 180 - ((cleanVal / yCeiling) * 150);
     }
+
     
     const activeCoords = [];
 
