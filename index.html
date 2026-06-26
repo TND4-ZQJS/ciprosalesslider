@@ -839,15 +839,25 @@
 
         const activeCoords = [];
 
-        for (let i = 0; i < 6; i++) {
-            const milestone = milestones[i];
-            const value = milestone.accountValue;
-            
-            const axisEl = document.getElementById(`axis-${i}`);
-            if (axisEl) {
-                axisEl.innerText = `Age ${milestone.ageNext} (Yr ${milestone.policyYear})`;
-                axisEl.setAttribute('x', xCoordinates[i]); 
-            }
+     for (let i = 0; i < 6; i++) {
+    const milestone = milestones[i];
+    const value = milestone.accountValue;
+    
+    // Locate the dynamic SVG text component
+    const axisEl = document.getElementById(`axis-${i}`);
+    if (axisEl) {
+        // --- 100% VARIABLE X-AXIS DRIVEN BY JSON ---
+        // This completely drops fixed labels and reads straight from your file data structure!
+        if (milestone.policyYear === 1) {
+            axisEl.innerText = `Yr ${milestone.policyYear}`; // Outputs: "Yr 1"
+        } else {
+            axisEl.innerText = `Yr ${milestone.policyYear} (Age ${milestone.ageNext})`; // Outputs: "Yr 5 (Age 50)"
+        }
+        
+        // Ensure the text moves horizontally along with the shifting dot coordinates
+        axisEl.setAttribute('x', xCoordinates[i]); 
+    }
+
 
             if (i > 0) {
                 const lblEl = document.getElementById(`lbl-${i}`);
