@@ -18,7 +18,7 @@
           { "policyYear": 1, "ageNext": 46, "accountValue": 20114 },
           { "policyYear": 5, "ageNext": 50, "accountValue": 171568 },
           { "policyYear": 10, "ageNext": 55, "accountValue": 237580 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 180261 },
+          { "policyYear": 20, "ageNext": 65, "accountValue": 301455 },
           { "policyYear": 45, "ageNext": 70, "accountValue": 398134 },
           { "policyYear": 55, "ageNext": 80, "accountValue": 225502 }
         ]
