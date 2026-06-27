@@ -379,6 +379,109 @@
             opacity: 0.15;
             transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
         }
+
+                /* Integrated Premium Benefit Breakdown Matrix */
+        .benefit-breakdown {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-top: 2px;
+            margin-bottom: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .benefit-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: var(--text-main);
+        }
+
+        .benefit-name {
+            color: var(--text-muted);
+            letter-spacing: -0.01em;
+        }
+
+        .benefit-name strong {
+            color: var(--text-main);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            margin-left: 4px;
+        }
+
+        /* Tooltip Hover Core Engine */
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .info-icon {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .tooltip-wrapper:hover .info-icon {
+            color: var(--secondary-glow);
+            border-color: rgba(0, 210, 255, 0.3);
+            background: rgba(0, 210, 255, 0.05);
+            box-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
+        }
+
+        .tooltip-content {
+            visibility: hidden;
+            position: absolute;
+            bottom: 140%;
+            right: -4px;
+            width: 250px;
+            background-color: #0e1426;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d7e0;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 0.72rem;
+            line-height: 1.4;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+            white-space: normal;
+            pointer-events: none;
+        }
+
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            right: 8px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, 0.1) transparent transparent transparent;
+        }
+
+        /* Show trigger handles */
+        .tooltip-wrapper:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
     </style>
 </head>
 <body>
@@ -398,13 +501,41 @@
                 <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
             </div>
 
-            <div class="slider-group" id="protection-group">
-                <div class="slider-header">
-                    <span class="slider-label"><span id="lock-icon-protection"></span> Protection Face Amount</span>
-                    <span class="slider-value" id="protection-display">RM 1.0M</span>
-                </div>
-                <input type="range" id="protection-slider" class="range-slider" oninput="recalibrateSliderBounds()">
+                    <div class="slider-group">
+            <div class="slider-header">
+                <span class="slider-label">Coverage Amount</span>
+                <span id="protection-display-value" class="slider-value">RM 1.0M</span>
             </div>
+            
+            <div class="benefit-breakdown">
+                <div class="benefit-row">
+                    <span class="benefit-name">1. Death / TPD: <strong id="benefit-death">RM 1.0M</strong></span>
+                    <div class="tooltip-wrapper">
+                        <div class="info-icon">ⓘ</div>
+                        <div class="tooltip-content">Lump-sum payout distributed instantly upon death or diagnosed permanent disability to anchor client family protections.</div>
+                    </div>
+                </div>
+
+                <div class="benefit-row">
+                    <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
+                    <div class="tooltip-wrapper">
+                        <div class="info-icon">ⓘ</div>
+                        <div class="tooltip-content">Accelerated treatment payout delivered right at diagnostic matching tiers to safeguard ongoing income loss streams.</div>
+                    </div>
+                </div>
+
+                <div class="benefit-row">
+                    <span class="benefit-name">3. Accidental Death Benefit: <strong id="benefit-accidental">RM 1.0M</strong></span>
+                    <div class="tooltip-wrapper">
+                        <div class="info-icon">ⓘ</div>
+                        <div class="tooltip-content">Additional auxiliary cash injection if injuries leading directly to termination occur strictly due to accidental hazards.</div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="range" id="protection-slider" class="range-slider" value="1000000" oninput="recalibrateSliderBounds()">
+        </div>
+
 
             <div class="slider-group" id="premium-group">
                 <div class="slider-header">
@@ -818,12 +949,36 @@ async function executeSimulationEngine() {
         if (shadowArea) shadowArea.setAttribute('d', '');
     }
 
+    
     function updateUIOutputs(premium, milestones, pMinBoundary, scenarioData) {
-        const protectionSlider = document.getElementById('protection-slider');
-        if (!protectionSlider) return;
+    const protectionSlider = document.getElementById('protection-slider');
+    if (!protectionSlider) return;
 
-        const currentProtection = parseInt(protectionSlider.value);
-        const formattedProtection = `RM ${(currentProtection / 1000000) % 1 === 0 ? (currentProtection / 1000000).toFixed(1) : (currentProtection / 1000000).toFixed(2)}M`;
+    const currentProtection = parseInt(protectionSlider.value);
+    const formattedProtection = `RM ${(currentProtection / 1000000) % 1 === 0 ? (currentProtection / 1000000).toFixed(1) : (currentProtection / 1000000).toFixed(2)}M`;
+
+    // 1. Sync Main Label Target
+    const mainDisplay = document.getElementById('protection-display-value');
+    if (mainDisplay) mainDisplay.innerText = formattedProtection;
+
+    // 2. Sync Itemized Sub-Benefit Text Lines
+    const deathField = document.getElementById('benefit-death');
+    const ccField = document.getElementById('benefit-cc');
+    const accidentalField = document.getElementById('benefit-accidental');
+
+    if (deathField) deathField.innerText = formattedProtection;
+    if (ccField) ccField.innerText = formattedProtection;
+    if (accidentalField) accidentalField.innerText = formattedProtection;
+
+    // 3. Sync Premium Tracking Target Label
+    const premiumDisplay = document.getElementById('premium-display');
+    if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
+
+    // 4. SAFELY CLEAN & PARSE MILESTONE DATA
+    const valuesList = milestones.map(m => {
+        if (typeof m.accountValue === 'number') return m.accountValue;
+// ... rest of your math, svg plotters, loop tracks, and canvas builders continue perfectly unchanged ...
+
 
         document.getElementById('protection-display').innerText = formattedProtection;
         document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/yr`;
