@@ -1,6 +1,6 @@
 {
   "protectionProfiles": {
-      "750000": {
+      "500000": {
       "maxPremiumScenario": {
         "premiumAmount": 68654,
         "milestones": [
