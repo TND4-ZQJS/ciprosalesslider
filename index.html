@@ -823,8 +823,8 @@ async function executeSimulationEngine() {
         if (!protectionSlider) return;
 
         const currentProtection = parseInt(protectionSlider.value);
-        const formattedProtection = `RM ${(currentProtection / 1000000).toFixed(1)}M`;
-        
+        const formattedProtection = `RM ${(currentProtection / 1000000) % 1 === 0 ? (currentProtection / 1000000).toFixed(1) : (currentProtection / 1000000).toFixed(2)}M`;
+
         document.getElementById('protection-display').innerText = formattedProtection;
         document.getElementById('premium-display').innerText = `RM ${premium.toLocaleString()}/yr`;
 
