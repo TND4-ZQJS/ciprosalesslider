@@ -735,8 +735,9 @@
             proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
         }
 
-        let simulatedMilestones = [];
+           let simulatedMilestones = [];
         for (let i = 0; i < 6; i++) {
+            // Pull directly from the scenarioData loaded from your new JSON partitions
             let v1 = baseScenario.milestones[i].accountValue;
             let v2 = topScenario.milestones[i].accountValue;
             let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
@@ -747,6 +748,7 @@
                 accountValue: interpolatedValue
             });
         }
+
 
         const badgePi = document.getElementById('badge-pi');
         const badgeSim = document.getElementById('badge-sim');
@@ -837,56 +839,54 @@
             return 180 - ((cleanVal / yCeiling) * 140);
         }
 
-        const activeCoords = [];
+    const activeCoords = [];
 
-     for (let i = 0; i < 6; i++) {
-    const milestone = milestones[i];
-    const value = milestone.accountValue;
-    
-    // Locate the dynamic SVG text component
-    const axisEl = document.getElementById(`axis-${i}`);
-    if (axisEl) {
-        // --- 100% VARIABLE X-AXIS DRIVEN BY JSON ---
-        // This completely drops fixed labels and reads straight from your file data structure!
-        if (milestone.policyYear === 1) {
-            axisEl.innerText = `Yr ${milestone.policyYear}`; // Outputs: "Yr 1"
-        } else {
-            axisEl.innerText = `Yr ${milestone.policyYear} (Age ${milestone.ageNext})`; // Outputs: "Yr 5 (Age 50)"
-        }
+    for (let i = 0; i < 6; i++) {
+        const milestone = milestones[i];
+        const value = milestone.accountValue;
         
-        // Ensure the text moves horizontally along with the shifting dot coordinates
-        axisEl.setAttribute('x', xCoordinates[i]); 
-    }
+        // 1. DYNAMIC X-AXIS UNDER THE GRAPH DOTS
+        const axisEl = document.getElementById(`axis-${i}`);
+        if (axisEl) {
+            // This reads dynamically: e.g., "Yr 55 (Age 100)"
+            axisEl.innerText = `Yr ${milestone.policyYear} (Age ${milestone.ageNext})`;
+            axisEl.setAttribute('x', xCoordinates[i]); // Dynamically positions it under the dot
+        }
 
+        // 2. DYNAMIC SUMMARY CARDS BELOW THE GRAPH
+        if (i > 0) {
+            const lblEl = document.getElementById(`lbl-${i}`);
+            const valEl = document.getElementById(`val-${i}`);
+            const cardEl = document.getElementById(`card-${i}`);
 
-            if (i > 0) {
-                const lblEl = document.getElementById(`lbl-${i}`);
-                const valEl = document.getElementById(`val-${i}`);
-                const cardEl = document.getElementById(`card-${i}`);
-
-                if (lblEl) lblEl.innerText = `Age ${milestone.ageNext} (Policy Yr ${milestone.policyYear}) Value`;
-                
-                if (valEl && cardEl) {
-                    if (i === 5 && premium < pMinBoundary) {
-                        valEl.innerText = "Not Sustainable";
-                        cardEl.classList.add('unsustainable-alert');
-                    } else {
-                        valEl.innerText = `RM ${value.toLocaleString()}`;
-                        cardEl.classList.remove('unsustainable-alert');
-                    }
+            // Updates the header of the card to match the graph timeline exactly
+            if (lblEl) {
+                lblEl.innerText = `Policy Yr ${milestone.policyYear} (Age ${milestone.ageNext})`;
+            }
+            
+            if (valEl && cardEl) {
+                if (i === 5 && premium < pMinBoundary) {
+                    valEl.innerText = "Not Sustainable";
+                    cardEl.classList.add('unsustainable-alert');
+                } else {
+                    valEl.innerText = `RM ${value.toLocaleString()}`;
+                    cardEl.classList.remove('unsustainable-alert');
                 }
             }
-
-            const cx = xCoordinates[i];
-            const cy = toSvgY(value);
-            const nodeEl = document.getElementById(`node-${i}`);
-
-            if (nodeEl) {
-                nodeEl.setAttribute('cx', cx);
-                nodeEl.setAttribute('cy', cy);
-            }
-            activeCoords.push({ x: cx, y: cy });
         }
+
+        // 3. MAP VECTOR DOT COORDINATES
+        const cx = xCoordinates[i];
+        const cy = toSvgY(value);
+        const nodeEl = document.getElementById(`node-${i}`);
+
+        if (nodeEl) {
+            nodeEl.setAttribute('cx', cx);
+            nodeEl.setAttribute('cy', cy);
+        }
+        activeCoords.push({ x: cx, y: cy });
+    }
+
 
         const smoothSplinePath = getSmoothBezierPath(activeCoords);
         const mainRibbon = document.getElementById('main-ribbon');
