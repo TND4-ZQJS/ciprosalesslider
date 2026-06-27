@@ -845,13 +845,19 @@
         const milestone = milestones[i];
         const value = milestone.accountValue;
         
-        // 1. DYNAMIC X-AXIS UNDER THE GRAPH DOTS
+        // Target your graph's horizontal text line
         const axisEl = document.getElementById(`axis-${i}`);
         if (axisEl) {
-            // This reads dynamically: e.g., "Yr 55 (Age 100)"
-            axisEl.innerText = `Yr ${milestone.policyYear} (Age ${milestone.ageNext})`;
-            axisEl.setAttribute('x', xCoordinates[i]); // Dynamically positions it under the dot
+            // FORCE RERENDER: Clear old layout strings to flush browser graphics memory
+            axisEl.textContent = ''; 
+            
+            // Re-inject the fresh variable data explicitly from your loaded JSON matrix
+            axisEl.textContent = `Yr ${milestone.policyYear} (Age ${milestone.ageNext})`;
+            
+            // Lock the text box precisely under your shifting vector graph point
+            axisEl.setAttribute('x', xCoordinates[i]); 
         }
+
 
         // 2. DYNAMIC SUMMARY CARDS BELOW THE GRAPH
         if (i > 0) {
