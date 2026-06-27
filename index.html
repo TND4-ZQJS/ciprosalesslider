@@ -604,160 +604,195 @@
         recalibrateSliderBounds(); 
     }
 
-    async function recalibrateSliderBounds() {
-        const ageSlider = document.getElementById('age-selector');
-        const termSlider = document.getElementById('term-selector');
-        const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
-        const genderSelector = document.getElementById('gender-selector');
+  async function recalibrateSliderBounds() {
+    const ageSlider = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const protectionSlider = document.getElementById('protection-slider');
+    const premiumSlider = document.getElementById('premium-slider');
+    const genderSelector = document.getElementById('gender-selector');
 
-        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
 
-        let ageValue = parseInt(ageSlider.value);
-        let termKey = termSlider.value;
-        let protectionValue = protectionSlider.value; 
-        let genderValue = genderSelector ? genderSelector.value : "Male";
+    let ageValue = parseInt(ageSlider.value);
+    let termKey = termSlider.value;
+    let genderValue = genderSelector ? genderSelector.value : "Male";
 
-        // Query asynchronous 3-tier data pipeline
-        const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
-        
-        if (!targetTermData || !targetTermData.protectionProfiles || !targetTermData.protectionProfiles[protectionValue]) { 
-            renderEmptyState(); 
-            return; 
-        }
-        
-        const scenarioData = targetTermData.protectionProfiles[protectionValue];
-
-        if (scenarioData && scenarioData.sustainable70Scenario) {
-            const floorPremium = scenarioData.sustainable70Scenario.premiumAmount;
-            const pMin = scenarioData.leastPremiumScenario.premiumAmount;
-            const pMid = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
-            const maxPremium = scenarioData.maxPremiumScenario.premiumAmount;
-            
-            premiumSlider.min = floorPremium;
-            premiumSlider.max = maxPremium;
-            
-            let currentSliderVal = parseInt(premiumSlider.value);
-            if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
-                premiumSlider.value = floorPremium; 
-            }
-
-            const datalist = document.getElementById('pi-points');
-            if (datalist) {
-                datalist.innerHTML = ''; 
-                const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
-                premiumMilestones.forEach(premium => {
-                    const option = document.createElement('option');
-                    option.value = premium;
-                    datalist.appendChild(option);
-                });
-            }
-        }
-        executeSimulationEngine();
+    // 1. Fetch the data profile for the selected combination
+    const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
+    
+    // Safety check if JSON structure is empty or missing
+    if (!targetTermData || !targetTermData.protectionProfiles) { 
+        renderEmptyState(); 
+        return; 
     }
-              
-    async function executeSimulationEngine() {
-        const ageSlider = document.getElementById('age-selector');
-        const termSlider = document.getElementById('term-selector');
-        const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
-        const genderSelector = document.getElementById('gender-selector');
 
-        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+    // 2. Read the available protection amounts directly from the JSON keys
+    const availableTiers = Object.keys(targetTermData.protectionProfiles).map(Number).sort((a, b) => a - b);
+    
+    if (availableTiers.length === 0) {
+        renderEmptyState();
+        return;
+    }
 
-        let ageValue = parseInt(ageSlider.value);
-        let termKey = termSlider.value;
-        let simulatedPremium = parseInt(premiumSlider.value);
-        let protectionValue = protectionSlider.value;
-        let genderValue = genderSelector ? genderSelector.value : "Male";
+    // 3. Re-map the input slider HTML attributes to match the file's strict limits
+    const absoluteMin = availableTiers[0];
+    const absoluteMax = availableTiers[availableTiers.length - 1];
+    
+    protectionSlider.min = absoluteMin;
+    protectionSlider.max = absoluteMax;
 
-        // Query asynchronous 3-tier data pipeline
-        const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
-        if (!targetTermData || !targetTermData.protectionProfiles || !targetTermData.protectionProfiles[protectionValue]) { 
-            renderEmptyState(); 
-            return; 
-        }
+    // 4. Match current slider position against the closest available JSON key
+    let rawSliderVal = parseInt(protectionSlider.value);
+    let closestTier = availableTiers.reduce((prev, curr) => {
+        return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
+    });
 
-        const scenarioData = targetTermData.protectionProfiles[protectionValue];
+    // Force snap the physical slider thumb and extract the clean string key
+    protectionSlider.value = closestTier;
+    let protectionValue = closestTier.toString();
+    
+    const scenarioData = targetTermData.protectionProfiles[protectionValue];
 
-        if (!scenarioData || !scenarioData.sustainable70Scenario) {
-            renderEmptyState();
-            return;
-        }
-
-        const pFloor = scenarioData.sustainable70Scenario.premiumAmount;
-        const pMin   = scenarioData.leastPremiumScenario.premiumAmount;
-        const pMid   = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
-        const pMax   = scenarioData.maxPremiumScenario.premiumAmount;
-
-        // iPad Touch Snapping Engine
-        const premiumMilestones = [pFloor, pMin, pMid, pMax];
-        const sliderRange = pMax - pFloor;
-        const snapThreshold = sliderRange * 0.025; 
+    if (scenarioData && scenarioData.sustainable70Scenario) {
+        const floorPremium = scenarioData.sustainable70Scenario.premiumAmount;
+        const pMin = scenarioData.leastPremiumScenario.premiumAmount;
+        const pMid = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
+        const maxPremium = scenarioData.maxPremiumScenario.premiumAmount;
         
-        let isExactAnchor = false;
-
-        for (let milestone of premiumMilestones) {
-            if (Math.abs(simulatedPremium - milestone) <= snapThreshold) {
-                premiumSlider.value = milestone;
-                simulatedPremium = milestone;
-                isExactAnchor = true;
-                break;
-            }
+        premiumSlider.min = floorPremium;
+        premiumSlider.max = maxPremium;
+        
+        let currentSliderVal = parseInt(premiumSlider.value);
+        if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
+            premiumSlider.value = floorPremium; 
         }
 
-        const svgElement = document.querySelector('.chart-container svg');
-        const graphWrapper = document.querySelector('.graph-wrapper');
-
-        if (svgElement && graphWrapper) {
-            if (simulatedPremium > pMid) {
-                graphWrapper.classList.add('focus-growth');
-                svgElement.setAttribute('viewBox', '200 20 400 200'); 
-            } else {
-                graphWrapper.classList.remove('focus-growth');
-                svgElement.setAttribute('viewBox', '0 0 600 220'); 
-            }
-        }    
-
-        let baseScenario, topScenario, proportion;
-
-        if (simulatedPremium <= pMin) {
-            baseScenario = scenarioData.sustainable70Scenario;
-            topScenario = scenarioData.leastPremiumScenario;
-            proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
-        } else if (simulatedPremium <= pMid) {
-            baseScenario = scenarioData.leastPremiumScenario;
-            topScenario = scenarioData.midPremiumScenario;
-            proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
-        } else {
-            baseScenario = scenarioData.midPremiumScenario;
-            topScenario = scenarioData.maxPremiumScenario;
-            proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
-        }
-
-           let simulatedMilestones = [];
-        for (let i = 0; i < 6; i++) {
-            // Pull directly from the scenarioData loaded from your new JSON partitions
-            let v1 = baseScenario.milestones[i].accountValue;
-            let v2 = topScenario.milestones[i].accountValue;
-            let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
-            
-            simulatedMilestones.push({
-                policyYear: baseScenario.milestones[i].policyYear,
-                ageNext: baseScenario.milestones[i].ageNext,
-                accountValue: interpolatedValue
+        const datalist = document.getElementById('pi-points');
+        if (datalist) {
+            datalist.innerHTML = ''; 
+            const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
+            premiumMilestones.forEach(premium => {
+                const option = document.createElement('option');
+                option.value = premium;
+                datalist.appendChild(option);
             });
         }
-
-
-        const badgePi = document.getElementById('badge-pi');
-        const badgeSim = document.getElementById('badge-sim');
-        
-        if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
-        if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
-
-        updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
     }
+    executeSimulationEngine();
+}
+          
+async function executeSimulationEngine() {
+    const ageSlider = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const protectionSlider = document.getElementById('protection-slider');
+    const premiumSlider = document.getElementById('premium-slider');
+    const genderSelector = document.getElementById('gender-selector');
+
+    if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+
+    let ageValue = parseInt(ageSlider.value);
+    let termKey = termSlider.value;
+    let simulatedPremium = parseInt(premiumSlider.value);
+    let genderValue = genderSelector ? genderSelector.value : "Male";
+
+    const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
+    if (!targetTermData || !targetTermData.protectionProfiles) { 
+        renderEmptyState(); 
+        return; 
+    }
+
+    // Reuse the exact same key-snapping loop here to guarantee data keys line up
+    const availableTiers = Object.keys(targetTermData.protectionProfiles).map(Number).sort((a, b) => a - b);
+    let rawSliderVal = parseInt(protectionSlider.value);
+    let protectionValue = availableTiers.reduce((prev, curr) => {
+        return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
+    }).toString();
+
+    // Check if the verified dynamic key scenario exists
+    if (!targetTermData.protectionProfiles[protectionValue]) {
+        renderEmptyState();
+        return;
+    }
+
+    const scenarioData = targetTermData.protectionProfiles[protectionValue];
+
+    if (!scenarioData || !scenarioData.sustainable70Scenario) {
+        renderEmptyState();
+        return;
+    }
+
+    const pFloor = scenarioData.sustainable70Scenario.premiumAmount;
+    const pMin   = scenarioData.leastPremiumScenario.premiumAmount;
+    const pMid   = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
+    const pMax   = scenarioData.maxPremiumScenario.premiumAmount;
+
+    // iPad Touch Snapping Engine
+    const premiumMilestones = [pFloor, pMin, pMid, pMax];
+    const sliderRange = pMax - pFloor;
+    const snapThreshold = sliderRange * 0.025; 
+    
+    let isExactAnchor = false;
+
+    for (let milestone of premiumMilestones) {
+        if (Math.abs(simulatedPremium - milestone) <= snapThreshold) {
+            premiumSlider.value = milestone;
+            simulatedPremium = milestone;
+            isExactAnchor = true;
+            break;
+        }
+    }
+
+    const svgElement = document.querySelector('.chart-container svg');
+    const graphWrapper = document.querySelector('.graph-wrapper');
+
+    if (svgElement && graphWrapper) {
+        if (simulatedPremium > pMid) {
+            graphWrapper.classList.add('focus-growth');
+            svgElement.setAttribute('viewBox', '200 20 400 200'); 
+        } else {
+            graphWrapper.classList.remove('focus-growth');
+            svgElement.setAttribute('viewBox', '0 0 600 220'); 
+        }
+    }    
+
+    let baseScenario, topScenario, proportion;
+
+    if (simulatedPremium <= pMin) {
+        baseScenario = scenarioData.sustainable70Scenario;
+        topScenario = scenarioData.leastPremiumScenario;
+        proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
+    } else if (simulatedPremium <= pMid) {
+        baseScenario = scenarioData.leastPremiumScenario;
+        topScenario = scenarioData.midPremiumScenario;
+        proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
+    } else {
+        baseScenario = scenarioData.midPremiumScenario;
+        topScenario = scenarioData.maxPremiumScenario;
+        proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
+    }
+
+    let simulatedMilestones = [];
+    for (let i = 0; i < 6; i++) {
+        let v1 = baseScenario.milestones[i].accountValue;
+        let v2 = topScenario.milestones[i].accountValue;
+        let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
+        
+        simulatedMilestones.push({
+            policyYear: baseScenario.milestones[i].policyYear,
+            ageNext: baseScenario.milestones[i].ageNext,
+            accountValue: interpolatedValue
+        });
+    }
+
+    const badgePi = document.getElementById('badge-pi');
+    const badgeSim = document.getElementById('badge-sim');
+    
+    if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
+    if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
+
+    updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
+}
+
 
     function renderEmptyState() {
         const premiumDisplay = document.getElementById('premium-display');
