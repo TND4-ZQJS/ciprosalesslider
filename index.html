@@ -379,15 +379,16 @@
             filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.4));
         }
 
-  .shadow-area-path {
+.shadow-area-path {
     fill: url(#areaGradient) !important;
     /* Forces the colors to illuminate intensely on dark backgrounds */
     mix-blend-mode: plus-lighter; 
-    /* Adds a subtle layout blur to give it a soft, volumetric light feel */
-    filter: drop-shadow(0 0 4px rgba(138, 43, 226, 0.3));
+    /* CHANGED: Increased blur to 8px and lowered opacity to 0.1 for a softer, lighter weight */
+    filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.1));
     transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
 }
+
 
 
         /* Integrated Premium Benefit Breakdown Matrix */
