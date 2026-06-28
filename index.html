@@ -482,6 +482,30 @@
             transform: translateY(0);
         }
 
+    /* Horizontal alignment grid for structural dropdowns */
+.control-row-layout {
+    display: flex;
+    gap: 0.75rem; /* Generous spacing between items */
+    width: 100%;
+}
+
+/* Forces each dropdown block to distribute space equally */
+.compact-group {
+    flex: 1; 
+    min-width: 0; /* Prevents overflow/breakage inside flexbox */
+}
+
+/* Slightly optimize select elements for tight row spaces */
+.compact-group .select-styled {
+    padding: 10px 24px 10px 10px; /* Shift arrow room to the edge */
+    font-size: 0.82rem;
+    background-position: right 8px center; /* Pull arrow in slightly */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
     </style>
 </head>
 <body>
@@ -546,37 +570,38 @@
                 <datalist id="pi-points"></datalist>
             </div>
 
-      <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
-    <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Structural Variables</p>
+      <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+    <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
     
-    <div class="slider-group">
-        <span class="slider-label">Client Gender</span>
-        <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-            <option value="Male" selected>Male Profile</option>
-            <option value="Female">Female Profile</option>
-        </select>
-    </div>
-
-    <div class="slider-group">
-        <span class="slider-label">Client Entry Age</span>
-        <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-            <option value="25">25 Years</option>
-            <option value="35">35 Years</option>
-            <option value="45" selected>45 Years</option>
-            <option value="55">55 Years</option>
-        </select>
-    </div>
-
-                <div class="slider-group">
-                    <span class="slider-label">Premium Payment Term</span>
-                    <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                        <option value="pay6" selected>6 Years Premium Pay</option>
-                        <option value="pay10">10 Years Premium Pay</option>
-                        <option value="pay20">20 Years Premium Pay</option>
-                    </select>
-                </div>
-            </div>
+    <div class="control-row-layout">
+        <div class="slider-group compact-group">
+            <span class="slider-label">Gender</span>
+            <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                <option value="Male" selected>Male</option>
+                <option value="Female">Female</option>
+            </select>
         </div>
+
+        <div class="slider-group compact-group">
+            <span class="slider-label">Age</span>
+            <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                <option value="25">25</option>
+                <option value="35">35</option>
+                <option value="45" selected>45</option>
+                <option value="55">55</option>
+            </select>
+        </div>
+
+        <div class="slider-group compact-group">
+            <span class="slider-label">Pay</span>
+            <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                <option value="pay6" selected>6 Yrs</option>
+                <option value="pay10">10 Yrs</option>
+                <option value="pay20">20 Yrs</option>
+            </select>
+        </div>
+    </div>
+</div>
 
         <div class="display-viewport">
             <div class="graph-wrapper">
