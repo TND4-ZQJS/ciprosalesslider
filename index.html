@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -125,6 +127,9 @@
             flex-direction: column;
             gap: 2rem;
             overflow-y: auto;
+            width: 380px;
+            min-width: 380px;
+            max-width: 380px;
         }
 
         .display-viewport {
@@ -380,7 +385,7 @@
             transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
         }
 
-                /* Integrated Premium Benefit Breakdown Matrix */
+        /* Integrated Premium Benefit Breakdown Matrix */
         .benefit-breakdown {
             background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
@@ -475,40 +480,37 @@
             border-color: rgba(255, 255, 255, 0.1) transparent transparent transparent;
         }
 
-        /* Show trigger handles */
         .tooltip-wrapper:hover .tooltip-content {
             visibility: visible;
             opacity: 1;
             transform: translateY(0);
         }
 
-/* Container for the horizontal layout row */
-.control-row-layout {
-    display: flex;
-    gap: 0.75rem;
-    width: 100%;
-}
+        /* Container for the horizontal layout row */
+        .control-row-layout {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+        }
 
-/* Isolated layout logic for the columns */
-.control-column {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem; /* Subtle space between small label and select box */
-}
+        /* Isolated layout logic for the columns */
+        .control-column {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem; 
+        }
 
-/* Compact padding and arrow overrides to keep drop-downs steady */
-.control-column .select-styled {
-    padding: 10px 22px 10px 10px;
-    font-size: 0.82rem;
-    background-position: right 8px center;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-
+        /* Compact padding and arrow overrides to keep drop-downs steady */
+        .control-column .select-styled {
+            padding: 10px 22px 10px 10px;
+            font-size: 0.82rem;
+            background-position: right 8px center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -528,41 +530,40 @@
                 <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
             </div>
 
-                    <div class="slider-group">
-            <div class="slider-header">
-                <span class="slider-label">Coverage Amount</span>
-                <span id="protection-display-value" class="slider-value">RM 1.0M</span>
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="slider-label">Coverage Amount</span>
+                    <span id="protection-display-value" class="slider-value">RM 1.0M</span>
+                </div>
+                
+                <div class="benefit-breakdown">
+                    <div class="benefit-row">
+                        <span class="benefit-name">1. Death / TPD: <strong id="benefit-death">RM 1.0M</strong></span>
+                        <div class="tooltip-wrapper">
+                            <div class="info-icon">ⓘ</div>
+                            <div class="tooltip-content">Lump-sum payout distributed instantly upon death or diagnosed permanent disability to anchor client family protections.</div>
+                        </div>
+                    </div>
+
+                    <div class="benefit-row">
+                        <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
+                        <div class="tooltip-wrapper">
+                            <div class="info-icon">ⓘ</div>
+                            <div class="tooltip-content">Accelerated treatment payout delivered right at diagnostic matching tiers to safeguard ongoing income loss streams.</div>
+                        </div>
+                    </div>
+
+                    <div class="benefit-row">
+                        <span class="benefit-name">3. Accidental Death Benefit: <strong id="benefit-accidental">RM 1.0M</strong></span>
+                        <div class="tooltip-wrapper">
+                            <div class="info-icon">ⓘ</div>
+                            <div class="tooltip-content">Additional auxiliary cash injection if injuries leading directly to termination occur strictly due to accidental hazards.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="range" id="protection-slider" class="range-slider" value="1000000" oninput="recalibrateSliderBounds()">
             </div>
-            
-            <div class="benefit-breakdown">
-                <div class="benefit-row">
-                    <span class="benefit-name">1. Death / TPD: <strong id="benefit-death">RM 1.0M</strong></span>
-                    <div class="tooltip-wrapper">
-                        <div class="info-icon">ⓘ</div>
-                        <div class="tooltip-content">Lump-sum payout distributed instantly upon death or diagnosed permanent disability to anchor client family protections.</div>
-                    </div>
-                </div>
-
-                <div class="benefit-row">
-                    <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
-                    <div class="tooltip-wrapper">
-                        <div class="info-icon">ⓘ</div>
-                        <div class="tooltip-content">Accelerated treatment payout delivered right at diagnostic matching tiers to safeguard ongoing income loss streams.</div>
-                    </div>
-                </div>
-
-                <div class="benefit-row">
-                    <span class="benefit-name">3. Accidental Death Benefit: <strong id="benefit-accidental">RM 1.0M</strong></span>
-                    <div class="tooltip-wrapper">
-                        <div class="info-icon">ⓘ</div>
-                        <div class="tooltip-content">Additional auxiliary cash injection if injuries leading directly to termination occur strictly due to accidental hazards.</div>
-                    </div>
-                </div>
-            </div>
-
-            <input type="range" id="protection-slider" class="range-slider" value="1000000" oninput="recalibrateSliderBounds()">
-        </div>
-
 
             <div class="slider-group" id="premium-group">
                 <div class="slider-header">
@@ -573,41 +574,39 @@
                 <datalist id="pi-points"></datalist>
             </div>
 
-      <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-    <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
-    
-    <div class="control-row-layout">
-        <div class="control-column">
-            <span class="slider-label">Gender</span>
-            <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                <option value="Male" selected>Male</option>
-                <option value="Female">Female</option>
-            </select>
-        </div>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
+                
+                <div class="control-row-layout">
+                    <div class="control-column">
+                        <span class="slider-label">Gender</span>
+                        <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
 
-        <div class="control-column">
-            <span class="slider-label">Age</span>
-            <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                <option value="25">25</option>
-                <option value="35">35</option>
-                <option value="45" selected>45</option>
-                <option value="55">55</option>
-            </select>
-        </div>
+                    <div class="control-column">
+                        <span class="slider-label">Age</span>
+                        <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                            <option value="25">25</option>
+                            <option value="35">35</option>
+                            <option value="45" selected>45</option>
+                            <option value="55">55</option>
+                        </select>
+                    </div>
 
-        <div class="control-column">
-            <span class="slider-label">Pay</span>
-            <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                <option value="pay6" selected>6 Yrs</option>
-                <option value="pay10">10 Yrs</option>
-                <option value="pay20">20 Yrs</option>
-            </select>
-        </div>
-    </div>
-</div>
-
-
-        <div class="display-viewport">
+                    <div class="control-column">
+                        <span class="slider-label">Pay</span>
+                        <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                            <option value="pay6" selected>6 Yrs</option>
+                            <option value="pay10">10 Yrs</option>
+                            <option value="pay20">20 Yrs</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div> <div class="display-viewport">
             <div class="graph-wrapper">
                 <div class="chart-container">
                     <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
@@ -688,6 +687,7 @@
     <footer>
         [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
     </footer>
+
 
 <script>
     // 3-Tier Asynchronous Data Caching & Fetching Architecture
