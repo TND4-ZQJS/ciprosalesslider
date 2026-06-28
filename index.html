@@ -511,6 +511,70 @@
             white-space: nowrap;
             overflow: hidden;
         }
+
+        /* ── Integrated Accordion Folders ── */
+.indicators-folder-wrapper {
+    background: rgba(13, 18, 34, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.indicators-folder-wrapper:focus-within,
+.indicators-folder-wrapper:hover {
+    border-color: rgba(0, 210, 255, 0.25);
+}
+
+/* Header Trigger Bar */
+.folder-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    background-color: var(--card-bg);
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.folder-trigger:hover {
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+/* Remove bottom margin from panel-title inside trigger */
+.folder-trigger .panel-title {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Chevron Icon Animation Setup */
+.folder-chevron {
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+
+.folder-trigger:hover .folder-chevron {
+    color: var(--secondary-glow);
+}
+
+/* Content Tray Animation Physics */
+.folder-content-tray {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.folder-content-inner {
+    padding: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+
     </style>
 </head>
 <body>
@@ -664,8 +728,16 @@
                 </div>
             </div>
 
-            <div class="indicators-panel">
-                <div class="panel-title">Asset Projections & Performance Metrics</div>
+<div class="indicators-panel">
+    
+    <!-- Folder Section 1: Default Projections Matrix -->
+    <div class="indicators-folder-wrapper">
+        <div class="folder-trigger" onclick="toggleMultiFolder(this)">
+            <div class="panel-title">📦 Asset Projections & Performance Metrics</div>
+            <span class="folder-chevron">▼</span>
+        </div>
+        <div class="folder-content-tray">
+            <div class="folder-content-inner">
                 <div class="milestone-grid">
                     <div class="milestone-card" id="card-1">
                         <div class="milestone-age" id="lbl-1">Policy Year 5</div>
@@ -690,6 +762,33 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Folder Section 2: Auxiliary Financial Breakdown (Ready to map) -->
+    <div class="indicators-folder-wrapper">
+        <div class="folder-trigger" onclick="toggleMultiFolder(this)">
+            <div class="panel-title">📊 Additional Premium & Breakeven Analysis</div>
+            <span class="folder-chevron">▼</span>
+        </div>
+        <div class="folder-content-tray">
+            <div class="folder-content-inner">
+                <div class="milestone-grid">
+                    <div class="milestone-card" id="card-breakeven">
+                        <div class="milestone-age">Est. Breakeven Year</div>
+                        <div class="milestone-value" id="val-breakeven">Year --</div>
+                    </div>
+                    <div class="milestone-card" id="card-total-premium">
+                        <div class="milestone-age">Total Premium Paid</div>
+                        <div class="milestone-value" id="val-total-premium">RM --</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+        </div
     </div>
 
     <footer>
@@ -1154,6 +1253,22 @@
     document.addEventListener("DOMContentLoaded", () => {
         recalibrateSliderBounds(); // Triggers foundational data stream pull safely on initialization
     });
+
+    //Folder Accortion
+    function toggleMultiFolder(triggerElement) {
+    const tray = triggerElement.nextElementSibling;
+    const chevron = triggerElement.querySelector('.folder-chevron');
+    
+    if (tray.style.maxHeight && tray.style.maxHeight !== "0px") {
+        tray.style.maxHeight = "0px";
+        chevron.style.transform = "rotate(0deg)";
+    } else {
+        // dynamic scroll height reading preserves CSS flexibility if rows change dynamically
+        tray.style.maxHeight = tray.scrollHeight + "px"; 
+        chevron.style.transform = "rotate(-90deg)";
+    }
+}
+
 </script>
 
 
