@@ -379,11 +379,16 @@
             filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.4));
         }
 
-        .shadow-area-path {
-            fill: url(#areaGradient);
-            opacity: 0.15;
-            transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
-        }
+  .shadow-area-path {
+    fill: url(#areaGradient) !important;
+    /* Forces the colors to illuminate intensely on dark backgrounds */
+    mix-blend-mode: plus-lighter; 
+    /* Adds a subtle layout blur to give it a soft, volumetric light feel */
+    filter: drop-shadow(0 0 4px rgba(138, 43, 226, 0.3));
+    transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
 
         /* Integrated Premium Benefit Breakdown Matrix */
         .benefit-breakdown {
@@ -689,7 +694,7 @@
                             </linearGradient>
                         <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
     <!-- Heavy primary purple color layer directly underneath the ribbon line -->
-    <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.80"/>
+    <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
     <!-- Blends color density smoothly into neon blue halfway down -->
     <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
     <!-- Drops off completely to absolute transparency right at the baseline -->
