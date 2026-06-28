@@ -482,24 +482,27 @@
             transform: translateY(0);
         }
 
-    /* Horizontal alignment grid for structural dropdowns */
+/* Container for the horizontal layout row */
 .control-row-layout {
     display: flex;
-    gap: 0.75rem; /* Generous spacing between items */
+    gap: 0.75rem;
     width: 100%;
 }
 
-/* Forces each dropdown block to distribute space equally */
-.compact-group {
-    flex: 1; 
-    min-width: 0; /* Prevents overflow/breakage inside flexbox */
+/* Isolated layout logic for the columns */
+.control-column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem; /* Subtle space between small label and select box */
 }
 
-/* Slightly optimize select elements for tight row spaces */
-.compact-group .select-styled {
-    padding: 10px 24px 10px 10px; /* Shift arrow room to the edge */
+/* Compact padding and arrow overrides to keep drop-downs steady */
+.control-column .select-styled {
+    padding: 10px 22px 10px 10px;
     font-size: 0.82rem;
-    background-position: right 8px center; /* Pull arrow in slightly */
+    background-position: right 8px center;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -574,7 +577,7 @@
     <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
     
     <div class="control-row-layout">
-        <div class="slider-group compact-group">
+        <div class="control-column">
             <span class="slider-label">Gender</span>
             <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
                 <option value="Male" selected>Male</option>
@@ -582,7 +585,7 @@
             </select>
         </div>
 
-        <div class="slider-group compact-group">
+        <div class="control-column">
             <span class="slider-label">Age</span>
             <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
                 <option value="25">25</option>
@@ -592,7 +595,7 @@
             </select>
         </div>
 
-        <div class="slider-group compact-group">
+        <div class="control-column">
             <span class="slider-label">Pay</span>
             <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
                 <option value="pay6" selected>6 Yrs</option>
@@ -602,6 +605,7 @@
         </div>
     </div>
 </div>
+
 
         <div class="display-viewport">
             <div class="graph-wrapper">
