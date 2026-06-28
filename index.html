@@ -546,18 +546,26 @@
                 <datalist id="pi-points"></datalist>
             </div>
 
-            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
-                <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Structural Variables</p>
-                
-                <div class="slider-group">
-                    <span class="slider-label">Client Entry Age</span>
-                    <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                        <option value="25">25 Years</option>
-                        <option value="35">35 Years</option>
-                        <option value="45" selected>45 Years</option>
-                        <option value="55">55 Years</option>
-                    </select>
-                </div>
+      <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+    <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Structural Variables</p>
+    
+    <div class="slider-group">
+        <span class="slider-label">Client Gender</span>
+        <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+            <option value="Male" selected>Male Profile</option>
+            <option value="Female">Female Profile</option>
+        </select>
+    </div>
+
+    <div class="slider-group">
+        <span class="slider-label">Client Entry Age</span>
+        <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+            <option value="25">25 Years</option>
+            <option value="35">35 Years</option>
+            <option value="45" selected>45 Years</option>
+            <option value="55">55 Years</option>
+        </select>
+    </div>
 
                 <div class="slider-group">
                     <span class="slider-label">Premium Payment Term</span>
@@ -736,17 +744,17 @@
     }
 
     async function recalibrateSliderBounds() {
-        const ageSlider = document.getElementById('age-selector');
+        const ageSelector = document.getElementById('age-selector');
         const termSlider = document.getElementById('term-selector');
         const protectionSlider = document.getElementById('protection-slider');
         const premiumSlider = document.getElementById('premium-slider');
         const genderSelector = document.getElementById('gender-selector');
 
-        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+        if (!ageSelector || !termSlider || !protectionSlider || !premiumSlider) return;
 
-        let ageValue = parseInt(ageSlider.value);
+        let ageValue = parseInt(ageSelector.value);
         let termKey = termSlider.value;
-        let genderValue = genderSelector ? genderSelector.value : "Male";
+        let genderValue = genderSelector ? genderSelector.value : "Male"; // Gracefully falls back if no UI element
 
         const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
         
@@ -807,15 +815,15 @@
     }
           
     async function executeSimulationEngine() {
-        const ageSlider = document.getElementById('age-selector');
+        const ageSelector = document.getElementById('age-selector');
         const termSlider = document.getElementById('term-selector');
         const protectionSlider = document.getElementById('protection-slider');
         const premiumSlider = document.getElementById('premium-slider');
         const genderSelector = document.getElementById('gender-selector');
 
-        if (!ageSlider || !termSlider || !protectionSlider || !premiumSlider) return;
+        if (!ageSelector || !termSlider || !protectionSlider || !premiumSlider) return;
 
-        let ageValue = parseInt(ageSlider.value);
+        let ageValue = parseInt(ageSelector.value);
         let termKey = termSlider.value;
         let simulatedPremium = parseInt(premiumSlider.value);
         let genderValue = genderSelector ? genderSelector.value : "Male";
@@ -864,16 +872,31 @@
             }
         }
 
+        // --- SILK SMOOTH VIEWBOX TRANSITION ENGINE ---
         const svgElement = document.querySelector('.chart-container svg');
         const graphWrapper = document.querySelector('.graph-wrapper');
 
         if (svgElement && graphWrapper) {
+            let zoomProgress = 0;
+            if (simulatedPremium > pMid && pMax > pMid) {
+                zoomProgress = (simulatedPremium - pMid) / (pMax - pMid);
+                zoomProgress = Math.min(Math.max(zoomProgress, 0), 1);
+                // Apply mathematical smooth-stepping curve
+                zoomProgress = zoomProgress * zoomProgress * (3 - 2 * zoomProgress);
+            }
+
+            // Linearly interpolate the ViewBox coordinates seamlessly
+            const currentX      = 0   + (200 * zoomProgress);
+            const currentY      = 0   + (20  * zoomProgress);
+            const currentWidth  = 600 - (200 * zoomProgress);
+            const currentHeight = 220 - (20  * zoomProgress);
+
+            svgElement.setAttribute('viewBox', `${currentX} ${currentY} ${currentWidth} ${currentHeight}`);
+
             if (simulatedPremium > pMid) {
                 graphWrapper.classList.add('focus-growth');
-                svgElement.setAttribute('viewBox', '200 20 400 200'); 
             } else {
                 graphWrapper.classList.remove('focus-growth');
-                svgElement.setAttribute('viewBox', '0 0 600 220'); 
             }
         }    
 
@@ -946,11 +969,9 @@
         const currentProtection = parseInt(protectionSlider.value);
         const formattedProtection = `RM ${(currentProtection / 1000000) % 1 === 0 ? (currentProtection / 1000000).toFixed(1) : (currentProtection / 1000000).toFixed(2)}M`;
 
-        // 1. Sync Main Label Target
         const mainDisplay = document.getElementById('protection-display-value');
         if (mainDisplay) mainDisplay.innerText = formattedProtection;
 
-        // 2. Sync Itemized Sub-Benefit Text Lines
         const deathField = document.getElementById('benefit-death');
         const ccField = document.getElementById('benefit-cc');
         const accidentalField = document.getElementById('benefit-accidental');
@@ -959,11 +980,9 @@
         if (ccField) ccField.innerText = formattedProtection;
         if (accidentalField) accidentalField.innerText = formattedProtection;
 
-        // 3. Sync Premium Tracking Target Label
         const premiumDisplay = document.getElementById('premium-display');
         if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
 
-        // 4. SAFELY CLEAN & PARSE MILESTONE DATA
         const valuesList = milestones.map(m => {
             if (typeof m.accountValue === 'number') return m.accountValue;
             if (typeof m.accountValue === 'string') {
@@ -975,7 +994,6 @@
         
         const localMax = Math.max(...valuesList, 100000);
 
-        // 5. STABLE SYSTEM BOUNDARIES DIRECT FROM MEMORY DATA ENGINE
         let pMid = pMinBoundary || 1500;
         let pMax = premium > pMid ? premium * 1.3 : 300000;
 
@@ -984,7 +1002,7 @@
             if (scenarioData.midPremiumScenario) pMid = scenarioData.midPremiumScenario.premiumAmount || pMid;
         }
 
-        // 6. DUAL-ZONE CEILING MATH
+        // DUAL-ZONE CEILING MATH
         let yCeiling;
         const isFocusGrowth = (premium > pMid);
 
@@ -997,13 +1015,24 @@
             yCeiling = localMax * 1.25; 
         }
 
-        // 7. HIGH-DRAMA VIEWPORT GRID COORDINATES
-        let xCoordinates = [40, 150, 260, 370, 480, 570]; 
-        if (isFocusGrowth) {
-            xCoordinates = [20, 80, 150, 260, 400, 580];
+        // --- LIQUID HORIZONTAL X-AXIS INTERPOLATION ENGINE ---
+        let xCoordinates = [];
+        const standardX = [40, 150, 260, 370, 480, 570];
+        const growthX   = [20, 80,  150, 260, 400, 580];
+
+        let layoutProgress = 0;
+        if (premium > pMid && pMax > pMid) {
+            layoutProgress = (premium - pMid) / (pMax - pMid);
+            layoutProgress = Math.min(Math.max(layoutProgress, 0), 1);
+            layoutProgress = layoutProgress * layoutProgress * (3 - 2 * layoutProgress);
         }
 
-        // 8. SVG GRID Y-COORDINATE PLOTTER
+        for (let i = 0; i < 6; i++) {
+            const interpolatedX = standardX[i] + (growthX[i] - standardX[i]) * layoutProgress;
+            xCoordinates.push(interpolatedX);
+        }
+
+        // SVG GRID Y-COORDINATE PLOTTER
         function toSvgY(val) {
             const cleanVal = isNaN(val) ? 0 : val;
             return 180 - ((cleanVal / yCeiling) * 140);
@@ -1015,7 +1044,6 @@
             const milestone = milestones[i];
             const value = milestone.accountValue;
             
-            // Target your graph's horizontal text line
             const axisEl = document.getElementById(`axis-${i}`);
             if (axisEl) {
                 axisEl.textContent = ''; 
@@ -1023,7 +1051,6 @@
                 axisEl.setAttribute('x', xCoordinates[i]); 
             }
 
-            // 9. DYNAMIC SUMMARY CARDS BELOW THE GRAPH
             if (i > 0) {
                 const lblEl = document.getElementById(`lbl-${i}`);
                 const valEl = document.getElementById(`val-${i}`);
@@ -1044,7 +1071,6 @@
                 }
             }
 
-            // 10. MAP VECTOR DOT COORDINATES
             const cx = xCoordinates[i];
             const cy = toSvgY(value);
             const nodeEl = document.getElementById(`node-${i}`);
@@ -1089,9 +1115,10 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        setMode('premium');
+        recalibrateSliderBounds(); // Triggers foundational data stream pull safely on initialization
     });
 </script>
+
 
 
 </body>
