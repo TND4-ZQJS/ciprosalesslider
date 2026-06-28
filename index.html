@@ -687,10 +687,15 @@
                                 <stop offset="0%" stop-color="#aa55ff" />
                                 <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
                             </linearGradient>
-                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.3"/>
-                                <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
-                            </linearGradient>
+                        <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+    <!-- Heavy primary purple color layer directly underneath the ribbon line -->
+    <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.80"/>
+    <!-- Blends color density smoothly into neon blue halfway down -->
+    <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
+    <!-- Drops off completely to absolute transparency right at the baseline -->
+    <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
+</linearGradient>
+
                         </defs>
                         
                         <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
@@ -782,6 +787,96 @@
     <footer>
         [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
     </footer>
+
+<script>
+    // ── GRAPH GEOMETRY MATRIX CONFIGURATION ──
+    const CHANNELS_CONFIG = {
+        baselineY: 180,       // Bottom grid boundary of your SVG chart frame
+        peakLimitY: 40,       // Maximum elevation point your trend line can scale up to
+        horizontalNodes: [40, 144, 248, 352, 456, 560] // Exact pixel anchors mapping to Yr 1 - Yr 35 text
+    };
+
+    // This converts structural slider parameters into progressive vector points arrays
+    function runProjectionCalculations(currentVolume, maxVolume) {
+        const structuralPoints = [];
+        const scaleFactor = Math.min(currentVolume / maxVolume, 1);
+
+        for (let i = 0; i < CHANNELS_CONFIG.horizontalNodes.length; i++) {
+            const currentX = CHANNELS_CONFIG.horizontalNodes[i];
+            
+            // Simulates geometric asset growth acceleration profiles curves over 35 periods
+            const growthFactorCurve = Math.pow(i / (CHANNELS_CONFIG.horizontalNodes.length - 1), 1.6);
+            const absoluteLiftValue = (CHANNELS_CONFIG.baselineY - CHANNELS_CONFIG.peakLimitY) * scaleFactor * growthFactorCurve;
+            
+            // Subtracting lift translates coordinate paths UPWARDS inside the SVG grid plane
+            const structuralY = CHANNELS_CONFIG.baselineY - absoluteLiftValue;
+            
+            structuralPoints.push({ x: currentX, y: structuralY });
+        }
+        return structuralPoints;
+    }
+
+    // This extracts the geometric point data and draws the paths live to your HTML DOM nodes
+    function generateTerminalGraphVectors() {
+        const interactionSlider = document.getElementById('premium-slider');
+        const currentSelectedInput = parseFloat(interactionSlider.value) || 45000;
+        const maximumBoundRange = parseFloat(interactionSlider.max) || 300000;
+
+        const activeCoordinates = runProjectionCalculations(currentSelectedInput, maximumBoundRange);
+
+        // A. Generate the standard linear ribbon path matrix tracking variables
+        let primaryRibbonString = `M ${activeCoordinates[0].x} ${activeCoordinates[0].y}`;
+        for (let i = 1; i < activeCoordinates.length; i++) {
+            primaryRibbonString += ` L ${activeCoordinates[i].x} ${activeCoordinates[i].y}`;
+        }
+
+        // B. Generate the CLOSED geometric loop boundary required to hold the heavy vertical gradient fill cleanly
+        let heavyShadowString = primaryRibbonString; 
+        heavyShadowString += ` L ${activeCoordinates[activeCoordinates.length - 1].x} ${CHANNELS_CONFIG.baselineY}`; // Drops to baseline edge
+        heavyShadowString += ` L ${activeCoordinates[0].x} ${CHANNELS_CONFIG.baselineY}`;                                 // Slides across floor back to start horizontal marker
+        heavyShadowString += ` Z`;                                                                                          // Closes vector frame path securely
+
+        // C. Deploy calculated data parameters directly into the interactive target nodes
+        document.getElementById('main-ribbon').setAttribute('d', primaryRibbonString);
+        document.getElementById('glow-ribbon').setAttribute('d', primaryRibbonString);
+        document.getElementById('shadow-area').setAttribute('d', heavyShadowString);
+
+        // D. Shift tracking nodes circles to mirror new vertical coordinates positions
+        activeCoordinates.forEach((coord, markerIndex) => {
+            const visualNodeElement = document.getElementById(`node-${markerIndex}`);
+            if (visualNodeElement) {
+                visualNodeElement.setAttribute('cx', coord.x);
+                visualNodeElement.setAttribute('cy', coord.y);
+            }
+        });
+    }
+
+    // ── INTERACTIVE WORKFLOW EVENT HANDLERS ──
+    function executeSimulationEngine() {
+        const operationalSlider = document.getElementById('premium-slider');
+        const quantitativeDisplayLabel = document.getElementById('premium-display');
+        
+        // Formats numerical tracking output data into localized premium representations strings
+        if (quantitativeDisplayLabel) {
+            quantitativeDisplayLabel.innerText = `RM ${parseInt(operationalSlider.value).toLocaleString()}/yr`;
+        }
+        
+        // Redraw vector geometry arrays live
+        generateTerminalGraphVectors();
+    }
+
+    function recalibrateSliderBounds() {
+        // Redraws vector arrays when changes happen across dropdown matrix arrays components
+        generateTerminalGraphVectors();
+    }
+
+    // System Startup Initializer Loop
+    window.addEventListener('DOMContentLoaded', () => {
+        // Temporary patch: unlocks your slider display so you can drag and test immediate interface reactions manually
+        document.getElementById('premium-slider').removeAttribute('disabled');
+        generateTerminalGraphVectors();
+    });
+</script>
 
 
 <script>
