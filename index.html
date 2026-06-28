@@ -380,14 +380,18 @@
         }
 
 .shadow-area-path {
-    fill: url(#areaGradient) !important;
-    /* CHANGED: Softens the illumination layer completely */
+    /* If your path has a dynamic stroke, this shadow will automatically match its exact color color */
+    filter: drop-shadow(0 0 10px currentColor);
+    
+    /* Keep it soft and well-blended */
     mix-blend-mode: screen; 
-    /* You can now use a clean, soft shadow without it exploding */
-    filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.15));
+    opacity: 0.25; /* Use overall element opacity to tame the heavy weight */
+    
+    fill: url(#areaGradient) !important;
     transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
 }
+
 
 
 
