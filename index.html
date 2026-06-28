@@ -381,13 +381,14 @@
 
 .shadow-area-path {
     fill: url(#areaGradient) !important;
-    /* Forces the colors to illuminate intensely on dark backgrounds */
-    mix-blend-mode: plus-lighter; 
-    /* CHANGED: Increased blur to 8px and lowered opacity to 0.1 for a softer, lighter weight */
-    filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.1));
+    /* CHANGED: Softens the illumination layer completely */
+    mix-blend-mode: screen; 
+    /* You can now use a clean, soft shadow without it exploding */
+    filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.15));
     transition: d 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
 }
+
 
 
 
