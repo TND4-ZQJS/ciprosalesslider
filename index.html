@@ -711,10 +711,13 @@
 </linearGradient>
 
                         </defs>
-                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
-                        
-                        <text id="dynamic-y-axis-label" x="40" y="25" class="axis-label" style="text-anchor: start; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
+                        <!-- Grid Lines -->
+<line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+<line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+
+<!-- UPDATED POSITIONING: Moves label to the near top-middle -->
+<text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
+
                         
                         <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
                         <path id="glow-ribbon" class="ribbon-glow" d="" />
