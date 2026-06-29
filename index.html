@@ -805,126 +805,7 @@
     </footer>
 
 <script>
-    // 1. CHART BOUNDS MATRIX SETUP
-    const CHART_GEOMETRY = {
-        baselineY: 180,       // Matches the floor line <line y1="180">
-        peakLimitY: 40,       // Maximum vertical height limits
-        horizontalNodes: [40, 144, 248, 352, 456, 560] // Exact horizontal X markers
-    };
-
-    // 2. MATHEMATICAL PROJECTION ENGINE
-function runProjectionCalculations(currentVolume, maxVolume) {
-    const structuralPoints = [];
-    
-    // scaleFactor now handles the ratio relative to the total compounded portfolio value ceiling
-    const scaleFactor = 0.95; // Keeps the line consistently filling the chart beautifully
-
-    for (let i = 0; i < CHART_GEOMETRY.horizontalNodes.length; i++) {
-        const currentX = CHART_GEOMETRY.horizontalNodes[i];
-        
-        const growthFactorCurve = Math.pow(i / (CHART_GEOMETRY.horizontalNodes.length - 1), 1.6);
-        const absoluteLiftValue = (CHART_GEOMETRY.baselineY - CHART_GEOMETRY.peakLimitY) * scaleFactor * growthFactorCurve;
-        
-        const structuralY = CHART_GEOMETRY.baselineY - absoluteLiftValue;
-        structuralPoints.push({ x: currentX, y: structuralY });
-    }
-    return structuralPoints;
-}
-
-
-    // 3. VECTOR COMPILER & DOM INJECTION LAYER
-   function generateTerminalGraphVectors() {
-    const interactionSlider = document.getElementById('premium-slider');
-    if (!interactionSlider) return;
-
-    const currentSelectedInput = parseFloat(interactionSlider.value) || 45000;
-    
-    // ── OLD WAY ──
-    // const maximumBoundRange = parseFloat(interactionSlider.max) || 300000;
-
-    // ── NEW APPLE-STYLE AUTO-SCALE WAY ──
-    // 1. Calculate what your actual highest projected value is at Year 35
-    // (Replace 'calculateMaxProjectedValue' with your actual array's peak calculation if needed)
-    const peakAccountValue = currentSelectedInput * 13.5; // Example compounding metric multiplier
-    
-    // 2. Round it to a clean number for the scale text layout (e.g., 650,000)
-    const maximumBoundRange = Math.ceil(peakAccountValue / 50000) * 50000;
-
-    // Pass this dynamic maximum ceiling into your projection calculations matrix
-    const activeCoordinates = runProjectionCalculations(currentSelectedInput, maximumBoundRange);
-
-    // A. Line Ribbon Vector String Generation
-    let primaryRibbonString = `M ${activeCoordinates[0].x} ${activeCoordinates[0].y}`;
-    for (let i = 1; i < activeCoordinates.length; i++) {
-        primaryRibbonString += ` L ${activeCoordinates[i].x} ${activeCoordinates[i].y}`;
-    }
-
-    // B. CLOSED LOOP SHADOW SHAPE PATH 
-    let heavyShadowString = `M ${activeCoordinates[0].x} ${activeCoordinates[0].y}`;
-    for (let i = 1; i < activeCoordinates.length; i++) {
-        heavyShadowString += ` L ${activeCoordinates[i].x} ${activeCoordinates[i].y}`;
-    }
-    heavyShadowString += ` L ${activeCoordinates[activeCoordinates.length - 1].x} 180`;
-    heavyShadowString += ` L ${activeCoordinates[0].x} 180`;
-    heavyShadowString += ` Z`;
-
-    // C. DEPLOY PATH ATTRIBUTES TO DOM
-    const mainRibbon = document.getElementById('main-ribbon');
-    const glowRibbon = document.getElementById('glow-ribbon');
-    const shadowArea = document.getElementById('shadow-area');
-    const dynamicYLabel = document.getElementById('dynamic-y-axis-label');
-
-    if (mainRibbon) mainRibbon.setAttribute('d', primaryRibbonString);
-    if (glowRibbon) glowRibbon.setAttribute('d', primaryRibbonString);
-    if (shadowArea) shadowArea.setAttribute('d', heavyShadowString);
-
-    // D. INJECT THE DYNAMIC SCALE VALUE INTO THE NEW Y-AXIS LABEL TEXT
-    if (dynamicYLabel) {
-        dynamicYLabel.textContent = `SCALE: RM ${parseInt(maximumBoundRange).toLocaleString()} MAX`;
-    }
-
-    // E. NODE ANCHOR POSITION UPDATES
-    activeCoordinates.forEach((coord, markerIndex) => {
-        const visualNodeElement = document.getElementById(`node-${markerIndex}`);
-        if (visualNodeElement) {
-            visualNodeElement.setAttribute('cx', coord.x);
-            visualNodeElement.setAttribute('cy', coord.y);
-        }
-    });
-}
-
-
-    // 4. WORKFLOW EXECUTION LISTENERS
-    function executeSimulationEngine() {
-        const operationalSlider = document.getElementById('premium-slider');
-        const quantitativeDisplayLabel = document.getElementById('premium-display');
-        
-        if (quantitativeDisplayLabel && operationalSlider) {
-            quantitativeDisplayLabel.innerText = `RM ${parseInt(operationalSlider.value).toLocaleString()}/yr`;
-        }
-        generateTerminalGraphVectors();
-    }
-
-    function recalibrateSliderBounds() {
-        generateTerminalGraphVectors();
-    }
-
-    // 5. SYSTEM INITIALIZATION BOOT FORWARDING LOOKUP
-    window.addEventListener('DOMContentLoaded', () => {
-        // Unlocks UI controller interactions manually
-        const slider = document.getElementById('premium-slider');
-        if (slider) {
-            slider.removeAttribute('disabled');
-        }
-        // Instantly maps vector matrix arrays on boot so it is never empty!
-        generateTerminalGraphVectors();
-    });
-</script>
-
-
-
-<script>
-    // 3-Tier Asynchronous Data Caching & Fetching Architecture
+    // Global Multi-Tier Data Caching Registry
     const quotationCache = {};
     let activeProfileData = null;
     let currentMode = 'premium'; 
@@ -961,6 +842,9 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         }
     }
 
+    /**
+     * Generates an elegant, Apple-style smooth cubic spline string
+     */
     function getSmoothBezierPath(coords) {
         if (coords.length === 0) return "";
         let pathString = `M ${coords[0].x} ${coords[0].y}`;
@@ -973,6 +857,9 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         return pathString;
     }
 
+    /**
+     * Configures mutual slider locking mechanisms
+     */
     function setMode(mode) {
         currentMode = mode;
         document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
@@ -1006,6 +893,9 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         recalibrateSliderBounds(); 
     }
 
+    /**
+     * Recalibrates structural bounds, step constraints, and min/max slider ticks
+     */
     async function recalibrateSliderBounds() {
         const ageSelector = document.getElementById('age-selector');
         const termSlider = document.getElementById('term-selector');
@@ -1017,7 +907,7 @@ function runProjectionCalculations(currentVolume, maxVolume) {
 
         let ageValue = parseInt(ageSelector.value);
         let termKey = termSlider.value;
-        let genderValue = genderSelector ? genderSelector.value : "Male"; // Gracefully falls back if no UI element
+        let genderValue = genderSelector ? genderSelector.value : "Male"; 
 
         const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
         
@@ -1077,6 +967,9 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         executeSimulationEngine();
     }
           
+    /**
+     * Primary Insurance Simulation and Interpolation Core Engine
+     */
     async function executeSimulationEngine() {
         const ageSelector = document.getElementById('age-selector');
         const termSlider = document.getElementById('term-selector');
@@ -1144,11 +1037,9 @@ function runProjectionCalculations(currentVolume, maxVolume) {
             if (simulatedPremium > pMid && pMax > pMid) {
                 zoomProgress = (simulatedPremium - pMid) / (pMax - pMid);
                 zoomProgress = Math.min(Math.max(zoomProgress, 0), 1);
-                // Apply mathematical smooth-stepping curve
                 zoomProgress = zoomProgress * zoomProgress * (3 - 2 * zoomProgress);
             }
 
-            // Linearly interpolate the ViewBox coordinates seamlessly
             const currentX      = 0   + (200 * zoomProgress);
             const currentY      = 0   + (20  * zoomProgress);
             const currentWidth  = 600 - (200 * zoomProgress);
@@ -1163,6 +1054,7 @@ function runProjectionCalculations(currentVolume, maxVolume) {
             }
         }    
 
+        // Calculate proportions across scenarios
         let baseScenario, topScenario, proportion;
 
         if (simulatedPremium <= pMin) {
@@ -1179,6 +1071,7 @@ function runProjectionCalculations(currentVolume, maxVolume) {
             proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
         }
 
+        // Generate current simulated live array values data points
         let simulatedMilestones = [];
         for (let i = 0; i < 6; i++) {
             let v1 = baseScenario.milestones[i].accountValue;
@@ -1201,6 +1094,9 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
     }
 
+    /**
+     * Safety Fallback Default Matrix Handlers
+     */
     function renderEmptyState() {
         const premiumDisplay = document.getElementById('premium-display');
         if (premiumDisplay) premiumDisplay.innerText = "Data Stream Empty";
@@ -1225,6 +1121,9 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         if (shadowArea) shadowArea.setAttribute('d', '');
     }
     
+    /**
+     * Refreshes DOM structural values, maps coordinates, and injects dynamic scales
+     */
     function updateUIOutputs(premium, milestones, pMinBoundary, scenarioData) {
         const protectionSlider = document.getElementById('protection-slider');
         if (!protectionSlider) return;
@@ -1246,6 +1145,7 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         const premiumDisplay = document.getElementById('premium-display');
         if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
 
+        // 1. EXTRACT LIVE INTERPOLATED VALUES MATRIX
         const valuesList = milestones.map(m => {
             if (typeof m.accountValue === 'number') return m.accountValue;
             if (typeof m.accountValue === 'string') {
@@ -1255,7 +1155,23 @@ function runProjectionCalculations(currentVolume, maxVolume) {
             return 0;
         });
         
-        const localMax = Math.max(...valuesList, 100000);
+        const localMax = Math.max(...valuesList, 10);
+
+        // 2. FIXED ANTI-OVERSHOOT AUTOMATIC CEILING SELECTOR
+        // Rounds up matching your JSON boundaries smoothly, preventing any pipeline overflow
+        let dynamicChartCeiling = 100000;
+        if (localMax > 100000) {
+            dynamicChartCeiling = Math.ceil(localMax / 100000) * 100000;
+        }
+        if (dynamicChartCeiling > 1000000) {
+            dynamicChartCeiling = Math.ceil(localMax / 500000) * 500000;
+        }
+
+        // 3. UPDATE APPLE THEME Y-AXIS SCALE CONTENT FIELD DIRECTLY
+        const dynamicYLabel = document.getElementById('dynamic-y-axis-label');
+        if (dynamicYLabel) {
+            dynamicYLabel.textContent = `SCALE: RM ${parseInt(dynamicChartCeiling).toLocaleString()} MAX`;
+        }
 
         let pMid = pMinBoundary || 1500;
         let pMax = premium > pMid ? premium * 1.3 : 300000;
@@ -1263,19 +1179,6 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         if (scenarioData) {
             if (scenarioData.maxPremiumScenario) pMax = scenarioData.maxPremiumScenario.premiumAmount || pMax;
             if (scenarioData.midPremiumScenario) pMid = scenarioData.midPremiumScenario.premiumAmount || pMid;
-        }
-
-        // DUAL-ZONE CEILING MATH
-        let yCeiling;
-        const isFocusGrowth = (premium > pMid);
-
-        if (isFocusGrowth && pMax > pMid) {
-            const linearProgress = Math.min(Math.max((premium - pMid) / (pMax - pMid), 0), 1); 
-            const exponentialProgress = Math.pow(linearProgress, 3);
-            const dynamicBuffer = 1.25 - (exponentialProgress * 0.23); 
-            yCeiling = localMax * dynamicBuffer;
-        } else {
-            yCeiling = localMax * 1.25; 
         }
 
         // --- LIQUID HORIZONTAL X-AXIS INTERPOLATION ENGINE ---
@@ -1295,10 +1198,12 @@ function runProjectionCalculations(currentVolume, maxVolume) {
             xCoordinates.push(interpolatedX);
         }
 
-        // SVG GRID Y-COORDINATE PLOTTER
+        // SECURE GEOMETRIC SVG HEIGHT SCALER LIFT
+        // Formulated directly against the auto-scaling json data file framework parameters
         function toSvgY(val) {
             const cleanVal = isNaN(val) ? 0 : val;
-            return 180 - ((cleanVal / yCeiling) * 140);
+            // 180 is the baseline floor, 140 is the dynamic vertical window margin (180px down to 40px chart limit boundary)
+            return 180 - ((cleanVal / dynamicChartCeiling) * 140);
         }
 
         const activeCoords = [];
@@ -1358,6 +1263,7 @@ function runProjectionCalculations(currentVolume, maxVolume) {
             shadowArea.setAttribute('d', closedPath);
         }
 
+        // Toggle warnings for downslope projections dynamically
         const isDownslope = (premium < pMinBoundary);
         const gradEnd = document.getElementById('gradient-end');
         const glowGradEnd = document.getElementById('glow-gradient-end');
@@ -1377,31 +1283,29 @@ function runProjectionCalculations(currentVolume, maxVolume) {
         }
     }
 
+    // System Initialization Entry Trigger
     document.addEventListener("DOMContentLoaded", () => {
-        recalibrateSliderBounds(); // Triggers foundational data stream pull safely on initialization
+        recalibrateSliderBounds(); 
     });
 
-function switchFolderTab(panelId, tabElement) {
-    // 1. Deactivate all tabs inside this panel container
-    const tabContainer = tabElement.parentElement;
-    tabContainer.querySelectorAll('.folder-tab').forEach(tab => {
-        tab.classList.remove('active-tab');
-    });
-    
-    // 2. Hide all tab content panels
-    const parentContainer = tabContainer.parentElement;
-    parentContainer.querySelectorAll('.tab-panel').forEach(panel => {
-        panel.classList.remove('active-panel');
-    });
-    
-    // 3. Activate selected tab and matching content panel
-    tabElement.classList.add('active-tab');
-    document.getElementById(panelId).classList.add('active-panel');
-}
-
-
+    /**
+     * Interface Folder Tab Toggle Manager
+     */
+    function switchFolderTab(panelId, tabElement) {
+        const tabContainer = tabElement.parentElement;
+        tabContainer.querySelectorAll('.folder-tab').forEach(tab => {
+            tab.classList.remove('active-tab');
+        });
+        
+        const parentContainer = tabContainer.parentElement;
+        parentContainer.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('active-panel');
+        });
+        
+        tabElement.classList.add('active-tab');
+        document.getElementById(panelId).classList.add('active-panel');
+    }
 </script>
-
 
 
 </body>
