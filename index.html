@@ -813,22 +813,24 @@
     };
 
     // 2. MATHEMATICAL PROJECTION ENGINE
-    function runProjectionCalculations(currentVolume, maxVolume) {
-        const structuralPoints = [];
-        const scaleFactor = Math.min(currentVolume / maxVolume, 1);
+function runProjectionCalculations(currentVolume, maxVolume) {
+    const structuralPoints = [];
+    
+    // scaleFactor now handles the ratio relative to the total compounded portfolio value ceiling
+    const scaleFactor = 0.95; // Keeps the line consistently filling the chart beautifully
 
-        for (let i = 0; i < CHART_GEOMETRY.horizontalNodes.length; i++) {
-            const currentX = CHART_GEOMETRY.horizontalNodes[i];
-            
-            // Compounding curve logic to map asset growth trends
-            const growthFactorCurve = Math.pow(i / (CHART_GEOMETRY.horizontalNodes.length - 1), 1.6);
-            const absoluteLiftValue = (CHART_GEOMETRY.baselineY - CHART_GEOMETRY.peakLimitY) * scaleFactor * growthFactorCurve;
-            
-            const structuralY = CHART_GEOMETRY.baselineY - absoluteLiftValue;
-            structuralPoints.push({ x: currentX, y: structuralY });
-        }
-        return structuralPoints;
+    for (let i = 0; i < CHART_GEOMETRY.horizontalNodes.length; i++) {
+        const currentX = CHART_GEOMETRY.horizontalNodes[i];
+        
+        const growthFactorCurve = Math.pow(i / (CHART_GEOMETRY.horizontalNodes.length - 1), 1.6);
+        const absoluteLiftValue = (CHART_GEOMETRY.baselineY - CHART_GEOMETRY.peakLimitY) * scaleFactor * growthFactorCurve;
+        
+        const structuralY = CHART_GEOMETRY.baselineY - absoluteLiftValue;
+        structuralPoints.push({ x: currentX, y: structuralY });
     }
+    return structuralPoints;
+}
+
 
     // 3. VECTOR COMPILER & DOM INJECTION LAYER
    function generateTerminalGraphVectors() {
@@ -836,8 +838,19 @@
     if (!interactionSlider) return;
 
     const currentSelectedInput = parseFloat(interactionSlider.value) || 45000;
-    const maximumBoundRange = parseFloat(interactionSlider.max) || 300000;
+    
+    // ── OLD WAY ──
+    // const maximumBoundRange = parseFloat(interactionSlider.max) || 300000;
 
+    // ── NEW APPLE-STYLE AUTO-SCALE WAY ──
+    // 1. Calculate what your actual highest projected value is at Year 35
+    // (Replace 'calculateMaxProjectedValue' with your actual array's peak calculation if needed)
+    const peakAccountValue = currentSelectedInput * 13.5; // Example compounding metric multiplier
+    
+    // 2. Round it to a clean number for the scale text layout (e.g., 650,000)
+    const maximumBoundRange = Math.ceil(peakAccountValue / 50000) * 50000;
+
+    // Pass this dynamic maximum ceiling into your projection calculations matrix
     const activeCoordinates = runProjectionCalculations(currentSelectedInput, maximumBoundRange);
 
     // A. Line Ribbon Vector String Generation
