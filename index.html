@@ -711,13 +711,15 @@
 </linearGradient>
 
                         </defs>
-                        
                         <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
                         <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
                         
-                        <path id="shadow-area" class="shadow-area-path" d="" />
+                        <text id="dynamic-y-axis-label" x="40" y="25" class="axis-label" style="text-anchor: start; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
+                        
+                        <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
                         <path id="glow-ribbon" class="ribbon-glow" d="" />
                         <path id="main-ribbon" class="ribbon-main" d="" />
+
                         
                         <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
                         <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
@@ -829,45 +831,55 @@
     }
 
     // 3. VECTOR COMPILER & DOM INJECTION LAYER
-    function generateTerminalGraphVectors() {
-        const interactionSlider = document.getElementById('premium-slider');
-        if (!interactionSlider) return;
+   function generateTerminalGraphVectors() {
+    const interactionSlider = document.getElementById('premium-slider');
+    if (!interactionSlider) return;
 
-        const currentSelectedInput = parseFloat(interactionSlider.value) || 45000;
-        const maximumBoundRange = parseFloat(interactionSlider.max) || 300000;
+    const currentSelectedInput = parseFloat(interactionSlider.value) || 45000;
+    const maximumBoundRange = parseFloat(interactionSlider.max) || 300000;
 
-        const activeCoordinates = runProjectionCalculations(currentSelectedInput, maximumBoundRange);
+    const activeCoordinates = runProjectionCalculations(currentSelectedInput, maximumBoundRange);
 
-        // A. Line Ribbon Vector String Generation
-        let primaryRibbonString = `M ${activeCoordinates[0].x} ${activeCoordinates[0].y}`;
-        for (let i = 1; i < activeCoordinates.length; i++) {
-            primaryRibbonString += ` L ${activeCoordinates[i].x} ${activeCoordinates[i].y}`;
-        }
-
-        // B. FIXED HEAVY VERTICAL SHADOW VECTOR CLOSED-LOOP
-        let heavyShadowString = `M ${activeCoordinates[0].x} ${activeCoordinates[0].y}`;
-        for (let i = 1; i < activeCoordinates.length; i++) {
-            heavyShadowString += ` L ${activeCoordinates[i].x} ${activeCoordinates[i].y}`;
-        }
-        // Force the shadow path down to the baseline floor grid coordinate (180)
-        heavyShadowString += ` L ${activeCoordinates[activeCoordinates.length - 1].x} 180`;
-        heavyShadowString += ` L ${activeCoordinates[0].x} 180`;
-        heavyShadowString += ` Z`; // Securely close the bottom layout framework path loop
-
-        // C. DOM DEPLOYMENT HOOKS
-        document.getElementById('main-ribbon').setAttribute('d', primaryRibbonString);
-        document.getElementById('glow-ribbon').setAttribute('d', primaryRibbonString);
-        document.getElementById('shadow-area').setAttribute('d', heavyShadowString);
-
-        // D. NODE ANCHOR UPDATES
-        activeCoordinates.forEach((coord, markerIndex) => {
-            const visualNodeElement = document.getElementById(`node-${markerIndex}`);
-            if (visualNodeElement) {
-                visualNodeElement.setAttribute('cx', coord.x);
-                visualNodeElement.setAttribute('cy', coord.y);
-            }
-        });
+    // A. Line Ribbon Vector String Generation
+    let primaryRibbonString = `M ${activeCoordinates[0].x} ${activeCoordinates[0].y}`;
+    for (let i = 1; i < activeCoordinates.length; i++) {
+        primaryRibbonString += ` L ${activeCoordinates[i].x} ${activeCoordinates[i].y}`;
     }
+
+    // B. CLOSED LOOP SHADOW SHAPE PATH 
+    let heavyShadowString = `M ${activeCoordinates[0].x} ${activeCoordinates[0].y}`;
+    for (let i = 1; i < activeCoordinates.length; i++) {
+        heavyShadowString += ` L ${activeCoordinates[i].x} ${activeCoordinates[i].y}`;
+    }
+    heavyShadowString += ` L ${activeCoordinates[activeCoordinates.length - 1].x} 180`;
+    heavyShadowString += ` L ${activeCoordinates[0].x} 180`;
+    heavyShadowString += ` Z`;
+
+    // C. DEPLOY PATH ATTRIBUTES TO DOM
+    const mainRibbon = document.getElementById('main-ribbon');
+    const glowRibbon = document.getElementById('glow-ribbon');
+    const shadowArea = document.getElementById('shadow-area');
+    const dynamicYLabel = document.getElementById('dynamic-y-axis-label');
+
+    if (mainRibbon) mainRibbon.setAttribute('d', primaryRibbonString);
+    if (glowRibbon) glowRibbon.setAttribute('d', primaryRibbonString);
+    if (shadowArea) shadowArea.setAttribute('d', heavyShadowString);
+
+    // D. INJECT THE DYNAMIC SCALE VALUE INTO THE NEW Y-AXIS LABEL TEXT
+    if (dynamicYLabel) {
+        dynamicYLabel.textContent = `SCALE: RM ${parseInt(maximumBoundRange).toLocaleString()} MAX`;
+    }
+
+    // E. NODE ANCHOR POSITION UPDATES
+    activeCoordinates.forEach((coord, markerIndex) => {
+        const visualNodeElement = document.getElementById(`node-${markerIndex}`);
+        if (visualNodeElement) {
+            visualNodeElement.setAttribute('cx', coord.x);
+            visualNodeElement.setAttribute('cy', coord.y);
+        }
+    });
+}
+
 
     // 4. WORKFLOW EXECUTION LISTENERS
     function executeSimulationEngine() {
