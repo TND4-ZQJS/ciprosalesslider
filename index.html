@@ -220,7 +220,23 @@
         }
 
         /* Shrunk numbers from 1.25rem to 1.05rem for clean, data-dense layout balance */
-        .milestone-value { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; transition: color 0.3s ease, font-size 0.3s ease; }
+.milestone-value { 
+    font-size: 1.05rem; 
+    font-weight: 700; 
+    letter-spacing: -0.01em; 
+    transition: color 0.3s ease, font-size 0.3s ease; 
+
+    /* CRITICAL FIX: Forces numbers into uniform width boxes */
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    -webkit-font-feature-settings: "tnum";
+    -moz-font-feature-settings: "tnum";
+
+    /* LAYOUT LOCK: Stabilizes text boundaries as values jump to millions */
+    display: inline-block;
+    text-align: right;   /* Aligns numerals perfectly down a straight edge */
+    min-width: 115px;    /* Comfortably holds up to RM 9,999,999 without snapping layers */
+}
 
         .mode-selector {
             display: flex;
