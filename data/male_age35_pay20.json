@@ -307,7 +307,7 @@
           { "policyYear": 10, "ageNext": 45, "accountValue": 508837 },
           { "policyYear": 20, "ageNext": 55, "accountValue": 1271469 },
           { "policyYear": 35, "ageNext": 70, "accountValue": 1342111 },
-          { "policyYear": 45, "ageNext": 80, "accountValue": 323126
+          { "policyYear": 45, "ageNext": 80, "accountValue": 323126 }
         ]
       },
       "sustainable70Scenario": {
