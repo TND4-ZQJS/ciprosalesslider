@@ -285,7 +285,7 @@
           { "policyYear": 10, "ageNext": 55, "accountValue": 2111278 },
           { "policyYear": 20, "ageNext": 65, "accountValue": 2801014 },
           { "policyYear": 25, "ageNext": 70, "accountValue": 3077444 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 925647 }
+          { "policyYear": 35, "ageNext": 80, "accountValue": 4491992 }
         ]
       },
       "midPremiumScenario": {
