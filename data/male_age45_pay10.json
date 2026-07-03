@@ -48,7 +48,7 @@
     },
     "800000": {
       "maxPremiumScenario": {
-        "premiumAmount": 68654,
+        "premiumAmount": 36660,
         "milestones": [
           { "policyYear": 1, "ageNext": 46, "accountValue": 35910 },
           { "policyYear": 5, "ageNext": 50, "accountValue": 307238 },
