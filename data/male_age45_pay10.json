@@ -311,13 +311,13 @@
         ]
       },
       "sustainable70Scenario": {
-        "premiumAmount": 52000,
+        "premiumAmount": 90000,
         "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 24394 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 210658 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 257849 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 215468 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 9735 },
+          { "policyYear": 1, "ageNext": 46, "accountValue": 33173 },
+          { "policyYear": 5, "ageNext": 50, "accountValue": 278347 },
+          { "policyYear": 10, "ageNext": 55, "accountValue": 685967 },
+          { "policyYear": 20, "ageNext": 65, "accountValue": 573308 },
+          { "policyYear": 25, "ageNext": 70, "accountValue": 24803 },
           { "policyYear": 35, "ageNext": 80, "accountValue": 0 }
         ]
       }
