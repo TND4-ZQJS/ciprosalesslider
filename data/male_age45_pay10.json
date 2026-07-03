@@ -300,7 +300,7 @@
         ]
       },
       "leastPremiumScenario": {
-        "premiumAmount": 134000
+        "premiumAmount": 134000,
         "milestones": [
           { "policyYear": 1, "ageNext": 46, "accountValue": 56874 },
           { "policyYear": 5, "ageNext": 50, "accountValue": 473337 },
