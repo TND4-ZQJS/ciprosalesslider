@@ -876,7 +876,7 @@
             Projections Matrix
         </div>
         <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
-            Analysis Desk
+            Diagnostic Analysis Desk
         </div>
     </div>
 
@@ -909,20 +909,29 @@
 
     <!-- Folder Content 2: Auxiliary Analysis Space -->
     <div id="analysis-panel" class="tab-panel">
-        <div class="panel-title">Additional Premium & Breakeven Analysis</div>
+        <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
         <div class="milestone-grid">
-            <div class="milestone-card" id="card-breakeven">
-                <div class="milestone-age">Est. Breakeven Year</div>
-                <div class="milestone-value" id="val-breakeven">Year --</div>
+            <div class="milestone-card" id="card-net-cost">
+                <div class="milestone-age">Amortized Net Cost / Yr</div>
+                <div class="milestone-value" id="val-net-cost">RM --</div>
             </div>
-            <div class="milestone-card" id="card-total-premium">
-                <div class="milestone-age">Total Premium Paid</div>
-                <div class="milestone-value" id="val-total-premium">RM --</div>
+            <div class="milestone-card" id="card-cost-100k">
+                <div class="milestone-age">Net Leverage Cost / 100K</div>
+                <div class="milestone-value" id="val-cost-100k">RM --</div>
+            </div>
+            <div class="milestone-card" id="card-leverage-factor">
+                <div class="milestone-age">Capital Leverage Multiplier</div>
+                <div class="milestone-value" id="val-leverage-factor">--</div>
+            </div>
+            <div class="milestone-card" id="card-preservation-factor">
+                <div class="milestone-age">Equity Retention Yield</div>
+                <div class="milestone-value" id="val-preservation-factor">--</div>
             </div>
         </div>
     </div>
 
 </div>
+
 
 
 </div>
@@ -1420,6 +1429,66 @@ function dismissGatekeeper() {
                 if (nodeEl) nodeEl.style.stroke = ''; 
             }
         }
+
+            // ==========================================================================
+        // ADVANCED ANALYSIS DESK METRIC CALCULATION ENGINE
+        // ==========================================================================
+        const termSelector = document.getElementById('term-selector');
+        let payYears = 6;
+        if (termSelector.value === 'pay10') payYears = 10;
+        if (termSelector.value === 'pay20') payYears = 20;
+
+        // 1. Calculate Base Inputs
+        let totalPremiumPaid = premium * payYears;
+        let year35AccountValue = milestones[5].accountValue;
+
+        // 2. Amortized Net Cost / Year
+        let amortizedNetCost = (totalPremiumPaid - year35AccountValue) / 35;
+        const valNetCostEl = document.getElementById('val-net-cost');
+        if (valNetCostEl) {
+            if (premium < pMinBoundary) {
+                valNetCostEl.innerText = "Lapse Risk";
+                valNetCostEl.style.color = "var(--neon-red)";
+            } else {
+                valNetCostEl.innerText = (amortizedNetCost < 0 ? "-" : "") + "RM " + Math.abs(Math.round(amortizedNetCost)).toLocaleString();
+                valNetCostEl.style.color = amortizedNetCost < 0 ? "var(--neon-green)" : "var(--text-main)";
+            }
+        }
+
+        // 3. Net Leverage Cost Per RM 100,000 of Cover
+        const valCost100kEl = document.getElementById('val-cost-100k');
+        if (valCost100kEl) {
+            if (premium < pMinBoundary) {
+                valCost100kEl.innerText = "N/A";
+                valCost100kEl.style.color = "var(--text-muted)";
+            } else {
+                let costPer100K = (amortizedNetCost / (currentProtection / 100000));
+                valCost100kEl.innerText = (costPer100K < 0 ? "-" : "") + "RM " + Math.abs(Math.round(costPer100K)).toLocaleString();
+                valCost100kEl.style.color = costPer100K < 0 ? "var(--neon-green)" : "var(--text-main)";
+            }
+        }
+
+        // 4. Capital Leverage Multiplier
+        const valLeverageEl = document.getElementById('val-leverage-factor');
+        if (valLeverageEl) {
+            let protectionLeverageRatio = currentProtection / Math.max(totalPremiumPaid, 1);
+            valLeverageEl.innerText = protectionLeverageRatio.toFixed(2) + "x";
+            valLeverageEl.style.color = "var(--secondary-glow)";
+        }
+
+        // 5. Equity Retention Yield
+        const valPreservationEl = document.getElementById('val-preservation-factor');
+        if (valPreservationEl) {
+            let retainedEquityRatio = (year35AccountValue / Math.max(totalPremiumPaid, 1)) * 100;
+            if (premium < pMinBoundary) {
+                valPreservationEl.innerText = "0.0%";
+                valPreservationEl.style.color = "var(--neon-red)";
+            } else {
+                valPreservationEl.innerText = retainedEquityRatio.toFixed(1) + "%";
+                valPreservationEl.style.color = retainedEquityRatio >= 100 ? "var(--neon-green)" : "var(--neon-amber)";
+            }
+        }
+
     }
 
     // System Initialization Entry Trigger
