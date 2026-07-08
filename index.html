@@ -130,73 +130,152 @@
                     </div>
                 </div>
             </div>
-        </div> <div class="display-viewport">
-            <div class="graph-wrapper">
-                <div class="chart-container">
-                    <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
-                        <defs>
-                            <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="6" result="blurOut" />
-                                <feMerge>
-                                    <feMergeNode in="blurOut" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                            <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#8A2BE2" /> 
-                                <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
-                            </linearGradient>
-                            <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#aa55ff" />
-                                <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
-                            </linearGradient>
-                        <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-    <!-- Heavy primary purple color layer directly underneath the ribbon line -->
-    <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
-    <!-- Blends color density smoothly into neon blue halfway down -->
-    <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
-    <!-- Drops off completely to absolute transparency right at the baseline -->
-    <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
-</linearGradient>
+        </div> 
 
-                        </defs>
-                        <!-- Grid Lines -->
-<line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-<line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+        <div class="display-viewport">
+    
+    <!-- 1. YOUR ORIGINAL GRAPH WRAPPER (We added id="graph-viewport-wrapper" here) -->
+    <div id="graph-viewport-wrapper" class="graph-wrapper">
+        <div class="chart-container">
+            <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur stdDeviation="6" result="blurOut" />
+                        <feMerge>
+                            <feMergeNode in="blurOut" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                    <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#8A2BE2" /> 
+                        <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
+                    </linearGradient>
+                    <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#aa55ff" />
+                        <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
+                    </linearGradient>
+                    <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
+                        <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
+                        <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
+                    </linearGradient>
+                </defs>
+                <!-- Grid Lines -->
+                <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
 
-<!-- UPDATED POSITIONING: Moves label to the near top-middle -->
-<text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
+                <text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
+                
+                <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
+                <path id="glow-ribbon" class="ribbon-glow" d="" />
+                <path id="main-ribbon" class="ribbon-main" d="" />
 
-                        
-                        <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
-                        <path id="glow-ribbon" class="ribbon-glow" d="" />
-                        <path id="main-ribbon" class="ribbon-main" d="" />
+                <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
+                <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
+                <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
+                <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
+                <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
+                <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
 
-                        
-                        <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
-                        <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
-                        <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
+                <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
+                <text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
+                <text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
+                <text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
+                <text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
+                <text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
+            </svg>
+        </div>
+    </div>
 
-                        <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
-                        <text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
-                        <text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
-                        <text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
-                        <text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
-                        <text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
-                    </svg>
+    <!-- 2. INJECT NEW TAB 1 WORKSPACE CONTAINER (Starts visible by default) -->
+    <div id="tab1-protection-blueprint" class="protection-workspace" style="display: block; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+        <h2 style="font-weight: 600; margin-top: 0; margin-bottom: 24px; color: #1d1d1f; font-size: 20px;">Product Protection Pillars</h2>
+        
+        <!-- Pillar 1: Manulife Heritage Card -->
+        <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e5ea;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                <div>
+                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #86868b; font-weight: 600;">Pillar 1 • Core Legacy</span>
+                    <h3 style="margin: 4px 0 0 0; font-size: 16px; color: #1d1d1f; font-weight: 600;">Manulife Heritage (Death & TPD)</h3>
+                </div>
+                <div id="heritage-discount-badge" style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"></div>
+            </div>
+            <div style="font-size: 26px; font-weight: 700; color: #0071e3; margin-bottom: 16px;" id="heritage-primary-value">RM 0</div>
+            
+            <div style="border-top: 1px solid #f2f2f7; padding-top: 14px;">
+                <div style="font-size: 11px; color: #86868b; margin-bottom: 8px; font-weight: 500;">🛡️ Built-in Protection Booster Progression:</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
+                    <div style="background: #f5f5f7; padding: 8px; border-radius: 8px;">
+                        <div style="font-size: 10px; color: #86868b;">Years 1-10</div>
+                        <div style="font-size: 12px; font-weight: 600; color: #1d1d1f; margin-top: 2px;" id="booster-y1-10">RM 0</div>
+                    </div>
+                    <div style="background: #f5f5f7; padding: 8px; border-radius: 8px;">
+                        <div style="font-size: 10px; color: #86868b;">Years 11-20 (+5%)</div>
+                        <div style="font-size: 12px; font-weight: 600; color: #1d1d1f; margin-top: 2px;" id="booster-y11-20">RM 0</div>
+                    </div>
+                    <div style="background: #f5f5f7; padding: 8px; border-radius: 8px;">
+                        <div style="font-size: 10px; color: #86868b;">Years 21+ (+10%)</div>
+                        <div style="font-size: 12px; font-weight: 600; color: #1d1d1f; margin-top: 2px;" id="booster-y21">RM 0</div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Pillar 2: Manulife Critical Cover Card -->
+        <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e5ea;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                <div>
+                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #86868b; font-weight: 600;">Pillar 2 • Living Benefit</span>
+                    <h3 style="margin: 4px 0 0 0; font-size: 16px; color: #1d1d1f; font-weight: 600;">Manulife Critical Cover (MCC)</h3>
+                </div>
+                <div id="mcc-discount-badge" style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"></div>
+            </div>
+            <div style="font-size: 26px; font-weight: 700; color: #0071e3; margin-bottom: 10px;" id="mcc-primary-value">RM 0</div>
+            <p style="margin: 0; font-size: 12px; color: #515154; line-height: 1.4;">Covers 48 Critical Illnesses and includes immediate financial support via the Admission Event benefit.</p>
+        </div>
+
+        <!-- Pillar 3: Accidental Death Card -->
+        <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e5ea;">
+            <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #86868b; font-weight: 600;">Pillar 3 • Contingency Multiplier</span>
+            <h3 style="margin: 4px 0 12px 0; font-size: 16px; color: #1d1d1f; font-weight: 600;">Accidental Death Benefit</h3>
+            <div style="display: flex; gap: 12px; align-items: center; background: #f5f5f7; padding: 12px; border-radius: 8px;">
+                <div style="flex: 1;">
+                    <div style="font-size: 10px; color: #86868b;">Base Benefit</div>
+                    <div style="font-size: 14px; font-weight: 600; color: #515154;" id="accidental-base-value">RM 0</div>
+                </div>
+                <div style="font-size: 16px; color: #86868b;">➔</div>
+                <div style="flex: 1;">
+                    <div style="font-size: 10px; color: #34c759; font-weight: 600;">Max Quadruple Payout (400%)</div>
+                    <div style="font-size: 18px; font-weight: 700; color: #34c759;" id="accidental-max-value">RM 0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. PLACEHOLDER CONTAINER FOR FUTURE TAB 2 (Starts hidden) -->
+    <div id="tab2-liquidity-blueprint" style="display: none; padding: 20px;">
+        <!-- We will construct Tab 2 layout content here -->
+    </div>
+
+</div>
 
 <div class="indicators-panel">
     
-    <!-- Folder Tabs Deck -->
+<!-- Folder Tabs Deck -->
     <div class="tabs-container">
-        <div class="folder-tab active-tab" onclick="switchFolderTab('projections-panel', this)">
+        <!-- 1. NEW DEFAULT TAB -->
+        <div class="folder-tab active-tab" onclick="switchFolderTab('core-blueprint', this)">
+            Product Features Blueprint
+        </div>
+        <!-- 2. NEW SECOND TAB -->
+        <div class="folder-tab" onclick="switchFolderTab('liquidity-architecture', this)">
+            Liquidity Architecture
+        </div>
+        <!-- 3. ORIGINAL PROJECTIONS TAB (active-tab class removed) -->
+        <div class="folder-tab" onclick="switchFolderTab('projections-panel', this)">
             Projections Matrix
         </div>
+        <!-- 4. ORIGINAL ANALYSIS TAB -->
         <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
             Diagnostic Analysis Desk
         </div>
@@ -821,20 +900,123 @@ function dismissGatekeeper() {
     /**
      * Interface Folder Tab Toggle Manager
      */
-    function switchFolderTab(panelId, tabElement) {
-        const tabContainer = tabElement.parentElement;
-        tabContainer.querySelectorAll('.folder-tab').forEach(tab => {
-            tab.classList.remove('active-tab');
-        });
-        
-        const parentContainer = tabContainer.parentElement;
-        parentContainer.querySelectorAll('.tab-panel').forEach(panel => {
-            panel.classList.remove('active-panel');
-        });
-        
-        tabElement.classList.add('active-tab');
-        document.getElementById(panelId).classList.add('active-panel');
+function switchFolderTab(panelId, tabElement) {
+    const tabContainer = tabElement.parentElement;
+    tabContainer.querySelectorAll('.folder-tab').forEach(tab => {
+        tab.classList.remove('active-tab');
+    });
+    
+    const parentContainer = tabContainer.parentElement;
+    parentContainer.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active-panel');
+    });
+    
+    tabElement.classList.add('active-tab');
+    
+    // Safety check: only add active-panel if the panelId element actually exists in the DOM
+    const targetPanel = document.getElementById(panelId);
+    if (targetPanel) {
+        targetPanel.classList.add('active-panel');
     }
+
+    // --- NEW: CONTROLLING THE RIGHT GRAPH VIEWPORT AREA ---
+    const graphWrapper = document.getElementById('graph-viewport-wrapper');
+    const tab1Wrapper = document.getElementById('tab1-protection-blueprint');
+    const tab2Wrapper = document.getElementById('tab2-liquidity-blueprint');
+
+    if (panelId === 'core-blueprint') {
+        if (graphWrapper) graphWrapper.style.display = 'none';
+        if (tab2Wrapper) tab2Wrapper.style.display = 'none';
+        if (tab1Wrapper) tab1Wrapper.style.display = 'block';
+        
+        // Push the current slider value to instantly draw correct numbers on load
+        syncSliderToTab1();
+        
+    } else if (panelId === 'liquidity-architecture') {
+        if (graphWrapper) graphWrapper.style.display = 'none';
+        if (tab1Wrapper) tab1Wrapper.style.display = 'none';
+        if (tab2Wrapper) tab2Wrapper.style.display = 'block';
+        
+    } else {
+        // Restores original chart canvas layout for standard simulation calculation tabs
+        if (tab1Wrapper) tab1Wrapper.style.display = 'none';
+        if (tab2Wrapper) tab2Wrapper.style.display = 'none';
+        if (graphWrapper) graphWrapper.style.display = 'block';
+    }
+}
+
+// Simple helper to find your slider and force an update on initial load
+function syncSliderToTab1() {
+    const sliderEl = document.getElementById('protection-slider') || document.querySelector('input[type="range"]');
+    if (sliderEl) {
+        updateTab1ProtectionBlueprint(sliderEl.value);
+    }
+}
+
+function updateTab1ProtectionBlueprint(rawValue) {
+    const value = parseFloat(rawValue) || 0;
+    const formatCurrency = (val) => 'RM ' + val.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+    const elHeritagePrimary = document.getElementById('heritage-primary-value');
+    if (!elHeritagePrimary) return; // Exit quietly if layout isn't painted yet
+
+    // 1. Sync primary values across elements
+    document.getElementById('heritage-primary-value').innerText = formatCurrency(value);
+    document.getElementById('mcc-primary-value').innerText = formatCurrency(value);
+    document.getElementById('accidental-base-value').innerText = formatCurrency(value);
+    document.getElementById('accidental-max-value').innerText = formatCurrency(value * 4);
+
+    // 2. Set booster values
+    document.getElementById('booster-y1-10').innerText = formatCurrency(value);
+    document.getElementById('booster-y11-20').innerText = formatCurrency(value * 1.05);
+    document.getElementById('booster-y21').innerText = formatCurrency(value * 1.10);
+
+    // 3. Heritage Badge Logic (RM 1M+)
+    const heritageBadge = document.getElementById('heritage-discount-badge');
+    if (value >= 1000000) {
+        heritageBadge.innerText = '✓ 20% Charge Discount Active';
+        heritageBadge.style.backgroundColor = '#e3fbe3';
+        heritageBadge.style.color = '#14b814';
+    } else {
+        heritageBadge.innerText = 'Standard Pricing Tier';
+        heritageBadge.style.backgroundColor = '#f2f2f7';
+        heritageBadge.style.color = '#86868b';
+    }
+
+    // 4. MCC Badge Logic (500k-750k = 5%, 750k+ = 10%)
+    const mccBadge = document.getElementById('mcc-discount-badge');
+    if (value >= 750000) {
+        mccBadge.innerText = '✓ 10% Max Discount Active';
+        mccBadge.style.backgroundColor = '#e3fbe3';
+        mccBadge.style.color = '#14b814';
+    } else if (value >= 500000) {
+        mccBadge.innerText = '✓ 5% Discount Active';
+        mccBadge.style.backgroundColor = '#e8f4fe';
+        mccBadge.style.color = '#0071e3';
+    } else {
+        mccBadge.innerText = 'Standard Pricing Tier';
+        mccBadge.style.backgroundColor = '#f2f2f7';
+        mccBadge.style.color = '#86868b';
+    }
+}
+
+// ==========================================
+// AUTOMATIC PART 4 ATTACHMENT LOOP
+// ==========================================
+document.addEventListener("DOMContentLoaded", function() {
+    // This looks for ANY range slider on your left panel automatically
+    const targetSlider = document.querySelector('input[type="range"]') || document.getElementById('protection-slider');
+    
+    if (targetSlider) {
+        // Automatically injects updates whenever the agent slides it
+        targetSlider.addEventListener('input', function(e) {
+            updateTab1ProtectionBlueprint(e.target.value);
+        });
+        
+        // Run it immediately once on startup to set initial values
+        updateTab1ProtectionBlueprint(targetSlider.value);
+    }
+});
 </script>
 
 
