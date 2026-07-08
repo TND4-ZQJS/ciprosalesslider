@@ -29,316 +29,245 @@
     </div>
 </div>
 
-<header>
-    <h1>Manulife Heritage // Client Mapping Terminal</h1>
-    <div class="telemetry-rack">
-        <div id="badge-pi" class="status-badge"><div class="dot"></div>Based on PI</div>
-        <div id="badge-sim" class="status-badge"><div class="dot"></div>Simulation Mode</div>
-    </div>
-</header>
-
-<!-- Main Wrap: Splits screen into Left and Right -->
-<div class="terminal-container" style="display: flex; gap: 20px; align-items: stretch;">
-    
-    <!-- ========================================================= -->
-    <!-- LEFT PANEL: CONTROLS & SLIDERS                            -->
-    <!-- ========================================================= -->
-    <div class="control-panel" style="flex: 1; min-width: 320px; max-width: 400px;">
-        <div class="mode-selector">
-            <button class="mode-btn active" onclick="setMode('premium')">Lock Premium</button>
-            <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
+    <header>
+        <h1>Manulife Heritage // Client Mapping Terminal</h1>
+        <div class="telemetry-rack">
+            <div id="badge-pi" class="status-badge"><div class="dot"></div>Based on PI</div>
+            <div id="badge-sim" class="status-badge"><div class="dot"></div>Simulation Mode</div>
         </div>
+    </header>
 
-        <div class="slider-group">
-            <div class="slider-header">
-                <span class="slider-label">CI Pro Needed</span>
-                <span id="protection-display-value" class="slider-value">RM 1.0M</span>
-            </div>
-            
-            <div class="benefit-breakdown">
-                <div class="benefit-row">
-                    <span class="benefit-name">1. Manulife Heritage: <strong id="benefit-death">RM 1.0M</strong></span>
-                    <div class="tooltip-wrapper">
-                        <div class="info-icon">ⓘ</div>
-                        <div class="tooltip-content">Lump-sum payout distributed instantly upon death or diagnosed permanent disability to anchor client family protections.</div>
-                    </div>
-                </div>
-
-                <div class="benefit-row">
-                    <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
-                    <div class="tooltip-wrapper">
-                        <div class="info-icon">ⓘ</div>
-                        <div class="tooltip-content">
-                            <strong class="tooltip-title">Critical Care Benefit:</strong>
-                            <ol class="tooltip-list">
-                                <li><strong>Lump-Sum Payout:</strong> Pays out up to RM 1.0M upon diagnosis of a covered illness.</li>
-                                <li><strong>Income Protection:</strong> Replaces lost earnings while you focus on recovery.</li>
-                                <li><strong>Tiered Payouts:</strong> includes incident of ICU stay > 10 days.</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="benefit-row">
-                    <span class="benefit-name">3. Accidental Death Benefit: <strong id="benefit-accidental">RM 1.0M</strong></span>
-                    <div class="tooltip-wrapper">
-                        <div class="info-icon">ⓘ</div>
-                        <div class="tooltip-content">Additional auxiliary cash injection if injuries leading directly to termination occur strictly due to accidental hazards.</div>
-                    </div>
-                </div>
-            </div>
-
-            <input type="range" id="protection-slider" class="range-slider" value="1000000" oninput="recalibrateSliderBounds()">
-        </div>
-
-        <div class="slider-group" id="premium-group">
-            <div class="slider-header">
-                <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
-                <span class="slider-value" id="premium-display">RM --/yr</span>
-            </div>
-            <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
-            <datalist id="pi-points"></datalist>
-        </div>
-
-        <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-            <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
-            
-            <div class="control-row-layout">
-                <div class="control-column">
-                    <span class="slider-label">Gender</span>
-                    <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                        <option value="Male" selected>Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-
-                <div class="control-column">
-                    <span class="slider-label">Age</span>
-                    <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                        <option value="25">25</option>
-                        <option value="35">35</option>
-                        <option value="45" selected>45</option>
-                        <option value="55">55</option>
-                    </select>
-                </div>
-
-                <div class="control-column">
-                    <span class="slider-label">Pay</span>
-                    <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                        <option value="pay6" selected>6 Yrs</option>
-                        <option value="pay10">10 Yrs</option>
-                        <option value="pay20">20 Yrs</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div> 
-
-    <!-- ========================================================= -->
-    <!-- RIGHT MAIN PANEL: UPPER WRAPPER + LOWER TAB SYSTEM       -->
-    <!-- ========================================================= -->
-    <div class="right-main-workspace" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
+    <!-- Main Container Layout: Splits screen into Left and Right sections -->
+    <div class="terminal-container" style="display: flex; gap: 20px; align-items: stretch;">
         
-        <!-- [RIGHT UPPER AREA]: GRAPH / ACTIVE VIEWPORT -->
-        <div class="display-viewport" style="flex: 1;">
-            <!-- 1. ORIGINAL GRAPH WRAPPER -->
-            <div id="graph-viewport-wrapper" class="graph-wrapper" style="display: none;">
-                <div class="chart-container">
-                    <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
-                        <defs>
-                            <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="6" result="blurOut" />
-                                <feMerge>
-                                    <feMergeNode in="blurOut" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                            <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#8A2BE2" /> 
-                                <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
-                            </linearGradient>
-                            <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#aa55ff" />
-                                <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
-                            </linearGradient>
-                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
-                                <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
-                                <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
-
-                        <text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
-                        
-                        <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" d="" />
-                        <path id="glow-ribbon" class="ribbon-glow" d="" />
-                        <path id="main-ribbon" class="ribbon-main" d="" />
-
-                        <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
-                        <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
-                        <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
-
-                        <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
-                        <text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
-                        <text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
-                        <text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
-                        <text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
-                        <text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
-                    </svg>
-                </div>
+        <!-- ========================================================= -->
+        <!-- LEFT PANEL: CONTROLS & SLIDERS                            -->
+        <!-- ========================================================= -->
+        <div class="control-panel" style="flex: 1; min-width: 320px; max-width: 400px;">
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('premium')">Lock Premium</button>
+                <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
             </div>
 
-            <!-- 2. TAB 1 WORKSPACE CONTAINER -->
-            <div id="tab1-protection-blueprint" class="protection-workspace" style="display: block; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
-                <h2 style="font-weight: 600; margin-top: 0; margin-bottom: 24px; color: #1d1d1f; font-size: 20px;">Product Protection Pillars</h2>
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="slider-label">CI Pro Needed</span>
+                    <span id="protection-display-value" class="slider-value">RM 1.0M</span>
+                </div>
                 
-                <!-- Pillar 1: Manulife Heritage Card -->
-                <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e5ea;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                        <div>
-                            <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #86868b; font-weight: 600;">Pillar 1 • Core Legacy</span>
-                            <h3 style="margin: 4px 0 0 0; font-size: 16px; color: #1d1d1f; font-weight: 600;">Manulife Heritage (Death & TPD)</h3>
+                <div class="benefit-breakdown">
+                    <div class="benefit-row">
+                        <span class="benefit-name">1. Manulife Heritage: <strong id="benefit-death">RM 1.0M</strong></span>
+                        <div class="tooltip-wrapper">
+                            <div class="info-icon">ⓘ</div>
+                            <div class="tooltip-content">Lump-sum payout distributed instantly upon death or diagnosed permanent disability to anchor client family protections.</div>
                         </div>
-                        <div id="heritage-discount-badge" style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"></div>
                     </div>
-                    <div style="font-size: 26px; font-weight: 700; color: #0071e3; margin-bottom: 16px;" id="heritage-primary-value">RM 0</div>
-                    
-                    <div style="border-top: 1px solid #f2f2f7; padding-top: 14px;">
-                        <div style="font-size: 11px; color: #86868b; margin-bottom: 8px; font-weight: 500;">🛡️ Built-in Protection Booster Progression:</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
-                            <div style="background: #f5f5f7; padding: 8px; border-radius: 8px;">
-                                <div style="font-size: 10px; color: #86868b;">Years 1-10</div>
-                                <div style="font-size: 12px; font-weight: 600; color: #1d1d1f; margin-top: 2px;" id="booster-y1-10">RM 0</div>
-                            </div>
-                            <div style="background: #f5f5f7; padding: 8px; border-radius: 8px;">
-                                <div style="font-size: 10px; color: #86868b;">Years 11-20 (+5%)</div>
-                                <div style="font-size: 12px; font-weight: 600; color: #1d1d1f; margin-top: 2px;" id="booster-y11-20">RM 0</div>
-                            </div>
-                            <div style="background: #f5f5f7; padding: 8px; border-radius: 8px;">
-                                <div style="font-size: 10px; color: #86868b;">Years 21+ (+10%)</div>
-                                <div style="font-size: 12px; font-weight: 600; color: #1d1d1f; margin-top: 2px;" id="booster-y21">RM 0</div>
+
+                    <div class="benefit-row">
+                        <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
+                        <div class="tooltip-wrapper">
+                            <div class="info-icon">ⓘ</div>
+                            <div class="tooltip-content">
+                                <strong class="tooltip-title">Critical Care Benefit:</strong>
+                                <ol class="tooltip-list">
+                                    <li><strong>Lump-Sum Payout:</strong> Pays out up to RM 1.0M upon diagnosis of a covered illness.</li>
+                                    <li><strong>Income Protection:</strong> Replaces lost earnings while you focus on recovery.</li>
+                                    <li><strong>Tiered Payouts:</strong> includes incident of ICU stay > 10 days.</li>
+                                </ol>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Pillar 2: Manulife Critical Cover Card -->
-                <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e5ea;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-                        <div>
-                            <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #86868b; font-weight: 600;">Pillar 2 • Living Benefit</span>
-                            <h3 style="margin: 4px 0 0 0; font-size: 16px; color: #1d1d1f; font-weight: 600;">Manulife Critical Cover (MCC)</h3>
-                        </div>
-                        <div id="mcc-discount-badge" style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"></div>
-                    </div>
-                    <div style="font-size: 26px; font-weight: 700; color: #0071e3; margin-bottom: 10px;" id="mcc-primary-value">RM 0</div>
-                    <p style="margin: 0; font-size: 12px; color: #515154; line-height: 1.4;">Covers 48 Critical Illnesses and includes immediate financial support via the Admission Event benefit.</p>
-                </div>
-
-                <!-- Pillar 3: Accidental Death Card -->
-                <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e5ea;">
-                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #86868b; font-weight: 600;">Pillar 3 • Contingency Multiplier</span>
-                    <h3 style="margin: 4px 0 12px 0; font-size: 16px; color: #1d1d1f; font-weight: 600;">Accidental Death Benefit</h3>
-                    <div style="display: flex; gap: 12px; align-items: center; background: #f5f5f7; padding: 12px; border-radius: 8px;">
-                        <div style="flex: 1;">
-                            <div style="font-size: 10px; color: #86868b;">Base Benefit</div>
-                            <div style="font-size: 14px; font-weight: 600; color: #515154;" id="accidental-base-value">RM 0</div>
-                        </div>
-                        <div style="font-size: 16px; color: #86868b;">➔</div>
-                        <div style="flex: 1;">
-                            <div style="font-size: 10px; color: #34c759; font-weight: 600;">Max Quadruple Payout (400%)</div>
-                            <div style="font-size: 18px; font-weight: 700; color: #34c759;" id="accidental-max-value">RM 0</div>
+                    <div class="benefit-row">
+                        <span class="benefit-name">3. Accidental Death Benefit: <strong id="benefit-accidental">RM 1.0M</strong></span>
+                        <div class="tooltip-wrapper">
+                            <div class="info-icon">ⓘ</div>
+                            <div class="tooltip-content">Additional auxiliary cash injection if injuries leading directly to termination occur strictly due to accidental hazards.</div>
                         </div>
                     </div>
                 </div>
+
+                <input type="range" id="protection-slider" class="range-slider" value="1000000" oninput="recalibrateSliderBounds()">
             </div>
 
-            <!-- 3. PLACEHOLDER CONTAINER FOR FUTURE TAB 2 -->
-            <div id="tab2-liquidity-blueprint" style="display: none; padding: 20px;">
-                <!-- We will construct Tab 2 layout content here -->
-            </div>
-        </div>
-
-        <!-- [RIGHT LOWER AREA]: TABS AND CONTENT BLOCKS -->
-        <div class="indicators-panel" style="flex: 1;">
-            <!-- Folder Tabs Deck -->
-            <div class="tabs-container">
-                <div class="folder-tab active-tab" onclick="switchFolderTab('core-blueprint', this)">
-                    Product Features Blueprint
+            <div class="slider-group" id="premium-group">
+                <div class="slider-header">
+                    <span class="slider-label"><span id="lock-icon-premium">🔒</span> Dynamic Premium Payment</span>
+                    <span class="slider-value" id="premium-display">RM --/yr</span>
                 </div>
-                <div class="folder-tab" onclick="switchFolderTab('liquidity-architecture', this)">
-                    Liquidity Architecture
-                </div>
-                <div class="folder-tab" onclick="switchFolderTab('projections-panel', this)">
-                    Projections Matrix
-                </div>
-                <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
-                    Diagnostic Analysis Desk
-                </div>
+                <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
+                <datalist id="pi-points"></datalist>
             </div>
 
-            <!-- Folder Content 1: Default Projections Matrix -->
-            <div id="projections-panel" class="tab-panel">
-                <div class="panel-title">Asset Projections & Performance Metrics</div>
-                <div class="milestone-grid">
-                    <div class="milestone-card" id="card-1">
-                        <div class="milestone-age" id="lbl-1">Policy Year 5</div>
-                        <div class="milestone-value" id="val-1">RM --</div>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
+                
+                <div class="control-row-layout">
+                    <div class="control-column">
+                        <span class="slider-label">Gender</span>
+                        <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                        </select>
                     </div>
-                    <div class="milestone-card" id="card-2">
-                        <div class="milestone-age" id="lbl-2">Policy Year 10</div>
-                        <div class="milestone-value" id="val-2">RM --</div>
+
+                    <div class="control-column">
+                        <span class="slider-label">Age</span>
+                        <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                            <option value="25">25</option>
+                            <option value="35">35</option>
+                            <option value="45" selected>45</option>
+                            <option value="55">55</option>
+                        </select>
                     </div>
-                    <div class="milestone-card" id="card-3">
-                        <div class="milestone-age" id="lbl-3">Policy Year 20</div>
-                        <div class="milestone-value" id="val-3">RM --</div>
-                    </div>
-                    <div class="milestone-card" id="card-4">
-                        <div class="milestone-age" id="lbl-4">Policy Year 25</div>
-                        <div class="milestone-value" id="val-4">RM --</div>
-                    </div>
-                    <div class="milestone-card" id="card-5">
-                        <div class="milestone-age" id="lbl-5">Policy Year 35</div>
-                        <div class="milestone-value" id="val-5">RM --</div>
+
+                    <div class="control-column">
+                        <span class="slider-label">Pay</span>
+                        <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                            <option value="pay6" selected>6 Yrs</option>
+                            <option value="pay10">10 Yrs</option>
+                            <option value="pay20">20 Yrs</option>
+                        </select>
                     </div>
                 </div>
             </div>
+        </div> 
 
-            <!-- Folder Content 2: Auxiliary Analysis Space -->
-            <div id="analysis-panel" class="tab-panel">
-                <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
-                <div class="milestone-grid">
-                    <div class="milestone-card" id="card-net-cost">
-                        <div class="milestone-age">Amortized Net Cost / Yr</div>
-                        <div class="milestone-value" id="val-net-cost">RM --</div>
-                    </div>
-                    <div class="milestone-card" id="card-cost-100k">
-                        <div class="milestone-age">Net Leverage Cost / 100K</div>
-                        <div class="milestone-value" id="val-cost-100k">RM --</div>
-                    </div>
-                    <div class="milestone-card" id="card-leverage-factor">
-                        <div class="milestone-age">Capital Leverage Multiplier</div>
-                        <div class="milestone-value" id="val-leverage-factor">--</div>
-                    </div>
-                    <div class="milestone-card" id="card-preservation-factor">
-                        <div class="milestone-age">Equity Retention Yield</div>
-                        <div class="milestone-value" id="val-preservation-factor">--</div>
+        <!-- ========================================================= -->
+        <!-- RIGHT PANEL: UPPER VIEWPORT AREA + BOTTOM TAB SYSTEM      -->
+        <!-- ========================================================= -->
+        <div class="right-main-workspace" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- [RIGHT UPPER AREA]: GRAPH VIEWPORT -->
+            <div class="display-viewport" style="flex: 1; min-height: 260px; overflow: visible;">
+                <div class="graph-wrapper">
+                    <div class="chart-container">
+                        <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
+                            <defs>
+                                <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
+                                    <feGaussianBlur stdDeviation="6" result="blurOut" />
+                                    <feMerge>
+                                        <feMergeNode in="blurOut" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                                <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#8A2BE2" /> 
+                                    <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
+                                </linearGradient>
+                                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#aa55ff" />
+                                    <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
+                                </linearGradient>
+                                <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
+                                    <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
+                                    <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- Grid Lines -->
+                            <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                            <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+
+                            <!-- Scale Label Axis -->
+                            <text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
+                            
+                            <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
+                            <path id="glow-ribbon" class="ribbon-glow" d="" />
+                            <path id="main-ribbon" class="ribbon-main" d="" />
+
+                            <!-- Vector Nodes -->
+                            <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
+                            <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
+                            <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
+                            <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
+                            <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
+                            <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
+
+                            <!-- X-Axis Labels -->
+                            <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
+                            <text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
+                            <text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
+                            <text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
+                            <text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
+                            <text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
+                        </svg>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div> <!-- End Right Main Workspace -->
-</div> <!-- End Terminal Container -->
+            <!-- [RIGHT BOTTOM AREA]: TABS AND GRID BLOCKS -->
+            <div class="indicators-panel" style="flex: 1;">
+                
+                <!-- Folder Tabs Deck -->
+                <div class="tabs-container">
+                    <div class="folder-tab active-tab" onclick="switchFolderTab('projections-panel', this)">
+                        Projections Matrix
+                    </div>
+                    <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
+                        Diagnostic Analysis Desk
+                    </div>
+                </div>
 
-<footer>
-    [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
-</footer>
+                <!-- Folder Content 1: Default Projections Matrix -->
+                <div id="projections-panel" class="tab-panel active-panel">
+                    <div class="panel-title">Asset Projections & Performance Metrics</div>
+                    <div class="milestone-grid">
+                        <div class="milestone-card" id="card-1">
+                            <div class="milestone-age" id="lbl-1">Policy Year 5</div>
+                            <div class="milestone-value" id="val-1">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-2">
+                            <div class="milestone-age" id="lbl-2">Policy Year 10</div>
+                            <div class="milestone-value" id="val-2">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-3">
+                            <div class="milestone-age" id="lbl-3">Policy Year 20</div>
+                            <div class="milestone-value" id="val-3">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-4">
+                            <div class="milestone-age" id="lbl-4">Policy Year 25</div>
+                            <div class="milestone-value" id="val-4">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-5">
+                            <div class="milestone-age" id="lbl-5">Policy Year 35</div>
+                            <div class="milestone-value" id="val-5">RM --</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Folder Content 2: Auxiliary Analysis Space -->
+                <div id="analysis-panel" class="tab-panel">
+                    <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
+                    <div class="milestone-grid">
+                        <div class="milestone-card" id="card-net-cost">
+                            <div class="milestone-age">Amortized Net Cost / Yr</div>
+                            <div class="milestone-value" id="val-net-cost">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-cost-100k">
+                            <div class="milestone-age">Net Leverage Cost / 100K</div>
+                            <div class="milestone-value" id="val-cost-100k">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-leverage-factor">
+                            <div class="milestone-age">Capital Leverage Multiplier</div>
+                            <div class="milestone-value" id="val-leverage-factor">--</div>
+                        </div>
+                        <div class="milestone-card" id="card-preservation-factor">
+                            <div class="milestone-age">Equity Retention Yield</div>
+                            <div class="milestone-value" id="val-preservation-factor">--</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- End Indicators Panel -->
+        </div> <!-- End Right Main Workspace -->
+    </div> <!-- End Terminal Container -->
+
+    <footer>
+        [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
+    </footer>
 <script>
 
 function dismissGatekeeper() {
