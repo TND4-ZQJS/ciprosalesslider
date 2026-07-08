@@ -2,14 +2,14 @@
   "protectionProfiles": {
       "500000": {
       "maxPremiumScenario": {
-        "premiumAmount": 68654,
+        "premiumAmount": 46096,
         "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 35910 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 307238 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 415625 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 524325 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 560000 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 614673 }
+          { "policyYear": 1, "ageNext": 55, "accountValue": 35910 },
+          { "policyYear": 5, "ageNext": 60, "accountValue": 307238 },
+          { "policyYear": 10, "ageNext": 65, "accountValue": 415625 },
+          { "policyYear": 20, "ageNext": 75, "accountValue": 524325 },
+          { "policyYear": 25, "ageNext": 80, "accountValue": 209653 },
+          { "policyYear": 35, "ageNext": 90, "accountValue": 0 }
         ]
       },
       "midPremiumScenario": {
