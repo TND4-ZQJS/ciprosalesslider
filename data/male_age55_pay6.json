@@ -7,9 +7,9 @@
           { "policyYear": 1, "ageNext": 56, "accountValue": 21534 },
           { "policyYear": 5, "ageNext": 60, "accountValue": 190891 },
           { "policyYear": 10, "ageNext": 65, "accountValue": 250323 },
-          { "policyYear": 20, "ageNext": 75, "accountValue": 253742 },
-          { "policyYear": 25, "ageNext": 80, "accountValue": 209653 },
-          { "policyYear": 35, "ageNext": 90, "accountValue": 0 }
+          { "policyYear": 15, "ageNext": 70, "accountValue": 253742 },
+          { "policyYear": 20, "ageNext": 75, "accountValue": 209653 },
+          { "policyYear": 25, "ageNext": 80, "accountValue": 0 }
         ]
       },
       "midPremiumScenario": {
