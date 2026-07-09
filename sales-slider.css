@@ -672,3 +672,10 @@
     visibility: hidden;
     pointer-events: none;
 }
+
+.net-gain-green {
+    color: #30d158 !important; /* Elegant Neon Apple Green tint for increased cash performance */
+}
+.net-loss-red {
+    color: #ff453a !important; /* High-visibility warning red for added costs or funding outlays */
+}
