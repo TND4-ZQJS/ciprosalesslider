@@ -97,6 +97,12 @@
                 <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
                 <datalist id="pi-points"></datalist>
             </div>
+            <!-- Interactive Presentation Action Control -->
+<div style="margin: 20px 0 10px 0;">
+    <button id="pin-scenario-btn" onclick="toggleScenarioPin()" style="width: 100%; padding: 12px; background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 8px; color: var(--secondary-glow); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span>📌</span> Pin Scenario A
+    </button>
+</div>
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
                 <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
@@ -229,6 +235,29 @@
         </div>
     </div>
 
+    <!-- Tab 3: Side-by-Side Matrix Verification Desk -->
+<div id="comparison-panel" class="tab-panel">
+    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; margin-top: 15px;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Timeline Milestone</th>
+                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario A (Pinned Base)</th>
+                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario B (Active Live)</th>
+                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Net Delta Variance</th>
+                </tr>
+            </thead>
+            <tbody id="comparison-matrix-body">
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
+                        No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
     <!-- Folder Content 2: Auxiliary Analysis Space -->
     <div id="analysis-panel" class="tab-panel">
         <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
@@ -266,7 +295,6 @@
     </footer>
 
 <script>
-
 function dismissGatekeeper() {
     const overlayElement = document.getElementById('compliance-gatekeeper');
     if (overlayElement) {
@@ -274,20 +302,23 @@ function dismissGatekeeper() {
     }
 }
 
-    
     // Global Multi-Tier Data Caching Registry
     const quotationCache = {};
     let activeProfileData = null;
     let currentMode = 'premium'; 
 
+    // --- NEW PRESENTATION SCENARIO STATE REGISTRY ---
+    let baselineSnapshot = null;
+    let pinnedPremiumValue = null;
+    let isComparing = false;
+    let simulatedMilestonesGlobal = []; // Global tracking registry for matrix lookups
+
     /**
      * Dynamically loads targeted JSON configuration files from disk
-     * Maps to structure: data/[gender]_age[age]_[payTerm].json
      */
     async function fetchQuotationProfile(gender, age, payTerm) {
         const cacheKey = `${gender.toLowerCase()}_age${age}_${payTerm.toLowerCase()}`;
         
-        // Return immediately if data partition exists in current application memory instance
         if (quotationCache[cacheKey]) {
             activeProfileData = quotationCache[cacheKey];
             return activeProfileData;
@@ -301,8 +332,6 @@ function dismissGatekeeper() {
                 throw new Error(`Data file not found: ${targetedPath}`);
             }
             const data = await response.json();
-            
-            // Commit to memory lookup registry
             quotationCache[cacheKey] = data;
             activeProfileData = data;
             return activeProfileData;
@@ -331,6 +360,9 @@ function dismissGatekeeper() {
      * Configures mutual slider locking mechanisms
      */
     function setMode(mode) {
+        // Prevent manual mode toggling if we are in the middle of an active presentation comparison
+        if (isComparing) return;
+
         currentMode = mode;
         document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
         
@@ -396,17 +428,19 @@ function dismissGatekeeper() {
         const absoluteMin = availableTiers[0];
         const absoluteMax = availableTiers[availableTiers.length - 1];
         
-        protectionSlider.min = absoluteMin;
-        protectionSlider.max = absoluteMax;
+        // Safeguard protection boundaries from updating if locked during presentation
+        if (!isComparing) {
+            protectionSlider.min = absoluteMin;
+            protectionSlider.max = absoluteMax;
 
-        let rawSliderVal = parseInt(protectionSlider.value);
-        let closestTier = availableTiers.reduce((prev, curr) => {
-            return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
-        });
+            let rawSliderVal = parseInt(protectionSlider.value);
+            let closestTier = availableTiers.reduce((prev, curr) => {
+                return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
+            });
+            protectionSlider.value = closestTier;
+        }
 
-        protectionSlider.value = closestTier;
-        let protectionValue = closestTier.toString();
-        
+        let protectionValue = protectionSlider.value.toString();
         const scenarioData = targetTermData.protectionProfiles[protectionValue];
 
         if (scenarioData && scenarioData.sustainable70Scenario) {
@@ -436,7 +470,7 @@ function dismissGatekeeper() {
         }
         executeSimulationEngine();
     }
-          
+              
     /**
      * Primary Insurance Simulation and Interpolation Core Engine
      */
@@ -511,9 +545,9 @@ function dismissGatekeeper() {
             }
 
             const currentX      = 0   + (200 * zoomProgress);
-            const currentY      = 0   + (20  * zoomProgress);
+            const currentY      = 0   + (20   * zoomProgress);
             const currentWidth  = 600 - (200 * zoomProgress);
-            const currentHeight = 220 - (20  * zoomProgress);
+            const currentHeight = 220 - (20   * zoomProgress);
 
             svgElement.setAttribute('viewBox', `${currentX} ${currentY} ${currentWidth} ${currentHeight}`);
 
@@ -555,6 +589,9 @@ function dismissGatekeeper() {
             });
         }
 
+        // Commit tracking arrays to global scope to feed matrix operations
+        simulatedMilestonesGlobal = simulatedMilestones;
+
         const badgePi = document.getElementById('badge-pi');
         const badgeSim = document.getElementById('badge-sim');
         
@@ -562,6 +599,11 @@ function dismissGatekeeper() {
         if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
 
         updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
+        
+        // Dynamic side-by-side verification updater
+        if (isComparing) {
+            calculateComparisonMatrix(simulatedPremium);
+        }
     }
 
     /**
@@ -628,7 +670,6 @@ function dismissGatekeeper() {
         const localMax = Math.max(...valuesList, 10);
 
         // 2. FIXED ANTI-OVERSHOOT AUTOMATIC CEILING SELECTOR
-        // Rounds up matching your JSON boundaries smoothly, preventing any pipeline overflow
         let dynamicChartCeiling = 100000;
         if (localMax > 100000) {
             dynamicChartCeiling = Math.ceil(localMax / 100000) * 100000;
@@ -669,10 +710,8 @@ function dismissGatekeeper() {
         }
 
         // SECURE GEOMETRIC SVG HEIGHT SCALER LIFT
-        // Formulated directly against the auto-scaling json data file framework parameters
         function toSvgY(val) {
             const cleanVal = isNaN(val) ? 0 : val;
-            // 180 is the baseline floor, 140 is the dynamic vertical window margin (180px down to 40px chart limit boundary)
             return 180 - ((cleanVal / dynamicChartCeiling) * 140);
         }
 
@@ -752,7 +791,7 @@ function dismissGatekeeper() {
             }
         }
 
-            // ==========================================================================
+        // ==========================================================================
         // ADVANCED ANALYSIS DESK METRIC CALCULATION ENGINE
         // ==========================================================================
         const termSelector = document.getElementById('term-selector');
@@ -760,11 +799,9 @@ function dismissGatekeeper() {
         if (termSelector.value === 'pay10') payYears = 10;
         if (termSelector.value === 'pay20') payYears = 20;
 
-        // 1. Calculate Base Inputs
         let totalPremiumPaid = premium * payYears;
         let year35AccountValue = milestones[5].accountValue;
 
-        // 2. Amortized Net Cost / Year
         let amortizedNetCost = (totalPremiumPaid - year35AccountValue) / 35;
         const valNetCostEl = document.getElementById('val-net-cost');
         if (valNetCostEl) {
@@ -777,7 +814,6 @@ function dismissGatekeeper() {
             }
         }
 
-        // 3. Net Leverage Cost Per RM 100,000 of Cover
         const valCost100kEl = document.getElementById('val-cost-100k');
         if (valCost100kEl) {
             if (premium < pMinBoundary) {
@@ -790,7 +826,6 @@ function dismissGatekeeper() {
             }
         }
 
-        // 4. Capital Leverage Multiplier
         const valLeverageEl = document.getElementById('val-leverage-factor');
         if (valLeverageEl) {
             let protectionLeverageRatio = currentProtection / Math.max(totalPremiumPaid, 1);
@@ -798,7 +833,6 @@ function dismissGatekeeper() {
             valLeverageEl.style.color = "var(--secondary-glow)";
         }
 
-        // 5. Equity Retention Yield
         const valPreservationEl = document.getElementById('val-preservation-factor');
         if (valPreservationEl) {
             let retainedEquityRatio = (year35AccountValue / Math.max(totalPremiumPaid, 1)) * 100;
@@ -810,7 +844,146 @@ function dismissGatekeeper() {
                 valPreservationEl.style.color = retainedEquityRatio >= 100 ? "var(--neon-green)" : "var(--neon-amber)";
             }
         }
+    }
 
+    // ==========================================================================
+    // PRESENTATION SIDE-BY-SIDE SNAPSHOT ENGINE
+    // ==========================================================================
+    function toggleScenarioPin() {
+        const pinBtn = document.getElementById('pin-scenario-btn');
+        const protectionSlider = document.getElementById('protection-slider');
+        const premiumSlider = document.getElementById('premium-slider');
+        const modeSelectors = document.querySelectorAll('.mode-btn');
+
+        if (!isComparing) {
+            // Lock Scenario A (Baseline) Data Structures
+            if (simulatedMilestonesGlobal.length === 0) return;
+            
+            baselineSnapshot = JSON.parse(JSON.stringify(simulatedMilestonesGlobal));
+            pinnedPremiumValue = parseInt(premiumSlider.value);
+            isComparing = true;
+
+            // Enforce Operational Constraint: Clamping the Protection parameters
+            if (protectionSlider) {
+                protectionSlider.disabled = true;
+                protectionSlider.style.opacity = '0.35';
+                protectionSlider.style.cursor = 'not-allowed';
+            }
+            
+            // Lock out mode selection to protect calculation symmetry
+            modeSelectors.forEach(btn => {
+                btn.style.opacity = '0.4';
+                btn.style.pointerEvents = 'none';
+            });
+
+            if (pinBtn) {
+                pinBtn.innerHTML = '<span>🔓</span> Reset Baseline';
+                pinBtn.style.background = 'rgba(255, 69, 58, 0.15)';
+                pinBtn.style.color = '#ff453a';
+                pinBtn.style.borderColor = '#ff453a';
+            }
+            
+            // Fire matrix compilation engine
+            calculateComparisonMatrix(parseInt(premiumSlider.value));
+        } else {
+            // Release snapshot storage and restore standard inputs
+            baselineSnapshot = null;
+            pinnedPremiumValue = null;
+            isComparing = false;
+
+            if (protectionSlider) {
+                protectionSlider.disabled = (currentMode === 'protection'); // Match operational mode rules
+                protectionSlider.style.opacity = '1';
+                protectionSlider.style.cursor = 'pointer';
+            }
+
+            modeSelectors.forEach(btn => {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+            });
+
+            if (pinBtn) {
+                pinBtn.innerHTML = '<span>📌</span> Pin Scenario A';
+                pinBtn.style.background = 'rgba(0, 210, 255, 0.1)';
+                pinBtn.style.color = 'var(--secondary-glow)';
+                pinBtn.style.borderColor = 'rgba(0, 210, 255, 0.3)';
+            }
+
+            // Restore comparison interface to standard empty placeholder state
+            const tableBody = document.getElementById('comparison-matrix-body');
+            if (tableBody) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
+                            No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
+                        </td>
+                    </tr>`;
+            }
+        }
+    }
+
+    function calculateComparisonMatrix(currentLivePremium) {
+        if (!isComparing || !baselineSnapshot || simulatedMilestonesGlobal.length === 0) return;
+
+        const tableBody = document.getElementById('comparison-matrix-body');
+        if (!tableBody) return;
+
+        const termSelector = document.getElementById('term-selector');
+        let payYears = 6;
+        if (termSelector.value === 'pay10') payYears = 10;
+        if (termSelector.value === 'pay20') payYears = 20;
+
+        let htmlRows = '';
+
+        // Generate out-of-pocket metrics
+        let totalOutlayA = pinnedPremiumValue * payYears;
+        let totalOutlayB = currentLivePremium * payYears;
+        let outlayDelta = totalOutlayB - totalOutlayA;
+
+        // Step through timeline milestones index-by-index synchronously
+        simulatedMilestonesGlobal.forEach((milestoneB, i) => {
+            const milestoneA = baselineSnapshot[i];
+            if (!milestoneA) return;
+
+            let valA = milestoneA.accountValue;
+            let valB = milestoneB.accountValue;
+            let valDelta = valB - valA;
+
+            let deltaClass = valDelta >= 0 ? 'net-gain-green' : 'net-loss-red';
+            let deltaPrefix = valDelta >= 0 ? '+' : '';
+
+            htmlRows += `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;">
+                    <td style="padding: 14px 12px; font-weight: 600; color: var(--text-main); font-size: 13px;">
+                        Yr ${milestoneB.policyYear} <span style="display:block; font-size:11px; color:var(--text-muted); font-weight:400;">Age ${milestoneB.ageNext}</span>
+                    </td>
+                    <td style="padding: 14px 12px; font-size: 13px; color: rgba(255,255,255,0.85);">
+                        RM ${valA.toLocaleString()}
+                    </td>
+                    <td style="padding: 14px 12px; font-size: 13px; color: var(--text-main); font-weight: 500;">
+                        RM ${valB.toLocaleString()}
+                    </td>
+                    <td style="padding: 14px 12px; font-size: 13px; font-weight: 600;" class="${deltaClass}">
+                        ${deltaPrefix}RM ${valDelta.toLocaleString()}
+                    </td>
+                </tr>`;
+        });
+
+        // Inject cumulative aggregate row directly at bottom boundary
+        let structuralOutlayClass = outlayDelta <= 0 ? 'net-gain-green' : 'net-loss-red';
+        let structuralOutlayPrefix = outlayDelta > 0 ? '+' : '';
+
+        htmlRows += `
+            <tr style="background: rgba(255,255,255,0.03); font-weight: 600;">
+                <td style="padding: 16px 12px; color: var(--secondary-glow); font-size: 13px;">TOTAL OUTLAY</td>
+                <td style="padding: 16px 12px; font-size: 13px; color: var(--text-muted);">RM ${totalOutlayA.toLocaleString()}</td>
+                <td style="padding: 16px 12px; font-size: 13px; color: var(--text-main);">RM ${totalOutlayB.toLocaleString()}</td>
+                <td style="padding: 16px 12px; font-size: 13px;" class="${structuralOutlayClass}">
+                    ${structuralOutlayPrefix}RM ${outlayDelta.toLocaleString()}
+                </td>
+            </tr>`;
+
+        tableBody.innerHTML = htmlRows;
     }
 
     // System Initialization Entry Trigger
@@ -834,9 +1007,16 @@ function dismissGatekeeper() {
         
         tabElement.classList.add('active-tab');
         document.getElementById(panelId).classList.add('active-panel');
+        
+        // Force refresh table updates when moving to comparison tab
+        if (panelId === 'comparison-panel' && isComparing) {
+            const premiumSlider = document.getElementById('premium-slider');
+            if (premiumSlider) calculateComparisonMatrix(parseInt(premiumSlider.value));
+        }
     }
 </script>
-
+</body>
+</html>
 
 </body>
 </html>
