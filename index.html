@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -61,21 +59,20 @@
                         </div>
                     </div>
 
-      <div class="benefit-row">
-    <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
-    <div class="tooltip-wrapper">
-        <div class="info-icon">ⓘ</div>
-        <div class="tooltip-content">
-            <strong class="tooltip-title">Critical Care Benefit:</strong>
-            <ol class="tooltip-list">
-                <li><strong>Lump-Sum Payout:</strong> Pays out up to RM 1.0M upon diagnosis of a covered illness.</li>
-                <li><strong>Income Protection:</strong> Replaces lost earnings while you focus on recovery.</li>
-                <li><strong>Tiered Payouts:</strong> includes incident of ICU stay > 10 days.</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
+                    <div class="benefit-row">
+                        <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
+                        <div class="tooltip-wrapper">
+                            <div class="info-icon">ⓘ</div>
+                            <div class="tooltip-content">
+                                <strong class="tooltip-title">Critical Care Benefit:</strong>
+                                <ol class="tooltip-list">
+                                    <li><strong>Lump-Sum Payout:</strong> Pays out up to RM 1.0M upon diagnosis of a covered illness.</li>
+                                    <li><strong>Income Protection:</strong> Replaces lost earnings while you focus on recovery.</li>
+                                    <li><strong>Tiered Payouts:</strong> includes incident of ICU stay &gt; 10 days.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="benefit-row">
                         <span class="benefit-name">3. Accidental Death Benefit: <strong id="benefit-accidental">RM 1.0M</strong></span>
@@ -97,12 +94,7 @@
                 <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
                 <datalist id="pi-points"></datalist>
             </div>
-            <!-- Interactive Presentation Action Control -->
-<div style="margin: 20px 0 10px 0;">
-    <button id="pin-scenario-btn" onclick="toggleScenarioPin()" style="width: 100%; padding: 12px; background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 8px; color: var(--secondary-glow); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
-        <span>📌</span> Pin Scenario A
-    </button>
-</div>
+            
 
             <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
                 <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
@@ -136,7 +128,9 @@
                     </div>
                 </div>
             </div>
-        </div> <div class="display-viewport">
+        </div> 
+        
+        <div class="display-viewport">
             <div class="graph-wrapper">
                 <div class="chart-container">
                     <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
@@ -156,29 +150,22 @@
                                 <stop offset="0%" stop-color="#aa55ff" />
                                 <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
                             </linearGradient>
-                        <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-    <!-- Heavy primary purple color layer directly underneath the ribbon line -->
-    <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
-    <!-- Blends color density smoothly into neon blue halfway down -->
-    <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
-    <!-- Drops off completely to absolute transparency right at the baseline -->
-    <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
-</linearGradient>
-
+                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
+                                <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
+                                <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
+                            </linearGradient>
                         </defs>
                         <!-- Grid Lines -->
-<line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-<line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
 
-<!-- UPDATED POSITIONING: Moves label to the near top-middle -->
-<text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
-
+                        <text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
                         
                         <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
                         <path id="glow-ribbon" class="ribbon-glow" d="" />
                         <path id="main-ribbon" class="ribbon-main" d="" />
 
-                        
                         <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
                         <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
                         <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
@@ -196,49 +183,59 @@
                 </div>
             </div>
 
-<div class="indicators-panel">
-    
-    <!-- Folder Tabs Deck -->
-    <div class="tabs-container">
-        <div class="folder-tab active-tab" onclick="switchFolderTab('projections-panel', this)">
-            Projections Matrix
-        </div>
-        <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
-            Diagnostic Analysis Desk
-        </div>
-    </div>
-    <div class="folder-tab" onclick="switchFolderTab('comparison-panel', this)">Scenario Matrix Comparison</div>
+            <div class="indicators-panel">
+                <!-- Folder Tabs Deck -->
+                <div class="tabs-container">
+                    <div class="folder-tab active-tab" onclick="switchFolderTab('projections-panel', this)">
+                        Projections Matrix
+                    </div>
+                    <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
+                        Diagnostic Analysis Desk
+                    </div>
+                    <div class="folder-tab" onclick="switchFolderTab('comparison-panel', this)">
+                        Scenario Matrix Comparison
+                    </div>
+                </div>
 
-    <!-- Folder Content 1: Default Projections Matrix -->
-    <div id="projections-panel" class="tab-panel active-panel">
-        <div class="panel-title">Asset Projections & Performance Metrics</div>
-        <div class="milestone-grid">
-            <div class="milestone-card" id="card-1">
-                <div class="milestone-age" id="lbl-1">Policy Year 5</div>
-                <div class="milestone-value" id="val-1">RM --</div>
-            </div>
-            <div class="milestone-card" id="card-2">
-                <div class="milestone-age" id="lbl-2">Policy Year 10</div>
-                <div class="milestone-value" id="val-2">RM --</div>
-            </div>
-            <div class="milestone-card" id="card-3">
-                <div class="milestone-age" id="lbl-3">Policy Year 20</div>
-                <div class="milestone-value" id="val-3">RM --</div>
-            </div>
-            <div class="milestone-card" id="card-4">
-                <div class="milestone-age" id="lbl-4">Policy Year 25</div>
-                <div class="milestone-value" id="val-4">RM --</div>
-            </div>
-            <div class="milestone-card" id="card-5">
-                <div class="milestone-age" id="lbl-5">Policy Year 35</div>
-                <div class="milestone-value" id="val-5">RM --</div>
-            </div>
-        </div>
-    </div>
+                <!-- Folder Content 1: Default Projections Matrix -->
+                <div id="projections-panel" class="tab-panel active-panel">
+                    <div class="panel-title">Asset Projections & Performance Metrics</div>
+                    <div class="milestone-grid">
+                        <div class="milestone-card" id="card-1">
+                            <div class="milestone-age" id="lbl-1">Policy Year 5</div>
+                            <div class="milestone-value" id="val-1">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-2">
+                            <div class="milestone-age" id="lbl-2">Policy Year 10</div>
+                            <div class="milestone-value" id="val-2">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-3">
+                            <div class="milestone-age" id="lbl-3">Policy Year 20</div>
+                            <div class="milestone-value" id="val-3">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-4">
+                            <div class="milestone-age" id="lbl-4">Policy Year 25</div>
+                            <div class="milestone-value" id="val-4">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-5">
+                            <div class="milestone-age" id="lbl-5">Policy Year 35</div>
+                            <div class="milestone-value" id="val-5">RM --</div>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Tab 3: Side-by-Side Matrix Verification Desk -->
+               <!-- Tab 3: Side-by-Side Matrix Verification Desk -->
 <div id="comparison-panel" class="tab-panel">
-    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; margin-top: 15px;">
+    
+    <!-- Contextual Pinned Action Control Bar -->
+    <div style="margin: 15px 0; display: flex; justify-content: flex-end;">
+        <button id="pin-scenario-btn" onclick="toggleScenarioPin()" style="width: auto; padding: 10px 20px; background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 8px; color: var(--secondary-glow); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span>📌</span> Pin Scenario A
+        </button>
+    </div>
+
+    <!-- Data Matrix Grid -->
+    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead>
                 <tr style="background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1);">
@@ -259,42 +256,35 @@
     </div>
 </div>
 
-    <!-- Folder Content 2: Auxiliary Analysis Space -->
-    <div id="analysis-panel" class="tab-panel">
-        <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
-        <div class="milestone-grid">
-            <div class="milestone-card" id="card-net-cost">
-                <div class="milestone-age">Amortized Net Cost / Yr</div>
-                <div class="milestone-value" id="val-net-cost">RM --</div>
-            </div>
-            <div class="milestone-card" id="card-cost-100k">
-                <div class="milestone-age">Net Leverage Cost / 100K</div>
-                <div class="milestone-value" id="val-cost-100k">RM --</div>
-            </div>
-            <div class="milestone-card" id="card-leverage-factor">
-                <div class="milestone-age">Capital Leverage Multiplier</div>
-                <div class="milestone-value" id="val-leverage-factor">--</div>
-            </div>
-            <div class="milestone-card" id="card-preservation-factor">
-                <div class="milestone-age">Equity Retention Yield</div>
-                <div class="milestone-value" id="val-preservation-factor">--</div>
+                <!-- Folder Content 2: Auxiliary Analysis Space -->
+                <div id="analysis-panel" class="tab-panel">
+                    <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
+                    <div class="milestone-grid">
+                        <div class="milestone-card" id="card-net-cost">
+                            <div class="milestone-age">Amortized Net Cost / Yr</div>
+                            <div class="milestone-value" id="val-net-cost">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-cost-100k">
+                            <div class="milestone-age">Net Leverage Cost / 100K</div>
+                            <div class="milestone-value" id="val-cost-100k">RM --</div>
+                        </div>
+                        <div class="milestone-card" id="card-leverage-factor">
+                            <div class="milestone-age">Capital Leverage Multiplier</div>
+                            <div class="milestone-value" id="val-leverage-factor">--</div>
+                        </div>
+                        <div class="milestone-card" id="card-preservation-factor">
+                            <div class="milestone-age">Equity Retention Yield</div>
+                            <div class="milestone-value" id="val-preservation-factor">--</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-</div>
-
-
-
-</div>
-
-        </div
     </div>
 
     <footer>
         [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
     </footer>
-
 <script>
 function dismissGatekeeper() {
     const overlayElement = document.getElementById('compliance-gatekeeper');
