@@ -134,132 +134,160 @@
             </div>
         </div> 
 
-        <!-- ========================================================= -->
-        <!-- RIGHT PANEL: UPPER VIEWPORT AREA + BOTTOM TAB SYSTEM      -->
-        <!-- ========================================================= -->
-        <div class="right-main-workspace" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
+<!-- ========================================================= -->
+<!-- RIGHT PANEL: GRAPH VIEWPORT (DYNAMIC) + TABS WINDOW        -->
+<!-- ========================================================= -->
+<div class="right-main-workspace" style="flex: 2; display: flex; flex-direction: column; gap: 20px;">
+    
+    <!-- [DYNAMIC DISPLAY VIEWPORT]: Switches based on active tab -->
+    <div class="display-viewport">
+        <div class="graph-wrapper">
             
-            <!-- [RIGHT UPPER AREA]: GRAPH VIEWPORT -->
-            <div class="display-viewport" style="flex: 1; min-height: 260px; overflow: visible;">
-                <div class="graph-wrapper">
-                    <div class="chart-container">
-                        <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
-                            <defs>
-                                <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
-                                    <feGaussianBlur stdDeviation="6" result="blurOut" />
-                                    <feMerge>
-                                        <feMergeNode in="blurOut" />
-                                        <feMergeNode in="SourceGraphic" />
-                                    </feMerge>
-                                </filter>
-                                <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#8A2BE2" /> 
-                                    <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
-                                </linearGradient>
-                                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#aa55ff" />
-                                    <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
-                                </linearGradient>
-                                <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                    <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
-                                    <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
-                                    <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
-                                </linearGradient>
-                            </defs>
-                            
-                            <!-- Grid Lines -->
-                            <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-                            <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+            <!-- VIEWPORT A: Account Value Growth Curve -->
+            <div id="chart-account-value" class="chart-container" style="display: block;">
+                <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#8A2BE2" /> 
+                            <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
+                        </linearGradient>
+                    </defs>
+                    <!-- Grid Lines -->
+                    <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                    <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+                    
+                    <text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
+                    
+                    <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" d="" />
+                    <path id="main-ribbon" class="ribbon-main" d="" />
 
-                            <!-- Scale Label Axis -->
-                            <text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
-                            
-                            <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
-                            <path id="glow-ribbon" class="ribbon-glow" d="" />
-                            <path id="main-ribbon" class="ribbon-main" d="" />
+                    <!-- Nodes -->
+                    <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
+                    <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
+                    <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
+                    <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
+                    <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
+                    <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
 
-                            <!-- Vector Nodes -->
-                            <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
-                            <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
-                            <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
-                            <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
-                            <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
-                            <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
-
-                            <!-- X-Axis Labels -->
-                            <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
-                            <text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
-                            <text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
-                            <text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
-                            <text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
-                            <text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
-                        </svg>
-                    </div>
-                </div>
+                    <!-- X-Axis -->
+                    <text x="40" y="205" class="axis-label" id="axis-0">Yr 1</text>
+                    <text x="144" y="205" class="axis-label" id="axis-1">Yr 5</text>
+                    <text x="248" y="205" class="axis-label" id="axis-2">Yr 10</text>
+                    <text x="352" y="205" class="axis-label" id="axis-3">Yr 20</text>
+                    <text x="456" y="205" class="axis-label" id="axis-4">Yr 25</text>
+                    <text x="560" y="205" class="axis-label" id="axis-5">Yr 35</text>
+                </svg>
             </div>
 
-            <!-- [RIGHT BOTTOM AREA]: TABS AND GRID BLOCKS -->
-            <div class="indicators-panel" style="flex: 1;">
-                
-                <!-- Folder Tabs Deck -->
-                <div class="tabs-container">
-                    <div class="folder-tab active-tab" onclick="switchFolderTab('projections-panel', this)">
-                        Projections Matrix
-                    </div>
-                    <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
-                        Diagnostic Analysis Desk
-                    </div>
-                </div>
+            <!-- VIEWPORT B: Layered Protection Pillars Blueprint -->
+            <div id="chart-protection-features" class="chart-container" style="display: none;">
+                <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
+                    <!-- Background Architecture Grid -->
+                    <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
+                        <line x1="50" y1="40" x2="550" y2="40" />
+                        <line x1="50" y1="100" x2="550" y2="100" />
+                        <line x1="50" y1="160" x2="550" y2="160" />
+                    </g>
 
-                <!-- Folder Content 1: Default Projections Matrix -->
-                <div id="projections-panel" class="tab-panel active-panel">
-                    <div class="panel-title">Asset Projections & Performance Metrics</div>
-                    <div class="milestone-grid">
-                        <div class="milestone-card" id="card-1">
-                            <div class="milestone-age" id="lbl-1">Policy Year 5</div>
-                            <div class="milestone-value" id="val-1">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-2">
-                            <div class="milestone-age" id="lbl-2">Policy Year 10</div>
-                            <div class="milestone-value" id="val-2">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-3">
-                            <div class="milestone-age" id="lbl-3">Policy Year 20</div>
-                            <div class="milestone-value" id="val-3">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-4">
-                            <div class="milestone-age" id="lbl-4">Policy Year 25</div>
-                            <div class="milestone-value" id="val-4">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-5">
-                            <div class="milestone-age" id="lbl-5">Policy Year 35</div>
-                            <div class="milestone-value" id="val-5">RM --</div>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Pillar 3: Accidental Quad-Multiplier Frame (Background Glow Border) -->
+                    <rect id="svg-accidental-pillar" x="70" y="45" width="460" height="115" rx="6" fill="none" stroke="rgba(52, 199, 89, 0.25)" stroke-width="1.5" stroke-dasharray="4 4" />
+                    <text x="78" y="58" fill="#34c759" font-size="8px" font-weight="600" letter-spacing="0.05em">ACCIDENTS: UP TO 400% MAX RISK SHIELD</text>
 
-                <!-- Folder Content 2: Auxiliary Analysis Space -->
-                <div id="analysis-panel" class="tab-panel">
-                    <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
-                    <div class="milestone-grid">
-                        <div class="milestone-card" id="card-net-cost">
-                            <div class="milestone-age">Amortized Net Cost / Yr</div>
-                            <div class="milestone-value" id="val-net-cost">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-cost-100k">
-                            <div class="milestone-age">Net Leverage Cost / 100K</div>
-                            <div class="milestone-value" id="val-cost-100k">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-leverage-factor">
-                            <div class="milestone-age">Capital Leverage Multiplier</div>
-                            <div class="milestone-value" id="val-leverage-factor">--</div>
-                        </div>
-                        <div class="milestone-card" id="card-preservation-factor">
-                            <div class="milestone-age">Equity Retention Yield</div>
-                            <div class="milestone-value" id="val-preservation-factor">--</div>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Pillar 1: Core Heritage Stack (Stepped Progression Area) -->
+                    <!-- Year 1-10 Base block -->
+                    <rect id="svg-heritage-p1" x="90" y="115" width="140" height="45" rx="4" fill="rgba(0, 113, 227, 0.15)" stroke="#0071e3" stroke-width="1.5" />
+                    <!-- Year 11-20 Booster (+5%) -->
+                    <rect id="svg-heritage-p2" x="235" y="110" width="140" height="50" rx="4" fill="rgba(0, 113, 227, 0.25)" stroke="#0071e3" stroke-width="1.5" />
+                    <!-- Year 21+ Booster (+10%) -->
+                    <rect id="svg-heritage-p3" x="380" y="105" width="140" height="55" rx="4" fill="rgba(0, 113, 227, 0.35)" stroke="#0071e3" stroke-width="1.5" />
+
+                    <!-- Pillar 2: Critical Care Shield Layer (Rides on top of Core) -->
+                    <rect id="svg-mcc-layer" x="90" y="85" width="430" height="20" rx="4" fill="rgba(138, 43, 226, 0.2)" stroke="#8A2BE2" stroke-width="1.2" />
+
+                    <!-- Live Value Overlays on Blueprint -->
+                    <g font-family="-apple-system, sans-serif" font-size="9px" font-weight="600" fill="#ffffff">
+                        <text id="svg-lbl-mcc" x="98" y="97" fill="#aa55ff">CRITICAL ILLNESS SHIELD</text>
+                        <text id="svg-lbl-heritage" x="98" y="130" fill="#0071e3">CORE LIFE/TPD</text>
+                        <text id="svg-lbl-booster" x="388" y="120" fill="#38a1ff">INTELLIGENT BOOSTER (+10%)</text>
+                    </g>
+
+                    <!-- Blueprint Time Timeline Axis -->
+                    <g font-size="9px" fill="var(--text-muted)" text-anchor:="middle">
+                        <text x="160" y="190" text-anchor="middle">Policy Yrs 1 - 10</text>
+                        <text x="305" y="190" text-anchor="middle">Policy Yrs 11 - 20</text>
+                        <text x="450" y="190" text-anchor="middle">Policy Yrs 21++</text>
+                    </g>
+                </svg>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Folder Tabs Deck -->
+    <div class="tabs-container" style="display: flex;">
+        <div class="folder-tab active-tab" onclick="switchFolderTab('projections-panel', this)">
+            Projections Matrix
+        </div>
+        <div class="folder-tab" onclick="switchFolderTab('protection-panel', this)" id="tab-trigger-protection">
+            Product Features
+        </div>
+        <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
+            Diagnostic Analysis Desk
+        </div>
+    </div>
+
+    <!-- Tab Contents Wrapper -->
+    <div class="tab-contents-wrapper" style="flex: 1; overflow-y: auto; background: var(--panel-bg, transparent); padding: 15px 0;">
+        
+        <!-- Tab Content 1: Projections Matrix -->
+        <div id="projections-panel" class="tab-panel active-panel">
+            <div class="panel-title">Asset Projections & Performance Metrics</div>
+            <div class="milestone-grid">
+                <div class="milestone-card" id="card-1"><div class="milestone-age" id="lbl-1">Year 5</div><div class="milestone-value" id="val-1">RM --</div></div>
+                <div class="milestone-card" id="card-2"><div class="milestone-age" id="lbl-2">Year 10</div><div class="milestone-value" id="val-2">RM --</div></div>
+                <div class="milestone-card" id="card-3"><div class="milestone-age" id="lbl-3">Year 20</div><div class="milestone-value" id="val-3">RM --</div></div>
+                <div class="milestone-card" id="card-4"><div class="milestone-age" id="lbl-4">Year 25</div><div class="milestone-value" id="val-4">RM --</div></div>
+                <div class="milestone-card" id="card-5"><div class="milestone-age" id="lbl-5">Year 35</div><div class="milestone-value" id="val-5">RM --</div></div>
+            </div>
+        </div>
+
+        <!-- Tab Content 2: Product Features -->
+        <div id="protection-panel" class="tab-panel" style="display: none; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 5px 10px;">
+            <div class="panel-title" style="margin-bottom: 15px;">Product Protection Pillars</div>
+            
+            <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #e5e5ea;">
+                <span style="font-size: 10px; text-transform: uppercase; color: #86868b; font-weight: 600;">Pillar 1 • Core Legacy</span>
+                <h3 style="margin: 2px 0 0 0; font-size: 15px; color: #1d1d1f; font-weight: 600;">Manulife Heritage (Death & TPD)</h3>
+                <div style="font-size: 24px; font-weight: 700; color: #0071e3; margin-top: 4px;" id="heritage-primary-value">RM 1,000,000</div>
+            </div>
+
+            <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #e5e5ea;">
+                <span style="font-size: 10px; text-transform: uppercase; color: #86868b; font-weight: 600;">Pillar 2 • Living Benefit</span>
+                <h3 style="margin: 2px 0 0 0; font-size: 15px; color: #1d1d1f; font-weight: 600;">Manulife Critical Cover (MCC)</h3>
+                <div style="font-size: 24px; font-weight: 700; color: #8A2BE2; margin-top: 4px;" id="mcc-primary-value">RM 1,000,000</div>
+            </div>
+
+            <div class="blueprint-card" style="background: #ffffff; border-radius: 12px; padding: 16px; border: 1px solid #e5e5ea;">
+                <span style="font-size: 10px; text-transform: uppercase; color: #86868b; font-weight: 600;">Pillar 3 • Contingency Multiplier</span>
+                <h3 style="margin: 2px 0 10px 0; font-size: 15px; color: #1d1d1f; font-weight: 600;">Accidental Death Shield</h3>
+                <div style="font-size: 20px; font-weight: 700; color: #34c759;" id="accidental-max-value">RM 4,000,000 Max Payout</div>
+            </div>
+        </div>
+
+        <!-- Tab Content 3: Diagnostic Analysis -->
+        <div id="analysis-panel" class="tab-panel" style="display: none;">
+            <div class="panel-title">Advanced Leveraged Cost Metrics (Horizon: Yr 35)</div>
+            <div class="milestone-grid">
+                <div class="milestone-card"><div class="milestone-age">Amortized Net Cost / Yr</div><div class="milestone-value" id="val-net-cost">RM --</div></div>
+                <div class="milestone-card"><div class="milestone-age">Net Leverage Cost / 100K</div><div class="milestone-value" id="val-cost-100k">RM --</div></div>
+                <div class="milestone-card"><div class="milestone-age">Capital Leverage Multiplier</div><div class="milestone-value" id="val-leverage-factor">--</div></div>
+                <div class="milestone-card"><div class="milestone-age">Equity Retention Yield</div><div class="milestone-value" id="val-preservation-factor">--</div></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
             </div> <!-- End Indicators Panel -->
         </div> <!-- End Right Main Workspace -->
@@ -565,6 +593,51 @@ function dismissGatekeeper() {
         if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
 
         updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
+
+                // ... (all your existing interpolation and badge toggle logic remains exactly the same above) ...
+
+        if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
+        if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
+
+        // 1. Run your existing structural matrix UI updating framework
+        updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
+
+        // 2. NEW HOOK: If the protection panel blueprint graph is visible, sync it immediately
+        const protectionChart = document.getElementById('chart-protection-features');
+        if (protectionChart && protectionChart.style.display === 'block') {
+            syncProtectionBlueprintGraph(protectionValue); 
+        }
+    }
+
+    /**
+     * Synchronizes the custom Layered Protection Blueprint SVG with real-time slider updates
+     */
+    function syncProtectionBlueprintGraph(currentProtectionRaw) {
+        // Read the actual active coverage amount selected by the mathematical engine
+        const currentCoverageAmount = parseFloat(currentProtectionRaw) || 0;
+        
+        // Premium utility formatter to transform 1000000 -> "RM 1.0M"
+        const fmt = (v) => "RM " + (v / 1000000).toFixed(1) + "M";
+
+        // 1. Locate and update text blocks sitting inside your vector blueprint
+        const lblMcc = document.getElementById('svg-lbl-mcc');
+        const lblHeritage = document.getElementById('svg-lbl-heritage');
+        const lblBooster = document.getElementById('svg-lbl-booster');
+        
+        if (lblMcc) lblMcc.textContent = `CRITICAL ILLNESS SHIELD: ${fmt(currentCoverageAmount)}`;
+        if (lblHeritage) lblHeritage.textContent = `CORE LIFE/TPD: ${fmt(currentCoverageAmount)}`;
+        if (lblBooster) lblBooster.textContent = `INTELLIGENT BOOSTER (YR21+): ${fmt(currentCoverageAmount * 1.1)}`;
+        
+        // 2. Maintain structural parity across text elements down in the folder card system too
+        const cardHeritage = document.getElementById('heritage-primary-value');
+        const cardMcc = document.getElementById('mcc-primary-value');
+        const cardAccidental = document.getElementById('accidental-max-value');
+
+        if (cardHeritage) cardHeritage.textContent = fmt(currentCoverageAmount);
+        if (cardMcc) cardMcc.textContent = fmt(currentCoverageAmount);
+        if (cardAccidental) cardAccidental.textContent = fmt(currentCoverageAmount * 4) + " Max Payout";
+    }
+
     }
 
     /**
@@ -825,49 +898,41 @@ function dismissGatekeeper() {
      * Interface Folder Tab Toggle Manager
      */
 function switchFolderTab(panelId, tabElement) {
-    const tabContainer = tabElement.parentElement;
-    tabContainer.querySelectorAll('.folder-tab').forEach(tab => {
-        tab.classList.remove('active-tab');
-    });
-    
-    const parentContainer = tabContainer.parentElement;
-    parentContainer.querySelectorAll('.tab-panel').forEach(panel => {
+    // 1. Hide all text tab content panels
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.style.display = 'none';
         panel.classList.remove('active-panel');
     });
     
-    tabElement.classList.add('active-tab');
+    // 2. Clear out active styling across all tab heads
+    document.querySelectorAll('.folder-tab').forEach(tab => {
+        tab.classList.remove('active-tab');
+    });
     
-    // Safety check: only add active-panel if the panelId element actually exists in the DOM
+    // 3. Mount current active text tab panel
     const targetPanel = document.getElementById(panelId);
     if (targetPanel) {
+        targetPanel.style.display = 'block';
         targetPanel.classList.add('active-panel');
     }
-
-    // --- NEW: CONTROLLING THE RIGHT GRAPH VIEWPORT AREA ---
-    const graphWrapper = document.getElementById('graph-viewport-wrapper');
-    const tab1Wrapper = document.getElementById('tab1-protection-blueprint');
-    const tab2Wrapper = document.getElementById('tab2-liquidity-blueprint');
-
-    if (panelId === 'core-blueprint') {
-        if (graphWrapper) graphWrapper.style.display = 'none';
-        if (tab2Wrapper) tab2Wrapper.style.display = 'none';
-        if (tab1Wrapper) tab1Wrapper.style.display = 'block';
-        
-        // Push the current slider value to instantly draw correct numbers on load
-        syncSliderToTab1();
-        
-    } else if (panelId === 'liquidity-architecture') {
-        if (graphWrapper) graphWrapper.style.display = 'none';
-        if (tab1Wrapper) tab1Wrapper.style.display = 'none';
-        if (tab2Wrapper) tab2Wrapper.style.display = 'block';
-        
+    tabElement.classList.add('active-tab');
+    
+    // 4. GRAPH INTERACT ENGINE ROUTING
+    // If user clicks the Product Features tab, swap the SVG viewports completely
+    const accountChart = document.getElementById('chart-account-value');
+    const protectionChart = document.getElementById('chart-protection-features');
+    
+    if (panelId === 'protection-panel') {
+        accountChart.style.display = 'none';
+        protectionChart.style.display = 'block';
+        // Run real-time update to map protection values to blueprint text nodes inside SVG
+        syncProtectionBlueprintGraph();
     } else {
-        // Restores original chart canvas layout for standard simulation calculation tabs
-        if (tab1Wrapper) tab1Wrapper.style.display = 'none';
-        if (tab2Wrapper) tab2Wrapper.style.display = 'none';
-        if (graphWrapper) graphWrapper.style.display = 'block';
+        accountChart.style.display = 'block';
+        protectionChart.style.display = 'none';
     }
 }
+
 
 // Simple helper to find your slider and force an update on initial load
 function syncSliderToTab1() {
