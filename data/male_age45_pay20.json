@@ -1,93 +1,47 @@
 {
   "protectionProfiles": {
-      "500000": {
+    "750000": {
       "maxPremiumScenario": {
-        "premiumAmount": 68654,
+        "premiumAmount": 33308,
         "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 35910 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 307238 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 415625 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 524325 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 560000 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 614673 }
+          { "policyYear": 1, "ageNext": 46, "accountValue": 13350 },
+          { "policyYear": 5, "ageNext": 50, "accountValue": 100540 },
+          { "policyYear": 10, "ageNext": 55, "accountValue": 263870 },
+          { "policyYear": 20, "ageNext": 65, "accountValue": 748569 },
+          { "policyYear": 25, "ageNext": 70, "accountValue": 871827 },
+          { "policyYear": 35, "ageNext": 80, "accountValue": 1263954 }
         ]
       },
       "midPremiumScenario": {
-        "premiumAmount": 60300,
+        "premiumAmount": 25154,
         "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 31116 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 266548 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 356149 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 431367 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 410000 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 343467 }
+          { "policyYear": 1, "ageNext": 46, "accountValue": 9294 },
+          { "policyYear": 5, "ageNext": 50, "accountValue": 69716 },
+          { "policyYear": 10, "ageNext": 55, "accountValue": 183297 },
+          { "policyYear": 20, "ageNext": 65, "accountValue": 512917 },
+          { "policyYear": 25, "ageNext": 70, "accountValue": 554796 },
+          { "policyYear": 35, "ageNext": 80, "accountValue": 791654 }
         ]
       },
       "leastPremiumScenario": {
-        "premiumAmount": 52000,
+        "premiumAmount": 17000,
         "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 26302 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 225679 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 296411 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 337998 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 280000 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 71064 }
+          { "policyYear": 1, "ageNext": 46, "accountValue": 5238 },
+          { "policyYear": 5, "ageNext": 50, "accountValue": 38892 },
+          { "policyYear": 10, "ageNext": 55, "accountValue": 102722 },
+          { "policyYear": 20, "ageNext": 65, "accountValue": 277260 },
+          { "policyYear": 25, "ageNext": 70, "accountValue": 225301 },
+          { "policyYear": 35, "ageNext": 80, "accountValue": 45327 }
         ]
       },
       "sustainable70Scenario": {
-        "premiumAmount": 35000,
+        "premiumAmount": 12500,
         "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 16440 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 141970 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 174055 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 146760 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 10640 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 0 }
-        ]
-      }
-    },
-    "800000": {
-      "maxPremiumScenario": {
-        "premiumAmount": 68654,
-        "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 35910 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 307238 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 415625 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 524325 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 560000 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 614673 }
-        ]
-      },
-      "midPremiumScenario": {
-        "premiumAmount": 60300,
-        "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 31116 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 266548 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 356149 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 431367 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 410000 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 343467 }
-        ]
-      },
-      "leastPremiumScenario": {
-        "premiumAmount": 52000,
-        "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 26302 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 225679 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 296411 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 337998 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 280000 },
-          { "policyYear": 35, "ageNext": 80, "accountValue": 71064 }
-        ]
-      },
-      "sustainable70Scenario": {
-        "premiumAmount": 35000,
-        "milestones": [
-          { "policyYear": 1, "ageNext": 46, "accountValue": 16440 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 141970 },
-          { "policyYear": 10, "ageNext": 55, "accountValue": 174055 },
-          { "policyYear": 20, "ageNext": 65, "accountValue": 146760 },
-          { "policyYear": 25, "ageNext": 70, "accountValue": 10640 },
+          { "policyYear": 1, "ageNext": 46, "accountValue": 2999 },
+          { "policyYear": 5, "ageNext": 50, "accountValue": 21881 },
+          { "policyYear": 10, "ageNext": 55, "accountValue": 58255 },
+          { "policyYear": 20, "ageNext": 65, "accountValue": 147206 },
+          { "policyYear": 25, "ageNext": 70, "accountValue": 43461 },
           { "policyYear": 35, "ageNext": 80, "accountValue": 0 }
         ]
       }
