@@ -224,37 +224,57 @@
                     </div>
                 </div>
 
-               <!-- Tab 3: Side-by-Side Matrix Verification Desk -->
+<!-- Tab 3: Side-by-Side Matrix Verification Desk -->
 <div id="comparison-panel" class="tab-panel">
     
-    <!-- Contextual Pinned Action Control Bar -->
-    <div style="margin: 15px 0; display: flex; justify-content: flex-end;">
-        <button id="pin-scenario-btn" onclick="toggleScenarioPin()" style="width: auto; padding: 10px 20px; background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 8px; color: var(--secondary-glow); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <span>📌</span> Pin Scenario A
+    <!-- 1. Context Telemetry and Pin Controller Header -->
+    <div style="margin: 12px 0; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.01); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
+        <div style="display: flex; gap: 8px; font-size: 11px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+            <div style="background: rgba(255,255,255,0.03); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05);">
+                <span style="color: var(--text-muted); text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">Premium A:</span> 
+                <strong id="pinned-premium-display" style="color: #fff; margin-left: 4px;">RM --</strong>
+            </div>
+            <div style="background: rgba(0, 210, 255, 0.05); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(0, 210, 255, 0.1);">
+                <span style="color: var(--text-muted); text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">Active B:</span> 
+                <strong id="live-premium-display" style="color: #00d2ff; margin-left: 4px;">RM --</strong>
+            </div>
+        </div>
+
+        <button id="pin-scenario-btn" onclick="toggleScenarioPin()" style="padding: 6px 14px; background: rgba(0, 210, 255, 0.08); border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 6px; color: #00d2ff; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+            📌 Pin Base
         </button>
     </div>
 
-    <!-- Data Matrix Grid -->
-    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <!-- 2. Condensed Data Matrix Table -->
+    <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
             <thead>
-                <tr style="background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Timeline Milestone</th>
-                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario A (Pinned Base)</th>
-                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario B (Active Live)</th>
-                    <th style="padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Net Delta Variance</th>
+                <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06);">
+                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Milestone</th>
+                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario A</th>
+                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario B</th>
+                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; text-align: right;">Net Delta</th>
                 </tr>
             </thead>
-            <tbody id="comparison-matrix-body">
-                <tr>
-                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
-                        No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
-                    </td>
+            <tbody id="comparison-matrix-body" style="font-family: SFMono-Regular, Consolas, Monaco, monospace; font-size: 11px;">
+                <!-- Target Row Example Layout for when populated by your Javascript Engine -->
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                    <td style="padding: 8px 10px; color: #fff; font-family: -apple-system, sans-serif;">Policy Year 10</td>
+                    <td style="padding: 8px 10px; color: var(--text-muted);">RM 120,500</td>
+                    <td style="padding: 8px 10px; color: #00d2ff;">RM 155,000</td>
+                    <td style="padding: 8px 10px; color: #34c759; text-align: right; font-weight: 600;">+RM 34,500</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                    <td style="padding: 8px 10px; color: #fff; font-family: -apple-system, sans-serif;">Policy Year 20</td>
+                    <td style="padding: 8px 10px; color: var(--text-muted);">RM 310,000</td>
+                    <td style="padding: 8px 10px; color: #00d2ff;">RM 420,000</td>
+                    <td style="padding: 8px 10px; color: #34c759; text-align: right; font-weight: 600;">+RM 110,000</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
 
                 <!-- Folder Content 2: Auxiliary Analysis Space -->
                 <div id="analysis-panel" class="tab-panel">
