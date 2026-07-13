@@ -631,6 +631,13 @@ function dismissGatekeeper() {
         const premiumDisplay = document.getElementById('premium-display');
         if (premiumDisplay) premiumDisplay.innerText = "Data Stream Empty";
         
+        // --- ADD THESE THREE LINES TO RESET THE COMPARISON BADGES ---
+        const pinnedDisplay = document.getElementById('pinned-premium-display');
+        const liveDisplay = document.getElementById('live-premium-display');
+        if (pinnedDisplay) pinnedDisplay.innerText = "RM --";
+        if (liveDisplay) liveDisplay.innerText = "RM --";
+        // -----------------------------------------------------------
+
         const badgePi = document.getElementById('badge-pi');
         const badgeSim = document.getElementById('badge-sim');
         if (badgePi) badgePi.classList.remove('active-pi');
@@ -1017,9 +1024,22 @@ function dismissGatekeeper() {
     }
 
     // System Initialization Entry Trigger
-    document.addEventListener("DOMContentLoaded", () => {
-        recalibrateSliderBounds(); 
-    });
+// System Initialization Entry Trigger
+document.addEventListener("DOMContentLoaded", () => {
+    // Force clear out the comparison matrix on fresh page loads
+    const tableBody = document.getElementById('comparison-matrix-body');
+    if (tableBody) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
+                    No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
+                </td>
+            </tr>`;
+    }
+
+    // Now run your standard simulation boundaries startup
+    recalibrateSliderBounds(); 
+});
 
     /**
      * Interface Folder Tab Toggle Manager
