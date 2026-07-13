@@ -870,20 +870,19 @@ function dismissGatekeeper() {
     function toggleScenarioPin() {
         const pinBtn = document.getElementById('pin-scenario-btn');
         const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
         const modeSelectors = document.querySelectorAll('.mode-btn');
 
         // 1. Fetch what the active premium slider is currently sitting at
-    const premiumSlider = document.getElementById('premium-slider');
-    if (!premiumSlider) return;
+        const premiumSlider = document.getElementById('premium-slider');
+        if (!premiumSlider) return;
 
-    const currentPremiumVal = parseInt(premiumSlider.value);
-    
-    // 2. Format and inject into the Premium A UI Badge
-    const pinnedPremiumDisplay = document.getElementById('pinned-premium-display');
-    if (pinnedPremiumDisplay && !isNaN(currentPremiumVal)) {
-        pinnedPremiumDisplay.textContent = `RM ${currentPremiumVal.toLocaleString()}/yr`;
-    }
+        const currentPremiumVal = parseInt(premiumSlider.value);
+        
+        // 2. Format and inject into the Premium A UI Badge
+        const pinnedPremiumDisplay = document.getElementById('pinned-premium-display');
+        if (pinnedPremiumDisplay && !isNaN(currentPremiumVal)) {
+            pinnedPremiumDisplay.textContent = `RM ${currentPremiumVal.toLocaleString()}/yr`;
+        }
 
         if (!isComparing) {
             // Lock Scenario A (Baseline) Data Structures
@@ -951,6 +950,7 @@ function dismissGatekeeper() {
             }
         }
     }
+
 
     function calculateComparisonMatrix(currentLivePremium) {
         if (!isComparing || !baselineSnapshot || simulatedMilestonesGlobal.length === 0) return;
