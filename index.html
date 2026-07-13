@@ -380,8 +380,18 @@ function dismissGatekeeper() {
         const pSlider = document.getElementById('premium-slider');
         const protSlider = document.getElementById('protection-slider');
         
-        if (protSlider) protSlider.disabled = (mode === 'protection');
-        if (pSlider) pSlider.disabled = (mode === 'premium');
+        if (protSlider) {
+            protSlider.disabled = (mode === 'protection');
+            // Dim or restore the protection slider track visually
+            protSlider.style.opacity = (mode === 'protection') ? '0.35' : '1';
+            protSlider.style.cursor = (mode === 'protection') ? 'not-allowed' : 'pointer';
+        }
+        if (pSlider) {
+            pSlider.disabled = (mode === 'premium');
+            // Dim or restore the premium slider track visually
+            pSlider.style.opacity = (mode === 'premium') ? '0.35' : '1';
+            pSlider.style.cursor = (mode === 'premium') ? 'not-allowed' : 'pointer';
+        }
         
         const activeBtn = document.querySelector(`[onclick="setMode('${mode}')"]`);
         if (activeBtn) activeBtn.classList.add('active');
@@ -392,20 +402,31 @@ function dismissGatekeeper() {
         const lockProtection = document.getElementById('lock-icon-protection');
 
         if (mode === 'premium') {
-            if (premiumGroup) premiumGroup.classList.add('locked');
-            if (protectionGroup) protectionGroup.classList.remove('locked');
+            if (premiumGroup) {
+                premiumGroup.classList.add('locked');
+                premiumGroup.style.opacity = '0.4'; // Dim entire premium container group
+            }
+            if (protectionGroup) {
+                protectionGroup.classList.remove('locked');
+                protectionGroup.style.opacity = '1'; // Light up entire protection container group
+            }
             if (lockPremium) lockPremium.innerText = '🔒';
             if (lockProtection) lockProtection.innerText = '';
         } else {
-            if (protectionGroup) protectionGroup.classList.add('locked');
-            if (premiumGroup) premiumGroup.classList.remove('locked');
+            if (protectionGroup) {
+                protectionGroup.classList.add('locked');
+                protectionGroup.style.opacity = '0.4'; // Dim entire protection container group
+            }
+            if (premiumGroup) {
+                premiumGroup.classList.remove('locked');
+                premiumGroup.style.opacity = '1'; // Light up entire premium container group
+            }
             if (lockProtection) lockProtection.innerText = '🔒';
             if (lockPremium) lockPremium.innerText = '';
         }
         
         recalibrateSliderBounds(); 
     }
-
     /**
      * Recalibrates structural bounds, step constraints, and min/max slider ticks
      */
@@ -1023,7 +1044,6 @@ function dismissGatekeeper() {
         tableBody.innerHTML = htmlRows;
     }
 
-    // System Initialization Entry Trigger
 // System Initialization Entry Trigger
 document.addEventListener("DOMContentLoaded", () => {
     // Force clear out the comparison matrix on fresh page loads
@@ -1037,10 +1057,10 @@ document.addEventListener("DOMContentLoaded", () => {
             </tr>`;
     }
 
-    // Now run your standard simulation boundaries startup
-    recalibrateSliderBounds(); 
+    // Initialize with Premium mode active by default to unlock the sliders
+    setMode('premium'); 
 });
-
+    
     /**
      * Interface Folder Tab Toggle Manager
      */
