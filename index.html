@@ -610,7 +610,14 @@ function dismissGatekeeper() {
         if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
 
         updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
-        
+
+        // --- ADD THIS BLOCK TO DYNAMICALLY UPDATE THE LIVE PREMIUM (B) IN THE UI ---
+        const livePremiumDisplay = document.getElementById('live-premium-display');
+        if (livePremiumDisplay && !isNaN(simulatedPremium)) {
+            // Formats number to standard readable syntax (e.g., RM 45,000/yr)
+            livePremiumDisplay.textContent = `RM ${simulatedPremium.toLocaleString()}/yr`;
+        }
+
         // Dynamic side-by-side verification updater
         if (isComparing) {
             calculateComparisonMatrix(simulatedPremium);
@@ -865,6 +872,18 @@ function dismissGatekeeper() {
         const protectionSlider = document.getElementById('protection-slider');
         const premiumSlider = document.getElementById('premium-slider');
         const modeSelectors = document.querySelectorAll('.mode-btn');
+
+        // 1. Fetch what the active premium slider is currently sitting at
+    const premiumSlider = document.getElementById('premium-slider');
+    if (!premiumSlider) return;
+
+    const currentPremiumVal = parseInt(premiumSlider.value);
+    
+    // 2. Format and inject into the Premium A UI Badge
+    const pinnedPremiumDisplay = document.getElementById('pinned-premium-display');
+    if (pinnedPremiumDisplay && !isNaN(currentPremiumVal)) {
+        pinnedPremiumDisplay.textContent = `RM ${currentPremiumVal.toLocaleString()}/yr`;
+    }
 
         if (!isComparing) {
             // Lock Scenario A (Baseline) Data Structures
