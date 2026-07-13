@@ -679,3 +679,18 @@
 .net-loss-red {
     color: #ff453a !important; /* High-visibility warning red for added costs or funding outlays */
 }
+
+/* Dynamic UI Dimming Rule for Frozen Inputs */
+.range-slider:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+    transition: opacity 0.25s ease-in-out;
+}
+
+/* Optional: If your slider has a container block you want to dim out entirely */
+.slider-group.locked {
+    opacity: 0.4;
+    pointer-events: none;
+    transition: opacity 0.25s ease-in-out;
+}
