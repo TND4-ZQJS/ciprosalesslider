@@ -96,45 +96,45 @@
             </div>
             
 
-            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-                <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em;">Structural Variables</p>
-                
-                <div class="control-row-layout">
-                    <div class="control-column">
-                        <span class="slider-label">Gender</span>
-                        <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                            <option value="Male" selected>Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
+  <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+    <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em; margin: 0;">Structural Variables</p>
+    
+    <!-- 1. The Clean 3-Column Dropdown Grid -->
+    <div class="control-row-layout" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <div class="control-column" style="display: flex; flex-direction: column; gap: 6px;">
+            <span class="slider-label">Gender</span>
+            <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                <option value="Male" selected>Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
 
-                    <div class="control-column">
-                        <span class="slider-label">Age</span>
-                        <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                            <option value="25">25</option>
-                            <option value="35">35</option>
-                            <option value="45" selected>45</option>
-                            <option value="55">55</option>
-                        </select>
-                    </div>
+        <div class="control-column" style="display: flex; flex-direction: column; gap: 6px;">
+            <span class="slider-label">Age</span>
+            <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                <option value="25">25</option>
+                <option value="35">35</option>
+                <option value="45" selected>45</option>
+                <option value="55">55</option>
+            </select>
+        </div>
 
-                    <div class="control-column">
-                        <span class="slider-label">Pay</span>
-                        <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                            <option value="pay6" selected>6 Yrs</option>
-                            <option value="pay10">10 Yrs</option>
-                            <option value="pay20">20 Yrs</option>
-                        </select>
-                    </div>
+        <div class="control-column" style="display: flex; flex-direction: column; gap: 6px;">
+            <span class="slider-label">Pay</span>
+            <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
+                <option value="pay6" selected>6 Yrs</option>
+                <option value="pay10">10 Yrs</option>
+                <option value="pay20">20 Yrs</option>
+            </select>
+        </div>
+    </div>
 
-                    <!-- Trigger Presentation Controller -->
-<button type="button" id="open-presentation-btn" class="presentation-trigger-btn" onclick="openFeaturePresentation()">
-    <span>📊</span> Present Product Features
-</button>
+    <!-- 2. The Spaced, Full-Width Presentation Button -->
+    <button type="button" id="open-presentation-btn" class="presentation-trigger-btn" onclick="openFeaturePresentation()">
+        <span>📊</span> Present Product Features
+    </button>
+</div>
 
-                </div>
-            </div>
-        </div> 
         
         <div class="display-viewport">
             <div class="graph-wrapper">
