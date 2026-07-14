@@ -405,20 +405,15 @@
 
 <!-- YOUR EXISTING SCRIPT STARTS HERE -->
 <script>
-function dismissGatekeeper() {
-    const overlayElement = document.getElementById('compliance-gatekeeper');
-    // ...
-
-    <footer>
-        [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
-    </footer>
-<script>
-function dismissGatekeeper() {
-    const overlayElement = document.getElementById('compliance-gatekeeper');
-    if (overlayElement) {
-        overlayElement.classList.add('gatekeeper-hidden');
+    /**
+     * Closes/hides the initial compliance warning gatekeeper overlay
+     */
+    function dismissGatekeeper() {
+        const overlayElement = document.getElementById('compliance-gatekeeper');
+        if (overlayElement) {
+            overlayElement.classList.add('gatekeeper-hidden');
+        }
     }
-}
 
     // Global Multi-Tier Data Caching Registry
     const quotationCache = {};
@@ -534,6 +529,7 @@ function dismissGatekeeper() {
         
         recalibrateSliderBounds(); 
     }
+
     /**
      * Recalibrates structural bounds, step constraints, and min/max slider ticks
      */
@@ -739,7 +735,7 @@ function dismissGatekeeper() {
 
         updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
 
-        // --- ADD THIS BLOCK TO DYNAMICALLY UPDATE THE LIVE PREMIUM (B) IN THE UI ---
+        // --- DYNAMICALLY UPDATE THE LIVE PREMIUM (B) IN THE UI ---
         const livePremiumDisplay = document.getElementById('live-premium-display');
         if (livePremiumDisplay && !isNaN(simulatedPremium)) {
             // Formats number to standard readable syntax (e.g., RM 45,000/yr)
@@ -759,12 +755,11 @@ function dismissGatekeeper() {
         const premiumDisplay = document.getElementById('premium-display');
         if (premiumDisplay) premiumDisplay.innerText = "Data Stream Empty";
         
-        // --- ADD THESE THREE LINES TO RESET THE COMPARISON BADGES ---
+        // --- RESET THE COMPARISON BADGES ---
         const pinnedDisplay = document.getElementById('pinned-premium-display');
         const liveDisplay = document.getElementById('live-premium-display');
         if (pinnedDisplay) pinnedDisplay.innerText = "RM --";
         if (liveDisplay) liveDisplay.innerText = "RM --";
-        // -----------------------------------------------------------
 
         const badgePi = document.getElementById('badge-pi');
         const badgeSim = document.getElementById('badge-sim');
@@ -1086,7 +1081,6 @@ function dismissGatekeeper() {
         }
     }
 
-
     function calculateComparisonMatrix(currentLivePremium) {
         if (!isComparing || !baselineSnapshot || simulatedMilestonesGlobal.length === 0) return;
 
@@ -1151,22 +1145,22 @@ function dismissGatekeeper() {
         tableBody.innerHTML = htmlRows;
     }
 
-// System Initialization Entry Trigger
-document.addEventListener("DOMContentLoaded", () => {
-    // Force clear out the comparison matrix on fresh page loads
-    const tableBody = document.getElementById('comparison-matrix-body');
-    if (tableBody) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
-                    No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
-                </td>
-            </tr>`;
-    }
+    // System Initialization Entry Trigger
+    document.addEventListener("DOMContentLoaded", () => {
+        // Force clear out the comparison matrix on fresh page loads
+        const tableBody = document.getElementById('comparison-matrix-body');
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
+                        No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
+                    </td>
+                </tr>`;
+        }
 
-    // Initialize with Premium mode active by default to unlock the sliders
-    setMode('premium'); 
-});
+        // Initialize with Premium mode active by default to unlock the sliders
+        setMode('premium'); 
+    });
     
     /**
      * Interface Folder Tab Toggle Manager
@@ -1193,93 +1187,93 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================================================
-// PRODUCT FEATURE SUITE OVERLAY CONTROLLER
-// ==========================================================================
-let currentPresentationPage = 1;
-const totalPresentationPages = 2;
+    // PRODUCT FEATURE SUITE OVERLAY CONTROLLER
+    // ==========================================================================
+    let currentPresentationPage = 1;
+    const totalPresentationPages = 2;
 
-/**
- * Opens the presentation overlay and defaults to the first page
- */
-function openFeaturePresentation() {
-    const overlay = document.getElementById('presentation-overlay');
-    if (overlay) {
-        overlay.style.display = 'flex';
-        switchPresentationPage(1); // Default back to Page 1 (Heritage) on open
-    }
-}
-
-/**
- * Closes the presentation overlay
- */
-function closeFeaturePresentation() {
-    const overlay = document.getElementById('presentation-overlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-    }
-}
-
-/**
- * Switches between the pages/tabs in the presentation overlay
- * @param {number} pageNum - The page number to switch to (1 or 2)
- */
-function switchPresentationPage(pageNum) {
-    currentPresentationPage = pageNum;
-    
-    // Toggle active slide visibility and tab styling
-    for (let i = 1; i <= totalPresentationPages; i++) {
-        const pageEl = document.getElementById(`presentation-page-${i}`);
-        const tabEl = document.getElementById(`tab-btn-${i}`);
-        
-        if (pageEl) {
-            pageEl.style.display = (i === pageNum) ? 'block' : 'none';
+    /**
+     * Opens the presentation overlay and defaults to the first page
+     */
+    function openFeaturePresentation() {
+        const overlay = document.getElementById('presentation-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+            switchPresentationPage(1); // Default back to Page 1 (Heritage) on open
         }
-        if (tabEl) {
-            if (i === pageNum) {
-                tabEl.classList.add('active');
+    }
+
+    /**
+     * Closes the presentation overlay
+     */
+    function closeFeaturePresentation() {
+        const overlay = document.getElementById('presentation-overlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    /**
+     * Switches between the pages/tabs in the presentation overlay
+     * @param {number} pageNum - The page number to switch to (1 or 2)
+     */
+    function switchPresentationPage(pageNum) {
+        currentPresentationPage = pageNum;
+        
+        // Toggle active slide visibility and tab styling
+        for (let i = 1; i <= totalPresentationPages; i++) {
+            const pageEl = document.getElementById(`presentation-page-${i}`);
+            const tabEl = document.getElementById(`tab-btn-${i}`);
+            
+            if (pageEl) {
+                pageEl.style.display = (i === pageNum) ? 'block' : 'none';
+            }
+            if (tabEl) {
+                if (i === pageNum) {
+                    tabEl.classList.add('active');
+                } else {
+                    tabEl.classList.remove('active');
+                }
+            }
+        }
+
+        // Update bottom page counter text
+        const indicator = document.getElementById('presentation-page-indicator');
+        if (indicator) {
+            indicator.textContent = `Page ${pageNum} of ${totalPresentationPages}`;
+        }
+
+        // Control navigation buttons state rules
+        const prevBtn = document.getElementById('prev-page-btn');
+        const nextBtn = document.getElementById('next-page-btn');
+        
+        if (prevBtn) {
+            prevBtn.disabled = (pageNum === 1);
+        }
+        
+        if (nextBtn) {
+            if (pageNum === totalPresentationPages) {
+                nextBtn.textContent = 'Finish';
+                nextBtn.onclick = closeFeaturePresentation;
             } else {
-                tabEl.classList.remove('active');
+                nextBtn.textContent = 'Next';
+                nextBtn.onclick = () => navigatePresentation(1);
             }
         }
     }
 
-    // Update bottom page counter text
-    const indicator = document.getElementById('presentation-page-indicator');
-    if (indicator) {
-        indicator.textContent = `Page ${pageNum} of ${totalPresentationPages}`;
-    }
-
-    // Control navigation buttons state rules
-    const prevBtn = document.getElementById('prev-page-btn');
-    const nextBtn = document.getElementById('next-page-btn');
-    
-    if (prevBtn) {
-        prevBtn.disabled = (pageNum === 1);
-    }
-    
-    if (nextBtn) {
-        if (pageNum === totalPresentationPages) {
-            nextBtn.textContent = 'Finish';
-            nextBtn.onclick = closeFeaturePresentation;
-        } else {
-            nextBtn.textContent = 'Next';
-            nextBtn.onclick = () => navigatePresentation(1);
+    /**
+     * Increments or decrements presentation slide tracking index
+     * @param {number} direction - Direction modifier (e.g. 1 or -1)
+     */
+    function navigatePresentation(direction) {
+        let targetPage = currentPresentationPage + direction;
+        if (targetPage >= 1 && targetPage <= totalPresentationPages) {
+            switchPresentationPage(targetPage);
         }
     }
-}
-
-/**
- * Increments or decrements presentation slide tracking index
- * @param {number} direction - Direction modifier (e.g. 1 or -1)
- */
-function navigatePresentation(direction) {
-    let targetPage = currentPresentationPage + direction;
-    if (targetPage >= 1 && targetPage <= totalPresentationPages) {
-        switchPresentationPage(targetPage);
-    }
-}
-
 </script>
+
 </body>
 </html>
 
