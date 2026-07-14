@@ -126,6 +126,12 @@
                             <option value="pay20">20 Yrs</option>
                         </select>
                     </div>
+
+                    <!-- Trigger Presentation Controller -->
+<button type="button" id="open-presentation-btn" class="presentation-trigger-btn" onclick="openFeaturePresentation()">
+    <span>📊</span> Present Product Features
+</button>
+
                 </div>
             </div>
         </div> 
@@ -301,6 +307,107 @@
             </div>
         </div>
     </div>
+
+    <!-- ... Rest of your calculator's HTML columns, cards, and sliders ... -->
+
+<!-- ========================================== -->
+<!-- PASTE THE ENTIRE OVERLAY BLOCK HERE (Directly above the script tag) -->
+<!-- ========================================== -->
+<div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
+    <div class="presentation-modal-card">
+        <!-- Header Zone -->
+        <div class="presentation-modal-header">
+            <h3>Product Feature Suite</h3>
+            <button type="button" class="close-overlay-btn" onclick="closeFeaturePresentation()">✕</button>
+        </div>
+
+        <!-- Navigation Tabs Layout -->
+        <div class="presentation-tab-bar">
+            <button type="button" class="presentation-tab-btn active" id="tab-btn-1" onclick="switchPresentationPage(1)">
+                🏛️ Manulife Heritage
+            </button>
+            <button type="button" class="presentation-tab-btn" id="tab-btn-2" onclick="switchPresentationPage(2)">
+                🛡️ Critical Cover
+            </button>
+        </div>
+
+        <!-- Scrollable Presentation Content -->
+        <div class="presentation-modal-body">
+            <!-- PAGE 1: MANULIFE HERITAGE -->
+            <div id="presentation-page-1" class="presentation-page-content">
+                <div class="feature-hero-badge">Legacy & Wealth Preservation</div>
+                <p class="feature-intro-text">Designed to safeguard what you have achieved, offering high liquidity to protect, grow, and seamlessly transfer your wealth to future generations.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-item-card">
+                        <div class="feature-icon">💎</div>
+                        <div>
+                            <h4>High-Value Entry Protection</h4>
+                            <p>Starts at a minimum Face Amount of **RM 500,000** for Death or Total & Permanent Disability (TPD), with up to 400% coverage for accidental events.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item-card">
+                        <div class="feature-icon">🚀</div>
+                        <div>
+                            <h4>Protection Booster Engine</h4>
+                            <p>Automatically enhances basic life coverage by **5% every 10 policy years** completely at no extra insurance cost or health re-underwriting.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item-card">
+                        <div class="feature-icon">🔄</div>
+                        <div>
+                            <h4>Cover Reset Benefit</h4>
+                            <p>Resets your core safety protection boundaries back to full strength after a partial withdrawal event, keeping the safety net functional when needed most.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: MANULIFE CRITICAL COVER -->
+            <div id="presentation-page-2" class="presentation-page-content" style="display: none;">
+                <div class="feature-hero-badge lifestyle-badge">Lifestyle & Active Income Shield</div>
+                <p class="feature-intro-text">Provides robust financial cushions upon health milestones, ensuring your core legacy investment vehicles aren't prematurely liquidated during a medical recovery window.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-item-card">
+                        <div class="feature-icon">🏥</div>
+                        <div>
+                            <h4>48 Covered Illness Events</h4>
+                            <p>Disburses a tax-efficient, liquid lump-sum payout immediately upon diagnosis of covered critical illnesses to manage changing priority timelines.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item-card">
+                        <div class="feature-icon">🩺</div>
+                        <div>
+                            <h4>Admission Shock Benefit</h4>
+                            <p>Triggers special lump-sum financial support paths if you are hospitalized due to an unexpected accident or undergo severe, intensive medical treatment paths.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item-card">
+                        <div class="feature-icon">❤️</div>
+                        <div>
+                            <h4>Wellness Charge Rewards</h4>
+                            <p>Stay healthy and earn premium optimizations—enjoy direct insurance charge rebates of **up to 30%** based on health track maintenance milestones.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Action Controller -->
+        <div class="presentation-modal-footer">
+            <button type="button" id="prev-page-btn" class="footer-nav-btn" onclick="navigatePresentation(-1)" disabled>Back</button>
+            <span class="page-indicator" id="presentation-page-indicator">Page 1 of 2</span>
+            <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary" onclick="navigatePresentation(1)">Next</button>
+        </div>
+    </div>
+</div>
+
+<!-- YOUR EXISTING SCRIPT STARTS HERE -->
+<script>
+function dismissGatekeeper() {
+    const overlayElement = document.getElementById('compliance-gatekeeper');
+    // ...
 
     <footer>
         [SYSTEM STATUS: ONLINE] // 6-Node Proportional Matrix Loaded. Monitoring Sustainability Threshold limits.
@@ -1084,6 +1191,94 @@ document.addEventListener("DOMContentLoaded", () => {
             if (premiumSlider) calculateComparisonMatrix(parseInt(premiumSlider.value));
         }
     }
+
+    // ==========================================================================
+// PRODUCT FEATURE SUITE OVERLAY CONTROLLER
+// ==========================================================================
+let currentPresentationPage = 1;
+const totalPresentationPages = 2;
+
+/**
+ * Opens the presentation overlay and defaults to the first page
+ */
+function openFeaturePresentation() {
+    const overlay = document.getElementById('presentation-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        switchPresentationPage(1); // Default back to Page 1 (Heritage) on open
+    }
+}
+
+/**
+ * Closes the presentation overlay
+ */
+function closeFeaturePresentation() {
+    const overlay = document.getElementById('presentation-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+/**
+ * Switches between the pages/tabs in the presentation overlay
+ * @param {number} pageNum - The page number to switch to (1 or 2)
+ */
+function switchPresentationPage(pageNum) {
+    currentPresentationPage = pageNum;
+    
+    // Toggle active slide visibility and tab styling
+    for (let i = 1; i <= totalPresentationPages; i++) {
+        const pageEl = document.getElementById(`presentation-page-${i}`);
+        const tabEl = document.getElementById(`tab-btn-${i}`);
+        
+        if (pageEl) {
+            pageEl.style.display = (i === pageNum) ? 'block' : 'none';
+        }
+        if (tabEl) {
+            if (i === pageNum) {
+                tabEl.classList.add('active');
+            } else {
+                tabEl.classList.remove('active');
+            }
+        }
+    }
+
+    // Update bottom page counter text
+    const indicator = document.getElementById('presentation-page-indicator');
+    if (indicator) {
+        indicator.textContent = `Page ${pageNum} of ${totalPresentationPages}`;
+    }
+
+    // Control navigation buttons state rules
+    const prevBtn = document.getElementById('prev-page-btn');
+    const nextBtn = document.getElementById('next-page-btn');
+    
+    if (prevBtn) {
+        prevBtn.disabled = (pageNum === 1);
+    }
+    
+    if (nextBtn) {
+        if (pageNum === totalPresentationPages) {
+            nextBtn.textContent = 'Finish';
+            nextBtn.onclick = closeFeaturePresentation;
+        } else {
+            nextBtn.textContent = 'Next';
+            nextBtn.onclick = () => navigatePresentation(1);
+        }
+    }
+}
+
+/**
+ * Increments or decrements presentation slide tracking index
+ * @param {number} direction - Direction modifier (e.g. 1 or -1)
+ */
+function navigatePresentation(direction) {
+    let targetPage = currentPresentationPage + direction;
+    if (targetPage >= 1 && targetPage <= totalPresentationPages) {
+        switchPresentationPage(targetPage);
+    }
+}
+
 </script>
 </body>
 </html>
