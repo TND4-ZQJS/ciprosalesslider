@@ -1231,11 +1231,12 @@ function closeFeaturePresentation() {
     }
 }
 
+// Switches categories (Tabs)
 function switchProductTab(tabIndex) {
     activeTab = tabIndex;
-    currentPage = 1; 
+    currentPage = 1; // Reset to page 1 upon toggling the deck category switch
     
-    // FIXED: Toggle Active Styles using the exact element selectors from your HTML
+    // Toggle Active Styles Header Buttons
     document.querySelectorAll('.mac-segment-btn').forEach((btn, i) => {
         btn.classList.toggle('active', (i + 1) === tabIndex);
     });
@@ -1244,6 +1245,7 @@ function switchProductTab(tabIndex) {
     document.getElementById('product-tab-1').style.display = (tabIndex === 1) ? 'block' : 'none';
     document.getElementById('product-tab-2').style.display = (tabIndex === 2) ? 'block' : 'none';
 
+    // FIX: Force the rendering engine to calculate and display the current sub-page immediately
     renderCurrentViewState();
 }
 
