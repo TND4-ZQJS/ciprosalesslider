@@ -311,23 +311,18 @@
 <div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
     <div class="presentation-modal-card">
         
-        <!-- Authentic macOS Unified Header Titlebar -->
+        <!-- macOS Unified Header Titlebar -->
         <div class="presentation-modal-header">
-            <!-- Traffic Light Controls on Left Window Flank -->
             <div class="mac-traffic-lights">
                 <button type="button" class="mac-light close" onclick="closeFeaturePresentation()" aria-label="Close"></button>
                 <div class="mac-light minimize"></div>
                 <div class="mac-light maximize"></div>
             </div>
-            
-            <!-- Centered Window Title -->
             <div class="mac-window-title">Product Feature Suite</div>
-            
-            <!-- Empty layout balancer to keep title perfectly centered -->
-            <div style="width: 52px;"></div>
+            <div style="width: 80px;"></div>
         </div>
 
-        <!-- Native macOS Segmented Control Tabs Navigation Switcher -->
+        <!-- macOS Native Segmented Tabs Strip -->
         <div class="mac-segmented-control-container">
             <div class="mac-segmented-control">
                 <button type="button" class="mac-segment-btn active" id="tab-btn-1" onclick="switchProductTab(1)">
@@ -341,16 +336,10 @@
 
         <!-- Scrollable Modal Content Space -->
         <div class="presentation-modal-body" id="modal-scroll-body">
-            <!-- (Keep your tab pages code exactly the same here...) -->
-
-
-        <!-- Scrollable Modal Content Space -->
-        <div class="presentation-modal-body" id="modal-scroll-body">
             
             <!-- CATEGORY 1: MANULIFE HERITAGE (Tab 1) -->
             <div id="product-tab-1" class="product-tab-content">
-                
-                <!-- Tab 1 - Page 1 -->
+                <!-- Page 1 -->
                 <div id="tab1-page-1" class="presentation-page-view">
                     <div class="feature-hero-badge">Legacy & Wealth Preservation // Page 1</div>
                     <p class="feature-intro-text">Designed to safeguard what you have achieved, offering high liquidity to protect your family boundaries.</p>
@@ -359,20 +348,20 @@
                             <div class="feature-icon">💎</div>
                             <div>
                                 <h4>High-Value Entry Protection</h4>
-                                <p>Starts at a minimum Face Amount of **RM 500,000** for Death or Total & Permanent Disability (TPD).</p>
+                                <p>Starts at a minimum Face Amount of RM 500,000 for Death or Total & Permanent Disability (TPD).</p>
                             </div>
                         </div>
                         <div class="feature-item-card">
                             <div class="feature-icon">🚀</div>
                             <div>
                                 <h4>Protection Booster Engine</h4>
-                                <p>Automatically enhances basic life coverage by **5% every 10 policy years** completely at zero entry premium cost.</p>
+                                <p>Automatically enhances basic life coverage by 5% every 10 policy years completely at zero entry premium cost.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tab 1 - Page 2 -->
+                <!-- Page 2 -->
                 <div id="tab1-page-2" class="presentation-page-view" style="display: none;">
                     <div class="feature-hero-badge">Advanced Legacy Strategy // Page 2</div>
                     <p class="feature-intro-text">Deep-tier strategic allocation options within your primary policy infrastructure architecture portfolio rules.</p>
@@ -386,13 +375,11 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
 
             <!-- CATEGORY 2: MANULIFE CRITICAL COVER (Tab 2) -->
             <div id="product-tab-2" class="product-tab-content" style="display: none;">
-                
-                <!-- Tab 2 - Page 1 -->
+                <!-- Page 1 -->
                 <div id="tab2-page-1" class="presentation-page-view" style="display: none;">
                     <div class="feature-hero-badge">Active Income Shield // Page 1</div>
                     <p class="feature-intro-text">Provides robust financial cushions to ensure legacy assets aren't prematurely liquidated during medical windows.</p>
@@ -407,7 +394,7 @@
                     </div>
                 </div>
 
-                <!-- Tab 2 - Page 2 -->
+                <!-- Page 2 -->
                 <div id="tab2-page-2" class="presentation-page-view" style="display: none;">
                     <div class="feature-hero-badge">Wellness Performance // Page 2</div>
                     <p class="feature-intro-text">Extended parameters governing advanced medical care, premium optimizations, and physical health rebates.</p>
@@ -416,16 +403,16 @@
                             <div class="feature-icon">❤️</div>
                             <div>
                                 <h4>Wellness Charge Rewards</h4>
-                                <p>Enjoy structural premium adjustments up to **30% direct charge reductions** aligned to target track performance markers.</p>
+                                <p>Enjoy structural premium adjustments up to 30% direct charge reductions aligned to target track performance markers.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
 
-        <!-- Footer Control Bar -->
+        <!-- System Footer Nav -->
         <div class="presentation-modal-footer">
             <button type="button" id="prev-page-btn" class="footer-nav-btn" onclick="navigatePage(-1)" disabled>Back</button>
             <span class="page-indicator" id="presentation-page-indicator">Page 1 of 2</span>
@@ -433,6 +420,7 @@
         </div>
     </div>
 </div>
+
 
 
 
