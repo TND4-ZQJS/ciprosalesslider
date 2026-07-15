@@ -733,32 +733,48 @@ footer {
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* Header Titlebar Grid Layout */
-.presentation-modal-header {
-    display: grid !important;
-    grid-template-columns: 40px 1fr 40px !important; /* Standard balanced distribution profile */
+/* Clean Apple Theme Header (Matches current HTML structure) */
+.presentation-modal-header-clean {
+    display: flex !important;
+    justify-content: space-between !important;
     align-items: center !important;
     padding: 18px 20px 8px 20px !important;
     background: transparent !important;
-    border: none !important;
     width: 100% !important;
     box-sizing: border-box !important;
     user-select: none !important;
 }
 
-/* Replaced Mac Traffic Lights with Clean Left Anchor Space */
-.mac-traffic-lights {
-    display: none !important; /* Completely clean out the 3 circles */
-}
-
 /* Center Formatted Title Element */
 .mac-window-title {
-    grid-column: 2 !important; /* Explicit placement targeting center slot */
     font-size: 17px !important; /* Native mobile layout typography scaling */
     font-weight: 600 !important;
     color: #1d1d1f !important;
-    text-align: center !important;
     letter-spacing: -0.015em !important;
+}
+
+/* Sleek Top-Right iOS-Style Circle Close Button */
+.apple-close-btn {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: none !important;
+    color: #86868b !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    padding-bottom: 2px !important; /* Visual optical center tuning */
+    transition: all 0.15s ease !important;
+}
+
+.apple-close-btn:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+    color: #1d1d1f !important;
 }
 
 /* Segmented App Navigation Header Strip */
@@ -790,6 +806,10 @@ footer {
     padding: 6px 20px !important;
     border-radius: 7px !important;
     cursor: pointer !important;
+    font-family: inherit !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
     transition: all 0.18s cubic-bezier(0.2, 0, 0, 1) !important;
 }
 
@@ -837,6 +857,13 @@ footer {
     gap: 14px !important;
     margin-bottom: 12px !important;
     box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+    align-items: flex-start !important;
+}
+
+.feature-icon {
+    font-size: 22px !important;
+    line-height: 1 !important;
+    margin-top: 2px !important;
 }
 
 .feature-item-card h4 {
@@ -886,6 +913,7 @@ footer {
     opacity: 0.35 !important;
     color: #86868b !important;
     cursor: not-allowed !important;
+    background: rgba(0, 0, 0, 0.02) !important;
 }
 
 /* Primary Form Submit/Next Control Button */
@@ -893,6 +921,7 @@ footer {
     background: #007AFF !important; 
     color: #ffffff !important;
     font-weight: 600 !important;
+    box-shadow: 0 1px 2px rgba(0, 122, 255, 0.2) !important;
 }
 
 .footer-nav-btn.nav-primary:hover:not(:disabled) {
