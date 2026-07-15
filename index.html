@@ -310,21 +310,39 @@
 
 <div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
     <div class="presentation-modal-card">
-        <!-- Header Zone -->
+        
+        <!-- Authentic macOS Unified Header Titlebar -->
         <div class="presentation-modal-header">
-            <h3>Product Feature Suite</h3>
-            <button type="button" class="close-overlay-btn" onclick="closeFeaturePresentation()">✕</button>
+            <!-- Traffic Light Controls on Left Window Flank -->
+            <div class="mac-traffic-lights">
+                <button type="button" class="mac-light close" onclick="closeFeaturePresentation()" aria-label="Close"></button>
+                <div class="mac-light minimize"></div>
+                <div class="mac-light maximize"></div>
+            </div>
+            
+            <!-- Centered Window Title -->
+            <div class="mac-window-title">Product Feature Suite</div>
+            
+            <!-- Empty layout balancer to keep title perfectly centered -->
+            <div style="width: 52px;"></div>
         </div>
 
-        <!-- Category Switching Tabs -->
-        <div class="presentation-tab-bar">
-            <button type="button" class="presentation-tab-btn active" id="tab-btn-1" onclick="switchProductTab(1)">
-                🏛️ Manulife Heritage
-            </button>
-            <button type="button" class="presentation-tab-btn" id="tab-btn-2" onclick="switchProductTab(2)">
-                🛡️ Critical Cover
-            </button>
+        <!-- Native macOS Segmented Control Tabs Navigation Switcher -->
+        <div class="mac-segmented-control-container">
+            <div class="mac-segmented-control">
+                <button type="button" class="mac-segment-btn active" id="tab-btn-1" onclick="switchProductTab(1)">
+                    🏛️ Manulife Heritage
+                </button>
+                <button type="button" class="mac-segment-btn" id="tab-btn-2" onclick="switchProductTab(2)">
+                    🛡️ Critical Cover
+                </button>
+            </div>
         </div>
+
+        <!-- Scrollable Modal Content Space -->
+        <div class="presentation-modal-body" id="modal-scroll-body">
+            <!-- (Keep your tab pages code exactly the same here...) -->
+
 
         <!-- Scrollable Modal Content Space -->
         <div class="presentation-modal-body" id="modal-scroll-body">
