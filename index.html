@@ -308,9 +308,6 @@
         </div>
     </div>
 
-<!-- ========================================== -->
-<!-- PASTE THE ENTIRE OVERLAY BLOCK HERE (Directly above the script tag) -->
-<!-- ========================================== -->
 <div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
     <div class="presentation-modal-card">
         <!-- Header Zone -->
@@ -319,87 +316,106 @@
             <button type="button" class="close-overlay-btn" onclick="closeFeaturePresentation()">✕</button>
         </div>
 
-        <!-- Navigation Tabs Layout -->
+        <!-- Category Switching Tabs -->
         <div class="presentation-tab-bar">
-            <button type="button" class="presentation-tab-btn active" id="tab-btn-1" onclick="switchPresentationPage(1)">
+            <button type="button" class="presentation-tab-btn active" id="tab-btn-1" onclick="switchProductTab(1)">
                 🏛️ Manulife Heritage
             </button>
-            <button type="button" class="presentation-tab-btn" id="tab-btn-2" onclick="switchPresentationPage(2)">
+            <button type="button" class="presentation-tab-btn" id="tab-btn-2" onclick="switchProductTab(2)">
                 🛡️ Critical Cover
             </button>
         </div>
 
-        <!-- Scrollable Presentation Content -->
-        <div class="presentation-modal-body">
-            <!-- PAGE 1: MANULIFE HERITAGE -->
-            <div id="presentation-page-1" class="presentation-page-content">
-                <div class="feature-hero-badge">Legacy & Wealth Preservation</div>
-                <p class="feature-intro-text">Designed to safeguard what you have achieved, offering high liquidity to protect, grow, and seamlessly transfer your wealth to future generations.</p>
+        <!-- Scrollable Modal Content Space -->
+        <div class="presentation-modal-body" id="modal-scroll-body">
+            
+            <!-- CATEGORY 1: MANULIFE HERITAGE (Tab 1) -->
+            <div id="product-tab-1" class="product-tab-content">
                 
-                <div class="feature-grid">
-                    <div class="feature-item-card">
-                        <div class="feature-icon">💎</div>
-                        <div>
-                            <h4>High-Value Entry Protection</h4>
-                            <p>Starts at a minimum Face Amount of **RM 500,000** for Death or Total & Permanent Disability (TPD), with up to 400% coverage for accidental events.</p>
+                <!-- Tab 1 - Page 1 -->
+                <div id="tab1-page-1" class="presentation-page-view">
+                    <div class="feature-hero-badge">Legacy & Wealth Preservation // Page 1</div>
+                    <p class="feature-intro-text">Designed to safeguard what you have achieved, offering high liquidity to protect your family boundaries.</p>
+                    <div class="feature-grid">
+                        <div class="feature-item-card">
+                            <div class="feature-icon">💎</div>
+                            <div>
+                                <h4>High-Value Entry Protection</h4>
+                                <p>Starts at a minimum Face Amount of **RM 500,000** for Death or Total & Permanent Disability (TPD).</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="feature-item-card">
-                        <div class="feature-icon">🚀</div>
-                        <div>
-                            <h4>Protection Booster Engine</h4>
-                            <p>Automatically enhances basic life coverage by **5% every 10 policy years** completely at no extra insurance cost or health re-underwriting.</p>
-                        </div>
-                    </div>
-                    <div class="feature-item-card">
-                        <div class="feature-icon">🔄</div>
-                        <div>
-                            <h4>Cover Reset Benefit</h4>
-                            <p>Resets your core safety protection boundaries back to full strength after a partial withdrawal event, keeping the safety net functional when needed most.</p>
+                        <div class="feature-item-card">
+                            <div class="feature-icon">🚀</div>
+                            <div>
+                                <h4>Protection Booster Engine</h4>
+                                <p>Automatically enhances basic life coverage by **5% every 10 policy years** completely at zero entry premium cost.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Tab 1 - Page 2 -->
+                <div id="tab1-page-2" class="presentation-page-view" style="display: none;">
+                    <div class="feature-hero-badge">Advanced Legacy Strategy // Page 2</div>
+                    <p class="feature-intro-text">Deep-tier strategic allocation options within your primary policy infrastructure architecture portfolio rules.</p>
+                    <div class="feature-grid">
+                        <div class="feature-item-card">
+                            <div class="feature-icon">🔄</div>
+                            <div>
+                                <h4>Cover Reset Benefit</h4>
+                                <p>Resets your core safety protection boundaries back to full strength after a partial asset withdrawal deployment execution.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
 
-            <!-- PAGE 2: MANULIFE CRITICAL COVER -->
-            <div id="presentation-page-2" class="presentation-page-content" style="display: none;">
-                <div class="feature-hero-badge lifestyle-badge">Lifestyle & Active Income Shield</div>
-                <p class="feature-intro-text">Provides robust financial cushions upon health milestones, ensuring your core legacy investment vehicles aren't prematurely liquidated during a medical recovery window.</p>
+            <!-- CATEGORY 2: MANULIFE CRITICAL COVER (Tab 2) -->
+            <div id="product-tab-2" class="product-tab-content" style="display: none;">
                 
-                <div class="feature-grid">
-                    <div class="feature-item-card">
-                        <div class="feature-icon">🏥</div>
-                        <div>
-                            <h4>48 Covered Illness Events</h4>
-                            <p>Disburses a tax-efficient, liquid lump-sum payout immediately upon diagnosis of covered critical illnesses to manage changing priority timelines.</p>
-                        </div>
-                    </div>
-                    <div class="feature-item-card">
-                        <div class="feature-icon">🩺</div>
-                        <div>
-                            <h4>Admission Shock Benefit</h4>
-                            <p>Triggers special lump-sum financial support paths if you are hospitalized due to an unexpected accident or undergo severe, intensive medical treatment paths.</p>
-                        </div>
-                    </div>
-                    <div class="feature-item-card">
-                        <div class="feature-icon">❤️</div>
-                        <div>
-                            <h4>Wellness Charge Rewards</h4>
-                            <p>Stay healthy and earn premium optimizations—enjoy direct insurance charge rebates of **up to 30%** based on health track maintenance milestones.</p>
+                <!-- Tab 2 - Page 1 -->
+                <div id="tab2-page-1" class="presentation-page-view" style="display: none;">
+                    <div class="feature-hero-badge">Active Income Shield // Page 1</div>
+                    <p class="feature-intro-text">Provides robust financial cushions to ensure legacy assets aren't prematurely liquidated during medical windows.</p>
+                    <div class="feature-grid">
+                        <div class="feature-item-card">
+                            <div class="feature-icon">🏥</div>
+                            <div>
+                                <h4>48 Covered Illness Events</h4>
+                                <p>Disburses a tax-efficient, liquid lump-sum payout immediately upon configuration diagnosis vectors.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Tab 2 - Page 2 -->
+                <div id="tab2-page-2" class="presentation-page-view" style="display: none;">
+                    <div class="feature-hero-badge">Wellness Performance // Page 2</div>
+                    <p class="feature-intro-text">Extended parameters governing advanced medical care, premium optimizations, and physical health rebates.</p>
+                    <div class="feature-grid">
+                        <div class="feature-item-card">
+                            <div class="feature-icon">❤️</div>
+                            <div>
+                                <h4>Wellness Charge Rewards</h4>
+                                <p>Enjoy structural premium adjustments up to **30% direct charge reductions** aligned to target track performance markers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <!-- Footer Action Controller -->
+        <!-- Footer Control Bar -->
         <div class="presentation-modal-footer">
-            <button type="button" id="prev-page-btn" class="footer-nav-btn" onclick="navigatePresentation(-1)" disabled>Back</button>
+            <button type="button" id="prev-page-btn" class="footer-nav-btn" onclick="navigatePage(-1)" disabled>Back</button>
             <span class="page-indicator" id="presentation-page-indicator">Page 1 of 2</span>
-            <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary" onclick="navigatePresentation(1)">Next</button>
+            <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary" onclick="navigatePage(1)">Next</button>
         </div>
     </div>
 </div>
+
 
 
 <!-- YOUR EXISTING SCRIPT STARTS HERE -->
@@ -1188,89 +1204,105 @@
     // ==========================================================================
     // PRODUCT FEATURE SUITE OVERLAY CONTROLLER
     // ==========================================================================
-    let currentPresentationPage = 1;
-    const totalPresentationPages = 2;
+// State variables tracking state indexes globally
+let activeTab = 1; 
+let currentPage = 1;
 
-    /**
-     * Opens the presentation overlay and defaults to the first page
-     */
-    function openFeaturePresentation() {
-        const overlay = document.getElementById('presentation-overlay');
-        if (overlay) {
-            overlay.style.display = 'flex';
-            switchPresentationPage(1); // Default back to Page 1 (Heritage) on open
-        }
+// Define total pages available within each specific product category layout
+const tabPagesConfig = {
+    1: 2, // Tab 1 (Manulife Heritage) has 2 pages
+    2: 2  // Tab 2 (Critical Cover) has 2 pages
+};
+
+function openFeaturePresentation() {
+    const presentation = document.getElementById('presentation-overlay');
+    if (presentation) {
+        presentation.style.display = 'flex';
+        switchProductTab(1); // Default initialization settings
+    }
+}
+
+function closeFeaturePresentation() {
+    const presentation = document.getElementById('presentation-overlay');
+    if (presentation) {
+        presentation.style.display = 'none';
+    }
+}
+
+// Switches categories (Tabs)
+function switchProductTab(tabIndex) {
+    activeTab = tabIndex;
+    currentPage = 1; // Reset to page 1 upon toggling the deck category switch
+    
+    // Toggle Active Styles Header Buttons
+    document.querySelectorAll('.presentation-tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', (i + 1) === tabIndex);
+    });
+
+    // Toggle Content Containers Panels
+    document.getElementById('product-tab-1').style.display = (tabIndex === 1) ? 'block' : 'none';
+    document.getElementById('product-tab-2').style.display = (tabIndex === 2) ? 'block' : 'none';
+
+    renderCurrentViewState();
+}
+
+// Moves through sub-pages inside the active category
+function navigatePage(direction) {
+    const maxPages = tabPagesConfig[activeTab];
+    const targetPage = currentPage + direction;
+
+    if (targetPage >= 1 && targetPage <= maxPages) {
+        currentPage = targetPage;
+        renderCurrentViewState();
+    }
+}
+
+// Processes internal display toggles and updates footer telemetry readings
+function renderCurrentViewState() {
+    const maxPages = tabPagesConfig[activeTab];
+
+    // Hide all sub-pages globally across categories
+    document.querySelectorAll('.presentation-page-view').forEach(view => {
+        view.style.display = 'none';
+    });
+
+    // Display the specific target path page structure
+    const targetViewId = `tab${activeTab}-page-${currentPage}`;
+    const targetView = document.getElementById(targetViewId);
+    if (targetView) {
+        targetView.style.display = 'block';
     }
 
-    /**
-     * Closes the presentation overlay
-     */
-    function closeFeaturePresentation() {
-        const overlay = document.getElementById('presentation-overlay');
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
+    // Scroll back to top smoothly if text runs long
+    const bodyScroll = document.getElementById('modal-scroll-body');
+    if (bodyScroll) bodyScroll.scrollTop = 0;
+
+    // Sync state layout UI components footer mechanics
+    document.getElementById('presentation-page-indicator').textContent = `Page ${currentPage} of ${maxPages}`;
+    document.getElementById('prev-page-btn').disabled = (currentPage === 1);
+    
+    // Change button text to "Finish" if on the very final page of the final tab
+    const nextBtn = document.getElementById('next-page-btn');
+    if (currentPage === maxPages) {
+        nextBtn.textContent = (activeTab === 2) ? 'Done' : 'Next Tab';
+    } else {
+        nextBtn.textContent = 'Next';
     }
 
-    /**
-     * Switches between the pages/tabs in the presentation overlay
-     * @param {number} pageNum - The page number to switch to (1 or 2)
-     */
-    function switchPresentationPage(pageNum) {
-        currentPresentationPage = pageNum;
-        
-        // Toggle active slide visibility and tab styling
-        for (let i = 1; i <= totalPresentationPages; i++) {
-            const pageEl = document.getElementById(`presentation-page-${i}`);
-            const tabEl = document.getElementById(`tab-btn-${i}`);
-            
-            if (pageEl) {
-                pageEl.style.display = (i === pageNum) ? 'block' : 'none';
-            }
-            if (tabEl) {
-                if (i === pageNum) {
-                    tabEl.classList.add('active');
-                } else {
-                    tabEl.classList.remove('active');
-                }
-            }
-        }
-
-        // Update bottom page counter text
-        const indicator = document.getElementById('presentation-page-indicator');
-        if (indicator) {
-            indicator.textContent = `Page ${pageNum} of ${totalPresentationPages}`;
-        }
-
-        // Control navigation buttons state rules
-        const prevBtn = document.getElementById('prev-page-btn');
-        const nextBtn = document.getElementById('next-page-btn');
-        
-        if (prevBtn) {
-            prevBtn.disabled = (pageNum === 1);
-        }
-        
-        if (nextBtn) {
-            if (pageNum === totalPresentationPages) {
-                nextBtn.textContent = 'Finish';
-                nextBtn.onclick = closeFeaturePresentation;
+    // Intercept behavior if execution reaches boundary line bounds
+    nextBtn.onclick = function() {
+        if (currentPage === maxPages) {
+            if (activeTab === 1) {
+                switchProductTab(2); // Jump automatically to Tab 2
             } else {
-                nextBtn.textContent = 'Next';
-                nextBtn.onclick = () => navigatePresentation(1);
+                closeFeaturePresentation(); // Wrap presentation execution loop completely
             }
+        } else {
+            navigatePage(1);
         }
-    }
+    };
+}
 
-    /**
-     * Increments or decrements presentation slide tracking index
-     * @param {number} direction - Direction modifier (e.g. 1 or -1)
-     */
-    function navigatePresentation(direction) {
-        let targetPage = currentPresentationPage + direction;
-        if (targetPage >= 1 && targetPage <= totalPresentationPages) {
-            switchPresentationPage(targetPage);
-        }
-    }
 </script>
 
 </body>
