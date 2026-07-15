@@ -872,82 +872,233 @@
     color: #ffffff;
 }
 
-/* Specific modal card container for the Feature Presentation */
-.presentation-modal-card {
-    background: #161920;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+/* ==========================================================================
+   Apple System Design Language Modals
+   ========================================================================== */
+
+.presentation-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 650px;
-    max-height: 90vh; /* Prevents overflow on smaller screens */
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Authentic macOS translucent tint */
+    backdrop-filter: blur(25px) saturate(190%); /* Apple system structural materials blur */
+    -webkit-backdrop-filter: blur(25px) saturate(190%);
     display: flex;
-    flex-direction: column;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-    overflow: hidden;
-    color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 24px;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease;
 }
 
-/* UI details to clean up layout inside the presentation modal */
+.presentation-modal-card {
+    background: rgba(30, 30, 30, 0.75); /* Dark Mode macOS window background */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    border-radius: 14px; /* Exact Apple standard window radius */
+    width: 100%;
+    max-width: 680px;
+    height: 80vh; /* Consistent fixed view box for multi-paging */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    animation: macOpen 0.34s cubic-bezier(0.16, 1, 0.3, 1); /* Authentic app zoom animation */
+}
+
+@keyframes macOpen {
+    0% { transform: scale(0.94); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
 .presentation-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 20px 12px 20px;
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .presentation-modal-header h3 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 15px; /* Apple system header weight layout */
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.01em;
 }
 
 .close-overlay-btn {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.08);
     border: none;
-    color: #888;
-    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.55);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: background 0.15s, color 0.15s;
 }
 
 .close-overlay-btn:hover {
-    color: #fff;
+    background: #FF453A; /* iOS System Red */
+    color: #ffffff;
+}
+
+/* Tab Deck Header Segment */
+.presentation-tab-bar {
+    display: flex;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 2px 20px 10px 20px;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.presentation-tab-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.presentation-tab-btn:hover {
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.presentation-tab-btn.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 0.5px rgba(255, 255, 255, 0.05);
 }
 
 .presentation-modal-body {
-    padding: 1.5rem;
-    overflow-y: auto; /* Makes only the body scrollable if text is long */
+    padding: 24px;
+    overflow-y: scroll;
     flex-grow: 1;
+    background: rgba(0, 0, 0, 0.05);
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+.presentation-modal-body::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
 }
 
+/* Feature Page Sub-Components */
+.feature-hero-badge {
+    display: inline-flex;
+    padding: 5px 10px;
+    background: rgba(10, 132, 255, 0.15); /* iOS System Blue tint */
+    color: #0A84FF;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.feature-intro-text {
+    font-size: 14px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 24px 0;
+}
+
+.feature-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.feature-item-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.feature-icon {
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-item-card h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.feature-item-card p {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Apple System Action Controls Footer */
 .presentation-modal-footer {
-    padding: 1.2rem 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(30, 30, 30, 0.4);
 }
 
-.presentation-header-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-muted, #ccc);
-    padding: 8px 14px;
+.footer-nav-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    color: #ffffff;
+    padding: 7px 16px;
     border-radius: 6px;
-    font-size: 0.8rem;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s ease;
+    transition: background 0.15s;
 }
 
-.presentation-header-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
-    transform: translateY(-1px);
+.footer-nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
 }
+
+.footer-nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.footer-nav-btn.nav-primary {
+    background: #0A84FF; /* Apple System Blue Primary */
+    border: none;
+}
+
+.footer-nav-btn.nav-primary:hover:not(:disabled) {
+    background: #2094FF;
+}
+
+.page-indicator {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+}
+
 
