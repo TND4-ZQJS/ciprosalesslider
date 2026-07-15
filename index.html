@@ -294,7 +294,7 @@
                             <div class="milestone-age">Net Leverage Cost / 100K</div>
                             <div class="milestone-value" id="val-cost-100k">RM --</div>
                         </div>
-                        <div class="milestone-card" id="card-leverage-factor">
+                        <div class="milestone-card" id="FeaturePresentation functions exactly the same ...card-leverage-factor">
                             <div class="milestone-age">Capital Leverage Multiplier</div>
                             <div class="milestone-value" id="val-leverage-factor">--</div>
                         </div>
@@ -307,16 +307,16 @@
             </div>
         </div>
     </div>
-
+    
+//Product Features Tab
 <div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
     <div class="presentation-modal-card">
         
-   <!-- NEW Clean Apple Theme Header -->
-<div class="presentation-modal-header-clean">
-    <div class="mac-window-title">Product Feature Suite</div>
-    <!-- Simple, sleek iOS-style close button on the top right -->
-    <button type="button" class="apple-close-btn" onclick="closeFeaturePresentation()" aria-label="Close">&times;</button>
-</div>
+        <!-- NEW Clean Apple Theme Header -->
+        <div class="presentation-modal-header-clean">
+            <div class="mac-window-title">Product Feature Suite</div>
+            <button type="button" class="apple-close-btn" onclick="closeFeaturePresentation()" aria-label="Close">&times;</button>
+        </div>
         
         <!-- macOS Native Segmented Tabs Strip -->
         <div class="mac-segmented-control-container">
@@ -326,6 +326,10 @@
                 </button>
                 <button type="button" class="mac-segment-btn" id="tab-btn-2" onclick="switchProductTab(2)">
                     🛡️ Critical Cover
+                </button>
+                <!-- ADDED: Third Tab Navigation Segment Control Button -->
+                <button type="button" class="mac-segment-btn" id="tab-btn-3" onclick="switchProductTab(3)">
+                    🚗 Accidental Death
                 </button>
             </div>
         </div>
@@ -406,17 +410,42 @@
                 </div>
             </div>
 
-        </div>
+            <!-- ADDED: CATEGORY 3: ACCIDENTAL DEATH BENEFIT (Tab 3) -->
+            <div id="product-tab-3" class="product-tab-content" style="display: none;">
+                <!-- Page 1 -->
+                <div id="tab3-page-1" class="presentation-page-view" style="display: none;">
+                    <div class="feature-hero-badge">Accidental Death Rider // Page 1</div>
+                    <p class="feature-intro-text">Additional layer of protection providing critical financial payouts if the unexpected happens due to external forces.</p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-item-card">
+                            <div class="feature-icon">⚠️</div>
+                            <div style="width: 100%;">
+                                <h4>Nature of Death Payout Schedule</h4>
+                                <p style="margin-bottom: 8px;">Comprehensive baseline breakdown rules overview framework metrics:</p>
+                                
+                                <!-- Apple Style Custom Matrix Info Table -->
+                                <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px;">
+                                    <thead>
+                                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.1); text-align: left;">
+                                            <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f;">Nature of Death</th>
+                                            <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; text-align: right;">Benefit Payable</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #636366;">1. By accident</td>
+                                            <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">100% of the Face Amount</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- System Footer Nav -->
-        <div class="presentation-modal-footer">
-            <button type="button" id="prev-page-btn" class="footer-nav-btn" onclick="navigatePage(-1)" disabled>Back</button>
-            <span class="page-indicator" id="presentation-page-indicator">Page 1 of 2</span>
-            <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary" onclick="navigatePage(1)">Next</button>
         </div>
-    </div>
-</div>
-
 
 
 
@@ -1209,9 +1238,11 @@
 let activeTab = 1; 
 let currentPage = 1;
 
+// UPDATED: Registered Tab 3 as a 1-page document view inside the deck system
 const tabPagesConfig = {
     1: 2, // Tab 1 (Manulife Heritage) has 2 pages
-    2: 2  // Tab 2 (Critical Cover) has 2 pages
+    2: 2, // Tab 2 (Critical Cover) has 2 pages
+    3: 1  // Tab 3 (Accidental Death Benefit) has 1 page
 };
 
 function openFeaturePresentation() {
@@ -1234,29 +1265,19 @@ function closeFeaturePresentation() {
 // Switches categories (Tabs)
 function switchProductTab(tabIndex) {
     activeTab = tabIndex;
-    currentPage = 1; // Reset to page 1 upon toggling the deck category switch
+    currentPage = 1; 
     
     // Toggle Active Styles Header Buttons
     document.querySelectorAll('.mac-segment-btn').forEach((btn, i) => {
         btn.classList.toggle('active', (i + 1) === tabIndex);
     });
 
-    // Toggle Content Containers Panels
+    // UPDATED: Sync display states for all 3 tab container panel elements
     document.getElementById('product-tab-1').style.display = (tabIndex === 1) ? 'block' : 'none';
     document.getElementById('product-tab-2').style.display = (tabIndex === 2) ? 'block' : 'none';
+    document.getElementById('product-tab-3').style.display = (tabIndex === 3) ? 'block' : 'none';
 
-    // FIX: Force the rendering engine to calculate and display the current sub-page immediately
     renderCurrentViewState();
-}
-
-function navigatePage(direction) {
-    const maxPages = tabPagesConfig[activeTab];
-    const targetPage = currentPage + direction;
-
-    if (targetPage >= 1 && targetPage <= maxPages) {
-        currentPage = targetPage;
-        renderCurrentViewState();
-    }
 }
 
 function renderCurrentViewState() {
@@ -1282,10 +1303,16 @@ function renderCurrentViewState() {
     document.getElementById('presentation-page-indicator').textContent = `Page ${currentPage} of ${maxPages}`;
     document.getElementById('prev-page-btn').disabled = (currentPage === 1);
     
-    // Change button text to "Finish" if on the very final page of the final tab
+    // UPDATED: Handle text state and redirection targets for all 3 categories seamlessly
     const nextBtn = document.getElementById('next-page-btn');
     if (currentPage === maxPages) {
-        nextBtn.textContent = (activeTab === 2) ? 'Done' : 'Next Tab';
+        if (activeTab === 1) {
+            nextBtn.textContent = 'Next Tab';
+        } else if (activeTab === 2) {
+            nextBtn.textContent = 'Next Tab';
+        } else {
+            nextBtn.textContent = 'Done';
+        }
     } else {
         nextBtn.textContent = 'Next';
     }
@@ -1294,15 +1321,16 @@ function renderCurrentViewState() {
         if (currentPage === maxPages) {
             if (activeTab === 1) {
                 switchProductTab(2); 
+            } else if (activeTab === 2) {
+                switchProductTab(3); // Moves from tab 2 to tab 3 automatically
             } else {
-                closeFeaturePresentation(); 
+                closeFeaturePresentation(); // Closes on the final step of tab 3
             }
         } else {
             navigatePage(1);
         }
     };
 }
-
 </script>
 
 </body>
