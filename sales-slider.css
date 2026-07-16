@@ -932,3 +932,20 @@ footer {
     font-size: 13px !important;
     color: #86868b !important;
 }
+
+/* Dynamic Discount Badges Style Additions */
+.status-badge.discount-active {
+    background: rgba(52, 199, 89, 0.12) !important; /* Apple Teal/Green Premium Accent */
+    color: #34C759 !important;
+    border: 1px solid rgba(52, 199, 89, 0.2) !important;
+}
+
+.status-badge.discount-active .dot {
+    background-color: #34C759 !important;
+    box-shadow: 0 0 8px rgba(52, 199, 89, 0.6) !important;
+}
+
+.status-badge.standard-rate {
+    background: rgba(142, 142, 147, 0.1) !important; /* Clean Secondary System Gray */
+    color: #8e8e93 !important;
+}
