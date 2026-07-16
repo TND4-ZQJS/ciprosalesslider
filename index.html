@@ -29,13 +29,27 @@
     </div>
 </div>
 
-    <header>
-        <h1>Manulife Heritage // Client Mapping Terminal</h1>
-        <div class="telemetry-rack">
-            <div id="badge-pi" class="status-badge"><div class="dot"></div>Based on PI</div>
-            <div id="badge-sim" class="status-badge"><div class="dot"></div>Simulation Mode</div>
+<header>
+    <h1>Manulife Heritage // Client Mapping Terminal</h1>
+    <div class="telemetry-rack">
+        <div id="badge-pi" class="status-badge"><div class="dot"></div>Based on PI</div>
+        <div id="badge-sim" class="status-badge"><div class="dot"></div>Simulation Mode</div>
+        
+        <!-- New Discount & Tier Badges -->
+        <div id="badge-heritage-20" class="status-badge discount-badge badge-green" style="display: none;">
+            <div class="dot"></div>Heritage: 20% Off
         </div>
-    </header>
+        <div id="badge-critical-5" class="status-badge discount-badge badge-amber" style="display: none;">
+            <div class="dot"></div>MCC: 5% Off
+        </div>
+        <div id="badge-critical-10" class="status-badge discount-badge badge-green" style="display: none;">
+            <div class="dot"></div>MCC: 10% Off
+        </div>
+        <div id="badge-no-discount" class="status-badge discount-badge badge-standard" style="display: none;">
+            <div class="dot"></div>Standard Rate
+        </div>
+    </div>
+</header>
 
     <div class="terminal-container">
         <div class="control-panel">
