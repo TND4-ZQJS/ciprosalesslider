@@ -42,10 +42,6 @@ header {
     justify-content: space-between;
     padding: 0 1.5rem;
     background-color: var(--card-bg);
-
-    /* NEW: Ensure the header can expand to hold all content on one row */
-    flex-wrap: nowrap;
-    overflow: hidden;
 }
 
 header h1 {
@@ -55,26 +51,14 @@ header h1 {
     background: linear-gradient(to right, var(--primary-glow), var(--secondary-glow));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    /* NEW: Prevent the title from squishing the badges */
-    flex-shrink: 0;
-    margin-right: 1.5rem;
 }
 
 .telemetry-rack {
-    display: flex !important;
-    gap: 0.5rem !important;
-    align-items: center !important;
-    flex-wrap: nowrap !important; /* Absolute override to force single line */
-    
-    /* NEW: Allow the badges container to scroll horizontally on small screens 
-       instead of wrapping/breaking layout */
-    overflow-x: auto;
-    scrollbar-width: none; /* Hides scrollbar on Firefox */
+    display: flex;
+    gap: 0.5rem;             /* Keeps badges close together */
+    align-items: center;
+    flex-wrap: nowrap;       /* STRICTLY forces them onto a single line */
 }
-
-.telemetry-rack::-webkit-scrollbar {
-    display: none; /* Hides scrollbar on Chrome, Safari, Edge */
 
 .status-badge {
     display: flex;
