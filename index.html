@@ -858,7 +858,7 @@
     /**
      * Refreshes DOM structural values, maps coordinates, and injects dynamic scales
      */
-    function updateUIOutputs(premium, milestones, pMinBoundary, scenarioData) {
+function updateUIOutputs(premium, milestones, pMinBoundary, scenarioData) {
         const protectionSlider = document.getElementById('protection-slider');
         if (!protectionSlider) return;
 
@@ -867,6 +867,34 @@
 
         const mainDisplay = document.getElementById('protection-display-value');
         if (mainDisplay) mainDisplay.innerText = formattedProtection;
+
+        // --- DYNAMIC DISCOUNT BADGE EVALUATION SYSTEM ---
+        const bHeritage20 = document.getElementById('badge-heritage-20');
+        const bCC5 = document.getElementById('badge-critical-5');
+        const bCC10 = document.getElementById('badge-critical-10');
+        const bStandard = document.getElementById('badge-no-discount');
+
+        // Hide all badges by default to prevent overlapping states
+        if (bHeritage20) bHeritage20.style.display = 'none';
+        if (bCC5) bCC5.style.display = 'none';
+        if (bCC10) bCC10.style.display = 'none';
+        if (bStandard) bStandard.style.display = 'none';
+
+        // Apply discount conditions based on currentProtection integer values
+        if (currentProtection >= 1000000) {
+            // Heritage: 20% Off (>= RM 1,000,000)
+            if (bHeritage20) bHeritage20.style.display = 'inline-flex';
+        } else if (currentProtection >= 750000) {
+            // Critical Cover: 10% Off (RM 750,000 - RM 999,999)
+            if (bCC10) bCC10.style.display = 'inline-flex';
+        } else if (currentProtection >= 500000) {
+            // Critical Cover: 5% Off (RM 500,000 - RM 749,999)
+            if (bCC5) bCC5.style.display = 'inline-flex';
+        } else {
+            // Standard Rate (Fallback for < RM 500,000)
+            if (bStandard) bStandard.style.display = 'inline-flex';
+        }
+        // ------------------------------------------------
 
         const deathField = document.getElementById('benefit-death');
         const ccField = document.getElementById('benefit-cc');
@@ -987,7 +1015,7 @@
         const shadowArea = document.getElementById('shadow-area');
         
         if (mainRibbon) mainRibbon.setAttribute('d', smoothSplinePath);
-        if (glowRibbon) glowRibbon.setAttribute('d', smoothSplinePath);
+        if (glowGradEnd) glowRibbon.setAttribute('d', smoothSplinePath); // Note: Keep an eye on this identifier mismatch in your original code (glowRibbon vs glowGradEnd)
         
         if (shadowArea && activeCoords.length > 0) {
             const closedPath = `${smoothSplinePath} L ${activeCoords[activeCoords.length - 1].x} 180 L ${activeCoords[0].x} 180 Z`;
@@ -1012,6 +1040,7 @@
                 if (nodeEl) nodeEl.style.stroke = ''; 
             }
         }
+}
 
         // ==========================================================================
         // ADVANCED ANALYSIS DESK METRIC CALCULATION ENGINE
