@@ -55,9 +55,9 @@ header h1 {
 
 .telemetry-rack {
     display: flex;
-    gap: 0.5rem; /* Slightly tighter gap to comfortably fit all 4 on smaller screens */
+    gap: 0.5rem;             /* Keeps badges close together */
     align-items: center;
-    flex-wrap: nowrap; /* Prevents badges from dropping to a second line */
+    flex-wrap: nowrap;       /* STRICTLY forces them onto a single line */
 }
 
 .status-badge {
@@ -74,6 +74,10 @@ header h1 {
     text-transform: uppercase;
     color: var(--text-muted);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* NEW: Prevents badges from shrinking or wrapping text internally */
+    flex-shrink: 0;          
+    white-space: nowrap;     
 }
 
 .status-badge .dot {
