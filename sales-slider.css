@@ -55,8 +55,9 @@ header h1 {
 
 .telemetry-rack {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem; /* Slightly tighter gap to comfortably fit all 4 on smaller screens */
     align-items: center;
+    flex-wrap: nowrap; /* Prevents badges from dropping to a second line */
 }
 
 .status-badge {
@@ -933,19 +934,21 @@ footer {
     color: #86868b !important;
 }
 
-/* Dynamic Discount Badges Style Additions */
+/* Dynamic Glowing Active Discount Badge */
 .status-badge.discount-active {
-    background: rgba(52, 199, 89, 0.12) !important; /* Apple Teal/Green Premium Accent */
-    color: #34C759 !important;
-    border: 1px solid rgba(52, 199, 89, 0.2) !important;
+    color: var(--neon-green) !important;
+    background: rgba(0, 255, 136, 0.04) !important;
+    border-color: rgba(0, 255, 136, 0.25) !important;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.15) !important;
+    animation: discountPulse 2s infinite alternate;
 }
 
 .status-badge.discount-active .dot {
-    background-color: #34C759 !important;
-    box-shadow: 0 0 8px rgba(52, 199, 89, 0.6) !important;
+    background-color: var(--neon-green) !important;
+    box-shadow: 0 0 8px var(--neon-green) !important;
 }
 
-.status-badge.standard-rate {
-    background: rgba(142, 142, 147, 0.1) !important; /* Clean Secondary System Gray */
-    color: #8e8e93 !important;
+@keyframes discountPulse {
+    0% { box-shadow: 0 0 4px rgba(0, 255, 136, 0.05); }
+    100% { box-shadow: 0 0 14px rgba(0, 255, 136, 0.25); }
 }
