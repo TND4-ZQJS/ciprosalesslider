@@ -1412,17 +1412,21 @@ function updateDiscountIndicators(value) {
     mccValueText.textContent = mccRate;
     heritageValueText.textContent = heritageRate;
 
-    // Toggle Active UI States
+// Toggle Active UI States
     if (isMccActive) {
-        mccBadge.classList.add('active-discount');
+        mccBadge.classList.add('discount-active');
+        mccBadge.classList.remove('standard-rate');
     } else {
-        mccBadge.classList.remove('active-discount');
+        mccBadge.classList.remove('discount-active');
+        mccBadge.classList.add('standard-rate');
     }
 
     if (isHeritageActive) {
-        heritageBadge.classList.add('active-discount');
+        heritageBadge.classList.add('discount-active');
+        heritageBadge.classList.remove('standard-rate');
     } else {
-        heritageBadge.classList.remove('active-discount');
+        heritageBadge.classList.remove('discount-active');
+        heritageBadge.classList.add('standard-rate');
     }
 }
 
