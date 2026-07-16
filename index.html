@@ -29,13 +29,34 @@
     </div>
 </div>
 
-    <header>
-        <h1>Manulife Heritage // Client Mapping Terminal</h1>
-        <div class="telemetry-rack">
+<header class="terminal-header">
+    <div class="header-brand">
+        <h1>Manulife Heritage <span class="divider">//</span> <span class="subtitle">Client Mapping Terminal</span></h1>
+    </div>
+    <div class="telemetry-rack">
+        <!-- Original System Indicators -->
+        <div class="badge-group">
             <div id="badge-pi" class="status-badge"><div class="dot"></div>Based on PI</div>
             <div id="badge-sim" class="status-badge"><div class="dot"></div>Simulation Mode</div>
         </div>
-    </header>
+
+        <div class="badge-separator"></div>
+
+        <!-- New Concurrent COI Discount Indicators -->
+        <div class="badge-group">
+            <!-- MCC Discount Indicator -->
+            <div id="badge-mcc" class="status-badge discount-badge">
+                <div class="dot"></div>
+                <span class="lbl">MCC Discount:</span> <span id="mcc-value">0%</span>
+            </div>
+            <!-- Heritage Discount Indicator -->
+            <div id="badge-heritage" class="status-badge discount-badge">
+                <div class="dot"></div>
+                <span class="lbl">Heritage Discount:</span> <span id="heritage-value">0%</span>
+            </div>
+        </div>
+    </div>
+</header>
 
     <div class="terminal-container">
         <div class="control-panel">
@@ -1344,6 +1365,75 @@ function renderCurrentViewState() {
             navigatePage(1);
         }
     };
+}
+
+/**
+ * Updates the header discount badges based on the current protection slider value.
+ * @param {number} value - The raw numeric value from your protection slider (e.g. 750000)
+ */
+function updateDiscountIndicators(value) {
+    const mccBadge = document.getElementById('badge-mcc');
+    const mccValueText = document.getElementById('mcc-value');
+    const heritageBadge = document.getElementById('badge-heritage');
+    const heritageValueText = document.getElementById('heritage-value');
+
+    if (!mccBadge || !heritageBadge) return;
+
+    // Reset default values
+    let mccRate = "0%";
+    let heritageRate = "0%";
+    let isMccActive = false;
+    let isHeritageActive = false;
+
+    // Evaluate Protection Slider thresholds
+    if (value >= 1000000) {
+        // RM1,000,000 and above: Concurrently lights up both
+        mccRate = "10%";
+        heritageRate = "20%";
+        isMccActive = true;
+        isHeritageActive = true;
+    } else if (value >= 749000) {
+        // RM749,000 to RM999,999
+        mccRate = "10%";
+        isMccActive = true;
+        isHeritageActive = false;
+    } else if (value >= 500000) {
+        // RM500,000 to RM748,999
+        mccRate = "5%";
+        isMccActive = true;
+        isHeritageActive = false;
+    } else {
+        // Below RM500,000
+        isMccActive = false;
+        isHeritageActive = false;
+    }
+
+    // Update Text Content
+    mccValueText.textContent = mccRate;
+    heritageValueText.textContent = heritageRate;
+
+    // Toggle Active UI States
+    if (isMccActive) {
+        mccBadge.classList.add('active-discount');
+    } else {
+        mccBadge.classList.remove('active-discount');
+    }
+
+    if (isHeritageActive) {
+        heritageBadge.classList.add('active-discount');
+    } else {
+        heritageBadge.classList.remove('active-discount');
+    }
+}
+
+// Example Slider Hookup:
+// Replace 'protection-slider' with the actual ID of your slider input element.
+const sliderElement = document.getElementById('protection-slider');
+if (sliderElement) {
+    sliderElement.addEventListener('input', (e) => {
+        const sliderValue = Number(e.target.value);
+        updateDiscountIndicators(sliderValue);
+    });
 }
 </script>
 
