@@ -938,22 +938,18 @@ footer {
     color: #86868b !important;
 }
 
-/* Dynamic Glowing Active Discount Badge - Premium Cyan Contrast */
 .status-badge.discount-active {
-    color: var(--secondary-glow) !important; /* Vivid Cyan/Electric Blue contrast */
-    background: rgba(0, 210, 255, 0.04) !important;
-    border-color: rgba(0, 210, 255, 0.25) !important;
-    box-shadow: 0 0 12px rgba(0, 210, 255, 0.15) !important;
+    color: #FFB800 !important; 
+    background: rgba(255, 184, 0, 0.04) !important;
+    border-color: rgba(255, 184, 0, 0.25) !important;
+    box-shadow: 0 0 12px rgba(255, 184, 0, 0.15) !important;
     animation: discountPulse 2s infinite alternate;
 }
-
 .status-badge.discount-active .dot {
-    background-color: var(--secondary-glow) !important;
-    box-shadow: 0 0 8px var(--secondary-glow) !important;
+    background-color: #FFB800 !important;
+    box-shadow: 0 0 8px #FFB800 !important;
 }
-
 @keyframes discountPulse {
-    0% { box-shadow: 0 0 4px rgba(0, 210, 255, 0.05); }
-    100% { box-shadow: 0 0 14px rgba(0, 210, 255, 0.25); }
+    0% { box-shadow: 0 0 4px rgba(255, 184, 0, 0.05); }
+    100% { box-shadow: 0 0 14px rgba(255, 184, 0, 0.25); }
 }
-
