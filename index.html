@@ -1261,7 +1261,6 @@
 let activeTab = 1; 
 let currentPage = 1;
 
-// Registered Tab volumes inside the presentation deck system
 const tabPagesConfig = {
     1: 2, // Tab 1 (Manulife Heritage) has 2 pages
     2: 2, // Tab 2 (Critical Cover) has 2 pages
@@ -1272,9 +1271,7 @@ function openFeaturePresentation() {
     const presentation = document.getElementById('presentation-overlay');
     if (presentation) {
         presentation.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Lock main background scroll
-        
-        // CRITICAL FIX: Direct core reset to step 1 every single time overlay fires up
+        document.body.style.overflow = 'hidden'; // Lock system scroll
         switchProductTab(1); 
     }
 }
@@ -1290,7 +1287,7 @@ function closeFeaturePresentation() {
 // Switches categories (Tabs)
 function switchProductTab(tabIndex) {
     activeTab = tabIndex;
-    currentPage = 1; // Always reset back to page 1 on a fresh tab layout load
+    currentPage = 1; 
     
     // Toggle Active Styles Header Buttons
     document.querySelectorAll('.mac-segment-btn').forEach((btn, i) => {
@@ -1305,7 +1302,7 @@ function switchProductTab(tabIndex) {
     renderCurrentViewState();
 }
 
-// Directional internal deck logic handler (-1 for Prev, 1 for Next)
+// Navigates internal pages
 function navigatePage(direction) {
     const maxPages = tabPagesConfig[activeTab];
     const targetPage = currentPage + direction;
@@ -1319,26 +1316,30 @@ function navigatePage(direction) {
 function renderCurrentViewState() {
     const maxPages = tabPagesConfig[activeTab];
 
-    // 1. Hide ALL sub-pages globally across all tabs to clear out stale views
-    document.querySelectorAll('.presentation-page-view').forEach(view => {
-        view.style.setProperty('display', 'none', 'important');
-    });
+    // FIX: Only loop through and hide views inside the CURRENT active tab 
+    // to prevent display states from breaking across hidden containers
+    const currentTabContainer = document.getElementById(`product-tab-${activeTab}`);
+    if (currentTabContainer) {
+        currentTabContainer.querySelectorAll('.presentation-page-view').forEach(view => {
+            view.style.display = 'none';
+        });
+    }
 
-    // 2. Unmask and display the specific active target page structure
+    // Display the specific active target page structure
     const targetViewId = `tab${activeTab}-page-${currentPage}`;
     const targetView = document.getElementById(targetViewId);
     if (targetView) {
-        targetView.style.setProperty('display', 'block', 'important');
+        targetView.style.display = 'block';
     }
 
-    // Scroll container canvas cleanly back to the top 
+    // Scroll back to top smoothly if text runs long
     const bodyScroll = document.getElementById('modal-scroll-body');
     if (bodyScroll) bodyScroll.scrollTop = 0;
 
     // Sync structural UI pagination footer values
     document.getElementById('presentation-page-indicator').textContent = `Page ${currentPage} of ${maxPages}`;
     
-    // Manage Back Button disabled status
+    // Setup Back button actions
     const prevBtn = document.getElementById('prev-page-btn');
     if (prevBtn) {
         prevBtn.disabled = (currentPage === 1);
@@ -1347,7 +1348,7 @@ function renderCurrentViewState() {
         };
     }
     
-    // Manage Next Button dynamic execution actions
+    // Setup Next button states and conditional redirection targets
     const nextBtn = document.getElementById('next-page-btn');
     if (nextBtn) {
         if (currentPage === maxPages) {
