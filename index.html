@@ -1261,7 +1261,7 @@
 let activeTab = 1; 
 let currentPage = 1;
 
-// UPDATED: Registered Tab 3 as a 1-page document view inside the deck system
+// Registered Tab volumes inside the presentation deck system
 const tabPagesConfig = {
     1: 2, // Tab 1 (Manulife Heritage) has 2 pages
     2: 2, // Tab 2 (Critical Cover) has 2 pages
@@ -1272,7 +1272,9 @@ function openFeaturePresentation() {
     const presentation = document.getElementById('presentation-overlay');
     if (presentation) {
         presentation.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Lock behind layout scroll
+        document.body.style.overflow = 'hidden'; // Lock main background scroll
+        
+        // CRITICAL FIX: Direct core reset to step 1 every single time overlay fires up
         switchProductTab(1); 
     }
 }
@@ -1288,14 +1290,14 @@ function closeFeaturePresentation() {
 // Switches categories (Tabs)
 function switchProductTab(tabIndex) {
     activeTab = tabIndex;
-    currentPage = 1; 
+    currentPage = 1; // Always reset back to page 1 on a fresh tab layout load
     
     // Toggle Active Styles Header Buttons
     document.querySelectorAll('.mac-segment-btn').forEach((btn, i) => {
         btn.classList.toggle('active', (i + 1) === tabIndex);
     });
 
-    // UPDATED: Sync display states for all 3 tab container panel elements
+    // Synchronize display framework states across parent tabs
     document.getElementById('product-tab-1').style.display = (tabIndex === 1) ? 'block' : 'none';
     document.getElementById('product-tab-2').style.display = (tabIndex === 2) ? 'block' : 'none';
     document.getElementById('product-tab-3').style.display = (tabIndex === 3) ? 'block' : 'none';
@@ -1303,56 +1305,75 @@ function switchProductTab(tabIndex) {
     renderCurrentViewState();
 }
 
+// Directional internal deck logic handler (-1 for Prev, 1 for Next)
+function navigatePage(direction) {
+    const maxPages = tabPagesConfig[activeTab];
+    const targetPage = currentPage + direction;
+    
+    if (targetPage >= 1 && targetPage <= maxPages) {
+        currentPage = targetPage;
+        renderCurrentViewState();
+    }
+}
+
 function renderCurrentViewState() {
     const maxPages = tabPagesConfig[activeTab];
 
-    // Hide all sub-pages globally across categories
+    // 1. Hide ALL sub-pages globally across all tabs to clear out stale views
     document.querySelectorAll('.presentation-page-view').forEach(view => {
-        view.style.display = 'none';
+        view.style.setProperty('display', 'none', 'important');
     });
 
-    // Display the specific target path page structure
+    // 2. Unmask and display the specific active target page structure
     const targetViewId = `tab${activeTab}-page-${currentPage}`;
     const targetView = document.getElementById(targetViewId);
     if (targetView) {
-        targetView.style.display = 'block';
+        targetView.style.setProperty('display', 'block', 'important');
     }
 
-    // Scroll back to top smoothly if text runs long
+    // Scroll container canvas cleanly back to the top 
     const bodyScroll = document.getElementById('modal-scroll-body');
     if (bodyScroll) bodyScroll.scrollTop = 0;
 
-    // Sync state layout UI components footer mechanics
+    // Sync structural UI pagination footer values
     document.getElementById('presentation-page-indicator').textContent = `Page ${currentPage} of ${maxPages}`;
-    document.getElementById('prev-page-btn').disabled = (currentPage === 1);
     
-    // UPDATED: Handle text state and redirection targets for all 3 categories seamlessly
-    const nextBtn = document.getElementById('next-page-btn');
-    if (currentPage === maxPages) {
-        if (activeTab === 1) {
-            nextBtn.textContent = 'Next Tab';
-        } else if (activeTab === 2) {
-            nextBtn.textContent = 'Next Tab';
-        } else {
-            nextBtn.textContent = 'Done';
-        }
-    } else {
-        nextBtn.textContent = 'Next';
+    // Manage Back Button disabled status
+    const prevBtn = document.getElementById('prev-page-btn');
+    if (prevBtn) {
+        prevBtn.disabled = (currentPage === 1);
+        prevBtn.onclick = function() {
+            navigatePage(-1);
+        };
     }
-
-    nextBtn.onclick = function() {
+    
+    // Manage Next Button dynamic execution actions
+    const nextBtn = document.getElementById('next-page-btn');
+    if (nextBtn) {
         if (currentPage === maxPages) {
-            if (activeTab === 1) {
-                switchProductTab(2); 
-            } else if (activeTab === 2) {
-                switchProductTab(3); // Moves from tab 2 to tab 3 automatically
+            if (activeTab === 1 || activeTab === 2) {
+                nextBtn.textContent = 'Next Tab';
             } else {
-                closeFeaturePresentation(); // Closes on the final step of tab 3
+                nextBtn.textContent = 'Done';
             }
         } else {
-            navigatePage(1);
+            nextBtn.textContent = 'Next';
         }
-    };
+
+        nextBtn.onclick = function() {
+            if (currentPage === maxPages) {
+                if (activeTab === 1) {
+                    switchProductTab(2); 
+                } else if (activeTab === 2) {
+                    switchProductTab(3); 
+                } else {
+                    closeFeaturePresentation(); 
+                }
+            } else {
+                navigatePage(1);
+            }
+        };
+    }
 }
 
 /**
