@@ -671,24 +671,37 @@ footer {
 }
 
 .presentation-trigger-btn {
-    background: linear-gradient(135deg, rgba(0, 210, 255, 0.15), rgba(58, 213, 146, 0.15));
-    border: 1px solid rgba(0, 210, 255, 0.3);
-    color: #fff;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
+    /* Main Background aligns with Header & Cards */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    
+    /* Perfect Center Alignment */
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    transition: all 0.2s ease-in-out;
+    
+    /* Layout & Sizing Match */
+    padding: 8px 16px;
+    border-radius: 6px; /* Matches your dashboard milestone cards */
+    font-size: 0.75rem; /* Scales perfectly down to telemetry system values */
+    font-weight: 700;   /* Matches badge weight metrics */
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .presentation-trigger-btn:hover {
-    background: linear-gradient(135deg, rgba(0, 210, 255, 0.25), rgba(58, 213, 146, 0.25));
-    border-color: #00d2ff;
-    transform: translateY(-1px);
+    background: rgba(0, 210, 255, 0.04);
+    border-color: rgba(0, 210, 255, 0.3);
+    color: var(--secondary-glow);
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.1);
+}
+
+.presentation-trigger-btn:active {
+    transform: scale(0.98);
 }
 
 /* ==========================================================================
