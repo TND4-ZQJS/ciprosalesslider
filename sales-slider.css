@@ -705,10 +705,10 @@ footer {
     box-shadow: 0 0 16px rgba(0, 210, 255, 0.25);
 }
 /* ==========================================================================
-   PRODUCTION-READY MODERN APPLE LIGHT DESIGN SYSTEM & OVERLAY RELEASES
+   PRODUCTION-READY PREMIUM ARCHITECTURE: MODERN INTEGRATED EYE-CATCHING GLASS UI
    ========================================================================== */
 
-/* 1. FORCE REMOVAL OF SCREEN LOCK WHEN INLINE ELEMENT DETECTS HIDDEN STATUS */
+/* 1. LAYER STATE AND CLAMP ENGINE CLEARANCES */
 .presentation-modal-backdrop[style*="display: none"] {
     display: none !important;
     visibility: hidden !important;
@@ -718,244 +718,320 @@ footer {
     height: 0px !important;
 }
 
-/* Active Backdrop Frame Metrics - Frosted Glass Overlay */
+/* Deep Dynamic Backdrop Frame Metrics - Enhanced Translucency & Scale Depth */
 .presentation-modal-backdrop {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    background-color: rgba(0, 0, 0, 0.3) !important; /* Softer, lighter overlay for high contrast blur */
-    backdrop-filter: blur(20px) saturate(190%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+    background: radial-gradient(circle at center, rgba(10, 15, 30, 0.12) 0%, rgba(5, 5, 10, 0.35) 100%) !important;
+    backdrop-filter: blur(24px) saturate(210%) cubic-bezier(0.16, 1, 0.3, 1) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(210%) !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     z-index: 99999 !important;
     box-sizing: border-box !important;
+    animation: backdropFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
 
-/* Master iOS/iPadOS Center Modal Card */
+@keyframes backdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Master Center Modal Card - High-Grade Chamfered Architectural Shell */
 .presentation-modal-card {
-    background: rgba(255, 255, 255, 0.85) !important; /* Premium light glass fill */
-    border: 1px solid rgba(255, 255, 255, 0.5) !important; /* Subtle inner highlight border */
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12), 0 1px 0 rgba(255, 255, 255, 0.2) inset !important;
-    border-radius: 20px !important; /* Signature smooth Apple corner rounding */
-    width: 90% !important;
-    max-width: 650px !important;
-    height: 75vh !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(250, 252, 255, 0.76) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.65) !important;
+    outline: 1px solid rgba(0, 0, 0, 0.03) !important; /* Micro external definition line */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.02),
+        0 24px 68px rgba(10, 20, 50, 0.15), 
+        0 1px 0 rgba(255, 255, 255, 0.4) inset !important;
+    border-radius: 24px !important; /* Smooth hyper-elliptical Apple profile curvature */
+    width: 92% !important;
+    max-width: 660px !important;
+    height: 76vh !important;
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
-    color: #1d1d1f !important; /* Deep charcoal text tint */
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif !important;
-    animation: appleSpringOpen 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important; /* Clean linear spring feel */
+    color: #1d1d1f !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif !important;
+    transform-origin: center center !important;
+    backface-visibility: hidden !important;
+    -webkit-font-smoothing: antialiased !important;
+    animation: appleSpringOpen 0.42s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 @keyframes appleSpringOpen {
-    0% { transform: scale(0.96); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    0% { transform: scale(0.95) translateY(8px); opacity: 0; filter: blur(4px); }
+    100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
 }
 
-/* Clean Apple Theme Header (Matches current HTML structure) */
+/* Polished High-Contrast Header Row */
 .presentation-modal-header-clean {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 18px 20px 8px 20px !important;
+    padding: 22px 24px 10px 24px !important;
     background: transparent !important;
     width: 100% !important;
     box-sizing: border-box !important;
     user-select: none !important;
 }
 
-/* Center Formatted Title Element */
+/* Crisp Geometric Title Component */
 .mac-window-title {
-    font-size: 17px !important; /* Native mobile layout typography scaling */
-    font-weight: 600 !important;
-    color: #1d1d1f !important;
-    letter-spacing: -0.015em !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    letter-spacing: -0.022em !important;
+    background: linear-gradient(180deg, #1d1d1f 0%, #3a3a3c 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
 }
 
-/* Sleek Top-Right iOS-Style Circle Close Button */
+/* Sleek Circle Close Control - High-DPI Focus Ring */
 .apple-close-btn {
-    background: rgba(0, 0, 0, 0.05) !important;
-    border: none !important;
-    color: #86868b !important;
-    font-size: 20px !important;
+    background: rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 0, 0, 0.02) !important;
+    color: #515154 !important;
+    font-size: 18px !important;
     line-height: 1 !important;
-    width: 28px !important;
-    height: 28px !important;
+    width: 30px !important;
+    height: 30px !important;
     border-radius: 50% !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     padding: 0 !important;
-    padding-bottom: 2px !important; /* Visual optical center tuning */
-    transition: all 0.15s ease !important;
+    padding-bottom: 1px !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .apple-close-btn:hover {
-    background: rgba(0, 0, 0, 0.1) !important;
-    color: #1d1d1f !important;
+    background: rgba(255, 59, 48, 0.12) !important; /* Soft dynamic destructive warning shift */
+    color: #ff3b30 !important;
+    border-color: rgba(255, 59, 48, 0.15) !important;
+    transform: scale(1.05);
 }
 
-/* Segmented App Navigation Header Strip */
+.apple-close-btn:active {
+    transform: scale(0.94);
+}
+
+/* Segmented App Navigation Track */
 .mac-segmented-control-container {
     display: flex !important;
     justify-content: center !important;
     width: 100% !important;
-    padding: 6px 16px 14px 16px !important;
+    padding: 8px 24px 16px 24px !important;
     box-sizing: border-box !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Segment Control Capsule Base */
+/* Segment Capsule Base - Fluid Visual Pill */
 .mac-segmented-control {
-    background: rgba(120, 120, 128, 0.12) !important; /* Native light background grey tone */
-    padding: 2.5px !important;
-    border-radius: 9px !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    padding: 3px !important;
+    border-radius: 11px !important;
     display: inline-flex !important;
     border: none !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    position: relative !important;
 }
 
-/* Individual Segment Tab Styling */
+/* Segment Control Options - Clean Micro-Type Alignment */
 .mac-segment-btn {
     background: transparent !important;
     border: none !important;
-    color: #636366 !important; /* Secondary tone color depth */
+    color: #515154 !important;
     font-size: 13px !important;
-    font-weight: 500 !important;
-    padding: 6px 20px !important;
-    border-radius: 7px !important;
+    font-weight: 600 !important;
+    padding: 7px 22px !important;
+    border-radius: 8px !important;
     cursor: pointer !important;
     font-family: inherit !important;
     display: flex !important;
     align-items: center !important;
     gap: 6px !important;
-    transition: all 0.18s cubic-bezier(0.2, 0, 0, 1) !important;
+    letter-spacing: -0.01em !important;
+    transition: all 0.24s cubic-bezier(0.2, 0, 0, 1) !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Active Highlight Focus CSS Switch */
+.mac-segment-btn:hover:not(.active) {
+    color: #000000 !important;
+    background: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Elevated Foreground Interactive Switch */
 .mac-segment-btn.active {
-    background: #ffffff !important; /* Elevated foreground slider appearance */
-    color: #1d1d1f !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.04) !important;
+    background: #ffffff !important;
+    color: #007AFF !important; /* Thematic focal pop */
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.04), 
+        0 4px 10px rgba(10, 20, 40, 0.06),
+        0 0 0 0.5px rgba(0, 0, 0, 0.02) !important;
 }
 
-/* Structural App View Body Pane */
+/* Structural Fluid Document Panel */
 .presentation-modal-body {
-    padding: 24px !important;
+    padding: 26px 28px !important;
     overflow-y: auto !important;
     flex-grow: 1 !important;
-    background: transparent !important; /* Allows frosted panel look to carry cleanly through body */
+    background: transparent !important;
+    scroll-behavior: smooth !important;
 }
 
-/* Premium Information Feature Elements */
+/* High-Contrast Focal Visual Badges */
 .feature-hero-badge {
     display: inline-flex !important;
-    padding: 4px 10px !important;
-    background: rgba(0, 122, 255, 0.1) !important; /* Bright active corporate system color fill */
+    padding: 5px 11px !important;
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.12) 0%, rgba(0, 122, 255, 0.06) 100%) !important;
+    border: 1px solid rgba(0, 122, 255, 0.15) !important;
     color: #007AFF !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
     border-radius: 6px !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 2px 6px rgba(0, 122, 255, 0.04) !important;
 }
 
+/* Primary Form Copywriting Frameworks */
 .feature-intro-text {
-    font-size: 15px !important;
-    line-height: 1.45 !important;
-    color: #48484a !important;
-    margin: 0 0 20px 0 !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    color: #3a3a3c !important;
+    margin: 0 0 24px 0 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
 }
 
-/* Individual Feature Block Frame UI */
+/* Premium Adaptive Feature Block Assemblies */
 .feature-item-card {
-    background: rgba(255, 255, 255, 0.6) !important;
-    border: 1px solid rgba(0, 0, 0, 0.05) !important;
-    border-radius: 12px !important;
-    padding: 16px !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    border-radius: 14px !important;
+    padding: 18px 20px !important;
     display: flex !important;
-    gap: 14px !important;
-    margin-bottom: 12px !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+    gap: 16px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 
+        0 1px 2px rgba(0,0,0,0.01),
+        0 4px 12px rgba(10, 15, 30, 0.02) !important;
     align-items: flex-start !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+.feature-item-card:hover {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(0, 122, 255, 0.18) !important;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.01),
+        0 8px 20px rgba(0, 122, 255, 0.05) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Visual Anchor Indicators */
 .feature-icon {
-    font-size: 22px !important;
+    font-size: 24px !important;
     line-height: 1 !important;
-    margin-top: 2px !important;
+    margin-top: 1px !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)) !important;
 }
 
 .feature-item-card h4 {
-    margin: 0 0 4px 0 !important;
+    margin: 0 0 5px 0 !important;
     font-size: 15px !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
     color: #1d1d1f !important;
+    letter-spacing: -0.015em !important;
 }
 
 .feature-item-card p {
     margin: 0 !important;
-    font-size: 13px !important;
-    line-height: 1.4 !important;
-    color: #86868b !important;
+    font-size: 13.5px !important;
+    line-height: 1.45 !important;
+    color: #515154 !important;
 }
 
-/* Window Action System Footer Bar */
+/* Bottom Actions Control Strip */
 .presentation-modal-footer {
-    padding: 16px 20px !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+    padding: 18px 24px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    background: rgba(250, 250, 250, 0.5) !important;
+    background: rgba(245, 245, 247, 0.6) !important;
     box-sizing: border-box !important;
+    backdrop-filter: blur(10px) !important;
 }
 
-/* Functional Navigation Footer Command Buttons */
+/* Standard Secondary Command Interface Elements */
 .footer-nav-btn {
     background: rgba(0, 0, 0, 0.04) !important;
-    border: none !important;
-    color: #007AFF !important; /* Standard blue color formatting for action actions */
-    padding: 7px 16px !important;
-    border-radius: 8px !important;
+    border: 1px solid rgba(0, 0, 0, 0.01) !important;
+    color: #007AFF !important;
+    padding: 8px 18px !important;
+    border-radius: 9px !important;
     font-size: 14px !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     cursor: pointer !important;
     font-family: inherit !important;
-    transition: background-color 0.15s ease !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .footer-nav-btn:hover:not(:disabled) {
-    background: rgba(0, 0, 0, 0.08) !important;
+    background: rgba(0, 0, 0, 0.07) !important;
+    color: #0056b3 !important;
+}
+
+.footer-nav-btn:active:not(:disabled) {
+    transform: scale(0.97) !important;
 }
 
 .footer-nav-btn:disabled {
-    opacity: 0.35 !important;
+    opacity: 0.25 !important;
     color: #86868b !important;
     cursor: not-allowed !important;
     background: rgba(0, 0, 0, 0.02) !important;
 }
 
-/* Primary Form Submit/Next Control Button */
+/* Premium Core Target Action System Button */
 .footer-nav-btn.nav-primary {
-    background: #007AFF !important; 
+    background: linear-gradient(180deg, #007AFF 0%, #0066CC 100%) !important;
     color: #ffffff !important;
     font-weight: 600 !important;
-    box-shadow: 0 1px 2px rgba(0, 122, 255, 0.2) !important;
+    border: none !important;
+    box-shadow: 
+        0 1px 2px rgba(0, 122, 255, 0.15), 
+        0 4px 12px rgba(0, 122, 255, 0.2) !important;
 }
 
 .footer-nav-btn.nav-primary:hover:not(:disabled) {
-    background: #0063CC !important;
+    background: linear-gradient(180deg, #0082ff 0%, #0073e6 100%) !important;
+    box-shadow: 
+        0 2px 4px rgba(0, 122, 255, 0.2), 
+        0 6px 16px rgba(0, 122, 255, 0.3) !important;
 }
 
 .page-indicator {
     font-size: 13px !important;
-    color: #86868b !important;
+    font-weight: 500 !important;
+    color: #68686e !important;
+    letter-spacing: -0.005em !important;
 }
 
 .status-badge.discount-active {
