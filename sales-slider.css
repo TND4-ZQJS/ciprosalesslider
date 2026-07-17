@@ -96,12 +96,19 @@ header h1 {
 }
 
 .status-badge.active-sim {
-    color: var(--neon-amber);
-    background: rgba(255, 170, 0, 0.04);
-    border-color: rgba(255, 170, 0, 0.25);
-    box-shadow: 0 0 12px rgba(255, 170, 0, 0.1);
+    color: #BF5AF2; /* Vivid Electric Purple */
+    background: rgba(191, 90, 242, 0.04);
+    border-color: rgba(191, 90, 242, 0.25);
+    box-shadow: 0 0 12px rgba(191, 90, 242, 0.1);
     animation: statusPulse 2s infinite alternate;
 }
+
+/* Optional: If your badges have an inner indicator dot, update it too */
+.status-badge.active-sim .dot {
+    background-color: #BF5AF2 !important;
+    box-shadow: 0 0 8px #BF5AF2 !important;
+}
+
 
 @keyframes statusPulse {
     0% { box-shadow: 0 0 4px rgba(255, 170, 0, 0.05); }
