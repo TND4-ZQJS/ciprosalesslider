@@ -709,13 +709,13 @@ footer {
    ========================================================================== */
 
 /* 1. LAYER STATE AND CLAMP ENGINE CLEARANCES */
-.presentation-modal-backdrop[style*="display: none"] {
+/* FIX: Restrict the display state override strictly to the parent backdrop utility */
+.presentation-modal-backdrop.is-hidden,
+div#presentation-overlay[style*="display: none"] {
     display: none !important;
     visibility: hidden !important;
     pointer-events: none !important;
     opacity: 0 !important;
-    width: 0px !important;
-    height: 0px !important;
 }
 
 /* Deep Dynamic Backdrop Frame Metrics - Enhanced Translucency & Scale Depth */
