@@ -671,10 +671,11 @@ footer {
 }
 
 .presentation-trigger-btn {
-    /* Main Background aligns with Header & Cards */
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
+    /* Promoted Hover Style to Default for High Visibility */
+    background: rgba(0, 210, 255, 0.05);
+    border: 1px solid rgba(0, 210, 255, 0.35);
+    color: var(--secondary-glow);
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.1);
     
     /* Perfect Center Alignment */
     display: inline-flex;
@@ -684,26 +685,25 @@ footer {
     
     /* Layout & Sizing Match */
     padding: 8px 16px;
-    border-radius: 6px; /* Matches your dashboard milestone cards */
-    font-size: 0.75rem; /* Scales perfectly down to telemetry system values */
-    font-weight: 700;   /* Matches badge weight metrics */
+    border-radius: 6px; 
+    font-size: 0.75rem; 
+    font-weight: 700;   
     letter-spacing: 0.05em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.3s ease;
+    
+    /* Smooth transitions for tap responses */
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color: transparent; /* Removes default mobile browser tap box overlay */
 }
 
-.presentation-trigger-btn:hover {
-    background: rgba(0, 210, 255, 0.04);
-    border-color: rgba(0, 210, 255, 0.3);
-    color: var(--secondary-glow);
-    box-shadow: 0 0 12px rgba(0, 210, 255, 0.1);
-}
-
+/* Touch Feedback: Shrinks slightly and flashes brighter when actively pressed */
 .presentation-trigger-btn:active {
-    transform: scale(0.98);
+    transform: scale(0.96);
+    background: rgba(0, 210, 255, 0.15);
+    border-color: rgba(0, 210, 255, 0.6);
+    box-shadow: 0 0 16px rgba(0, 210, 255, 0.25);
 }
-
 /* ==========================================================================
    PRODUCTION-READY MODERN APPLE LIGHT DESIGN SYSTEM & OVERLAY RELEASES
    ========================================================================== */
