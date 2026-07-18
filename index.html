@@ -478,26 +478,34 @@
 
         </div> <!-- Close #modal-scroll-body -->
 
-        <!-- ==========================================================================
-           CRITICAL ADDITION: RUNTIME PAGINATION STRIP (MODAL FOOTER UI CONTROLS)
-           Allows programmatic DOM binding for the inner view state engine.
-           ========================================================================== -->
-        <div class="presentation-modal-footer">
-            <!-- BACK BUTTON (Default state disabled on primary page loads) -->
-            <button type="button" id="prev-page-btn" class="footer-nav-btn" disabled>
-                Back
-            </button>
-            
-            <!-- LIVE VIEWPORT STATUS INDICATOR -->
-            <span id="presentation-page-indicator" class="page-indicator">
-                Page 1 of 2
-            </span>
-            
-            <!-- FORWARD NAVIGATION PIPELINE CONTROL BUTTON -->
-            <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary">
-                Next
-            </button>
-        </div>
+<!-- ==========================================================================
+   CRITICAL UPDATE: RUNTIME PAGINATION STRIP WITH DISCLOSURE BARS
+   ========================================================================== -->
+<div class="presentation-modal-footer" style="padding: 16px 24px; border-top: 1px solid rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 12px;">
+    
+    <!-- COMPLIANCE RISK AND T&C SAFEGUARD LINE -->
+    <div class="footer-compliance-disclaimer" style="font-size: 11px; color: #8e8e93; line-height: 1.4; text-align: justify; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
+        <strong>Disclaimer & Terms:</strong> This presentation material is for internal usage/illustrative purposes only and does not constitute an insurance contract or official offer. Product features, bonuses, and underwriting rules are subject to final policy contract terms, company parameters, and the regulatory framework of Labuan FSA. Actual financial outcomes may vary based on performance metrics.
+    </div>
+
+    <!-- NAVIGATION TRACK ROW -->
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <!-- BACK BUTTON -->
+        <button type="button" id="prev-page-btn" class="footer-nav-btn" disabled>
+            Back
+        </button>
+        
+        <!-- LIVE VIEWPORT STATUS INDICATOR -->
+        <span id="presentation-page-indicator" class="page-indicator" style="font-size: 13px; color: #636366; font-weight: 500;">
+            Page 1 of 3
+        </span>
+        
+        <!-- FORWARD NAVIGATION CONTROL BUTTON -->
+        <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary">
+            Next
+        </button>
+    </div>
+</div>
 
     </div> <!-- Close .presentation-modal-card -->
 </div> <!-- Close #presentation-overlay -->
