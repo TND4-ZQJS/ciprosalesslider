@@ -309,7 +309,9 @@
         </div>
     </div>
     
-<!-- Product Features Tab -->
+<!-- ==========================================================================
+   PRODUCT FEATURES SYSTEM PRESENTATION CORE LAYER
+   ========================================================================== -->
 <div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
     <div class="presentation-modal-card">
         
@@ -326,7 +328,7 @@
                     Manulife Heritage
                 </button>
                 <button type="button" class="mac-segment-btn" id="tab-btn-2" onclick="switchProductTab(2)">
-                   Manulife Critical Cover
+                    Manulife Critical Cover
                 </button>
                 <!-- ADDED: Third Tab Navigation Segment Control Button -->
                 <button type="button" class="mac-segment-btn" id="tab-btn-3" onclick="switchProductTab(3)">
@@ -338,7 +340,9 @@
         <!-- Scrollable Modal Content Space -->
         <div class="presentation-modal-body" id="modal-scroll-body">
             
-            <!-- CATEGORY 1: MANULIFE HERITAGE (Tab 1) -->
+            <!-- ==========================================================================
+               CATEGORY 1: MANULIFE HERITAGE (Tab 1)
+               ========================================================================== -->
             <div id="product-tab-1" class="product-tab-content">
                 <!-- Page 1 -->
                 <div id="tab1-page-1" class="presentation-page-view">
@@ -357,25 +361,25 @@
                                 <p>Automatically enhances basic life coverage by 5% every 10 policy years completely at zero entry premium cost.</p>
                             </div>
                         </div>
-                               <div class="feature-item-card">
+                        <div class="feature-item-card">
                             <div>
                                 <h4>Cover Reset</h4>
                                 <p>Resets your protection after a partial withdrawal event (after 13 months)</p>
                             </div>
                         </div>
-                               <div class="feature-item-card">
+                        <div class="feature-item-card">
                             <div>
                                 <h4>Wellness Reward</h4>
                                 <p>A portion of the Insurance Charges under the basic plan will be returned to your policy and credited to Account Value at the end of Policy Years 10 (10%), 20 (20%) and 30 (30%).</p>
                             </div>
                         </div>
-                                <div class="feature-item-card">
+                        <div class="feature-item-card">
                             <div>
                                 <h4>Loyalty Bonus</h4>
                                 <p>Be rewarded with a bonus up to 10% of the Face Amount which shall be credited to your policy's Account Value, depending on your entry age.</p>
                             </div>
                         </div>
-                                <div class="feature-item-card">
+                        <div class="feature-item-card">
                             <div>
                                 <h4>Maturity Bonus</h4>
                                 <p>Receieve up to 10% of the Face Amount, credited to your policy's Account Value</p>
@@ -400,7 +404,9 @@
                 </div>
             </div>
 
-            <!-- CATEGORY 2: MANULIFE CRITICAL COVER (Tab 2) -->
+            <!-- ==========================================================================
+               CATEGORY 2: MANULIFE CRITICAL COVER (Tab 2)
+               ========================================================================== -->
             <div id="product-tab-2" class="product-tab-content" style="display: none;">
                 <!-- Page 1 -->
                 <div id="tab2-page-1" class="presentation-page-view" style="display: none;">
@@ -433,7 +439,9 @@
                 </div>
             </div>
 
-            <!-- ADDED: CATEGORY 3: ACCIDENTAL DEATH BENEFIT (Tab 3) -->
+            <!-- ==========================================================================
+               CATEGORY 3: ACCIDENTAL DEATH BENEFIT (Tab 3)
+               ========================================================================== -->
             <div id="product-tab-3" class="product-tab-content" style="display: none;">
                 <!-- Page 1 -->
                 <div id="tab3-page-1" class="presentation-page-view" style="display: none;">
@@ -468,7 +476,31 @@
                 </div>
             </div>
 
+        </div> <!-- Close #modal-scroll-body -->
+
+        <!-- ==========================================================================
+           CRITICAL ADDITION: RUNTIME PAGINATION STRIP (MODAL FOOTER UI CONTROLS)
+           Allows programmatic DOM binding for the inner view state engine.
+           ========================================================================== -->
+        <div class="presentation-modal-footer">
+            <!-- BACK BUTTON (Default state disabled on primary page loads) -->
+            <button type="button" id="prev-page-btn" class="footer-nav-btn" disabled>
+                Back
+            </button>
+            
+            <!-- LIVE VIEWPORT STATUS INDICATOR -->
+            <span id="presentation-page-indicator" class="page-indicator">
+                Page 1 of 2
+            </span>
+            
+            <!-- FORWARD NAVIGATION PIPELINE CONTROL BUTTON -->
+            <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary">
+                Next
+            </button>
         </div>
+
+    </div> <!-- Close .presentation-modal-card -->
+</div> <!-- Close #presentation-overlay -->
 
 
 
