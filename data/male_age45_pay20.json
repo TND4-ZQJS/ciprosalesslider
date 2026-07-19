@@ -127,10 +127,10 @@
         ]
       },
       "sustainable70Scenario": {
-        "premiumAmount": 52000,
+        "premiumAmount": 23000,
         "milestones": [
           { "policyYear": 1, "ageNext": 46, "accountValue": 5666 },
-          { "policyYear": 5, "ageNext": 50, "accountValue": 41397 },
+          { "policyYear": 5, "ageNext": 50, "accountValue": 41391 },
           { "policyYear": 10, "ageNext": 55, "accountValue": 109870 },
           { "policyYear": 20, "ageNext": 65, "accountValue": 284739 },
           { "policyYear": 25, "ageNext": 70, "accountValue": 104656 },
