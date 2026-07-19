@@ -310,114 +310,100 @@
     </div>
     
 <!-- ==========================================================================
-   PRODUCT FEATURES SYSTEM PRESENTATION CORE LAYER
+   PRODUCT FEATURES SYSTEM PRESENTATION CORE LAYER (SPACE-OPTIMIZED WIDE VIEW)
    ========================================================================== -->
 <div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
-    <div class="presentation-modal-card">
+    <!-- Suggestion: Ensure card CSS has width: 90vw; max-width: 1100px; height: 85vh; for best proportions -->
+    <div class="presentation-modal-card" style="display: flex; flex-direction: column; overflow: hidden;">
         
-        <!-- NEW Clean Apple Theme Header -->
-        <div class="presentation-modal-header-clean">
-            <div class="mac-window-title">Product Feature Suite</div>
-            <button type="button" class="apple-close-btn" onclick="closeFeaturePresentation()" aria-label="Close">&times;</button>
+        <!-- COMPACT HEADER STRIP (Reduced padding & font weight layout footprint) -->
+        <div class="presentation-modal-header-clean" style="padding: 8px 16px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; background: rgba(250,250,252,0.8);">
+            <div class="mac-window-title" style="font-size: 13px; font-weight: 600; color: #1d1d1f;">Product Feature Suite</div>
+            <button type="button" class="apple-close-btn" onclick="closeFeaturePresentation()" aria-label="Close" style="font-size: 18px; line-height: 1; border: none; background: none; cursor: pointer; color: #8e8e93;">&times;</button>
         </div>
         
-        <!-- macOS Native Segmented Tabs Strip -->
-        <div class="mac-segmented-control-container">
-            <div class="mac-segmented-control">
-                <button type="button" class="mac-segment-btn active" id="tab-btn-1" onclick="switchProductTab(1)">
+        <!-- MICRO-SEGMENTED CONTROL STRIP (Tight track padding + low profile design) -->
+        <div class="mac-segmented-control-container" style="padding: 6px 16px; background: #fff; border-bottom: 1px solid rgba(0,0,0,0.05);">
+            <div class="mac-segmented-control" style="display: flex; background: rgba(118,118,128,0.12); padding: 2px; border-radius: 6px; max-width: 550px; margin: 0 auto;">
+                <button type="button" class="mac-segment-btn active" id="tab-btn-1" onclick="switchProductTab(1)" style="flex: 1; padding: 4px 8px; font-size: 11px; font-weight: 500; border: none; border-radius: 5px; cursor: pointer;">
                     Manulife Heritage
                 </button>
-                <button type="button" class="mac-segment-btn" id="tab-btn-2" onclick="switchProductTab(2)">
-                    Manulife Critical Cover
+                <button type="button" class="mac-segment-btn" id="tab-btn-2" onclick="switchProductTab(2)" style="flex: 1; padding: 4px 8px; font-size: 11px; font-weight: 500; border: none; border-radius: 5px; cursor: pointer;">
+                   Manulife Critical Cover
                 </button>
-                <!-- ADDED: Third Tab Navigation Segment Control Button -->
-                <button type="button" class="mac-segment-btn" id="tab-btn-3" onclick="switchProductTab(3)">
-                    Accidental Death Benefit
+                <button type="button" class="mac-segment-btn" id="tab-btn-3" onclick="switchProductTab(3)" style="flex: 1; padding: 4px 8px; font-size: 11px; font-weight: 500; border: none; border-radius: 5px; cursor: pointer;">
+                   Accidental Death Benefit
                 </button>
             </div>
         </div>
 
-        <!-- Scrollable Modal Content Space -->
-        <div class="presentation-modal-body" id="modal-scroll-body">
+        <!-- MAXIMIZED CONTENT SPACE (Takes remaining height via flex grow allocation) -->
+        <div class="presentation-modal-body" id="modal-scroll-body" style="flex: 1; overflow-y: auto; padding: 16px 20px;">
             
-            <!-- ==========================================================================
-               CATEGORY 1: MANULIFE HERITAGE (Tab 1)
-               ========================================================================== -->
+            <!-- CATEGORY 1: MANULIFE HERITAGE (Tab 1) -->
             <div id="product-tab-1" class="product-tab-content">
                 <!-- Page 1 -->
                 <div id="tab1-page-1" class="presentation-page-view">
-                    <div class="feature-hero-badge">Legacy & Wealth Preservation // Page 1</div>
-                    <p class="feature-intro-text">Designed to safeguard what you have achieved, offering high liquidity to protect your family boundaries.</p>
-                    <div class="feature-grid">
-                        <div class="feature-item-card">
-                            <div>
-                                <h4>High Insurance Protection</h4>
-                                <p>Starts at a minimum Face Amount of RM 500,000 for Death or Total & Permanent Disability (TPD).</p>
-                            </div>
+                    <div class="feature-hero-badge" style="display: inline-block; font-size: 10px; padding: 2px 6px; margin-bottom: 8px;">Legacy & Wealth Preservation // Page 1</div>
+                    <p class="feature-intro-text" style="font-size: 13px; margin-bottom: 12px; color: #3a3a3c;">Designed to safeguard what you have achieved, offering high liquidity to protect your family boundaries.</p>
+                    
+                    <!-- Grid Layout Recommendation: Use grid auto-fit layout to tile cards side-by-side -->
+                    <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                        <div class="feature-item-card" style="padding: 10px 12px;">
+                            <h4>High Insurance Protection</h4>
+                            <p style="font-size: 12px; margin-top: 2px;">Starts at a minimum Face Amount of RM 500,000 for Death or TPD.</p>
                         </div>
-                        <div class="feature-item-card">
-                            <div>
-                                <h4>Protection Booster</h4>
-                                <p>Automatically enhances basic life coverage by 5% every 10 policy years completely at zero entry premium cost.</p>
-                            </div>
+                        <div class="feature-item-card" style="padding: 10px 12px;">
+                            <h4>Protection Booster</h4>
+                            <p style="font-size: 12px; margin-top: 2px;">Automatically enhances basic life coverage by 5% every 10 policy years at zero cost.</p>
                         </div>
-                        <div class="feature-item-card">
-                            <div>
-                                <h4>Cover Reset</h4>
-                                <p>Resets your protection after a partial withdrawal event (after 13 months)</p>
-                            </div>
+                        <div class="feature-item-card" style="padding: 10px 12px;">
+                            <h4>Cover Reset</h4>
+                            <p style="font-size: 12px; margin-top: 2px;">Resets your protection after a partial withdrawal event (after 13 months)</p>
                         </div>
-                        <div class="feature-item-card">
-                            <div>
-                                <h4>Wellness Reward</h4>
-                                <p>A portion of the Insurance Charges under the basic plan will be returned to your policy and credited to Account Value at the end of Policy Years 10 (10%), 20 (20%) and 30 (30%).</p>
-                            </div>
+                        <div class="feature-item-card" style="padding: 10px 12px;">
+                            <h4>Wellness Reward</h4>
+                            <p style="font-size: 12px; margin-top: 2px;">Insurance Charges returned to policy value at Year 10 (10%), 20 (20%) and 30 (30%).</p>
                         </div>
-                        <div class="feature-item-card">
-                            <div>
-                                <h4>Loyalty Bonus</h4>
-                                <p>Be rewarded with a bonus up to 10% of the Face Amount which shall be credited to your policy's Account Value, depending on your entry age.</p>
-                            </div>
+                        <div class="feature-item-card" style="padding: 10px 12px;">
+                            <h4>Loyalty Bonus</h4>
+                            <p style="font-size: 12px; margin-top: 2px;">Bonus up to 10% of the Face Amount credited to Account Value based on entry age.</p>
                         </div>
-                        <div class="feature-item-card">
-                            <div>
-                                <h4>Maturity Bonus</h4>
-                                <p>Receieve up to 10% of the Face Amount, credited to your policy's Account Value</p>
-                            </div>
+                        <div class="feature-item-card" style="padding: 10px 12px;">
+                            <h4>Maturity Bonus</h4>
+                            <p style="font-size: 12px; margin-top: 2px;">Receive up to 10% of the Face Amount, credited to your policy's Account Value.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Page 2 -->
                 <div id="tab1-page-2" class="presentation-page-view" style="display: none;">
-                    <div class="feature-hero-badge">Advanced Legacy Strategy // Page 2</div>
-                    <p class="feature-intro-text">Deep-tier strategic allocation options within your primary policy infrastructure architecture portfolio rules.</p>
-                    <div class="feature-grid">
-                        <div class="feature-item-card">
-                            <div class="feature-icon">🔄</div>
+                    <div class="feature-hero-badge" style="display: inline-block; font-size: 10px; padding: 2px 6px; margin-bottom: 8px;">Advanced Legacy Strategy // Page 2</div>
+                    <p class="feature-intro-text" style="font-size: 13px; margin-bottom: 12px;">Deep-tier strategic allocation options within your primary policy infrastructure architecture portfolio rules.</p>
+                    <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                        <div class="feature-item-card" style="padding: 10px 12px; display: flex; gap: 8px;">
+                            <div class="feature-icon" style="font-size: 16px;">🔄</div>
                             <div>
                                 <h4>Cover Reset Benefit</h4>
-                                <p>Resets your core safety protection boundaries back to full strength after a partial asset withdrawal deployment execution.</p>
+                                <p style="font-size: 12px; margin-top: 2px;">Resets your core safety protection boundaries back to full strength after a partial asset withdrawal deployment execution.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ==========================================================================
-               CATEGORY 2: MANULIFE CRITICAL COVER (Tab 2)
-               ========================================================================== -->
+            <!-- CATEGORY 2: MANULIFE CRITICAL COVER (Tab 2) -->
             <div id="product-tab-2" class="product-tab-content" style="display: none;">
                 <!-- Page 1 -->
                 <div id="tab2-page-1" class="presentation-page-view" style="display: none;">
-                    <div class="feature-hero-badge">Active Income Shield // Page 1</div>
-                    <p class="feature-intro-text">Provides robust financial cushions to ensure legacy assets aren't prematurely liquidated during medical windows.</p>
-                    <div class="feature-grid">
-                        <div class="feature-item-card">
-                            <div class="feature-icon">🏥</div>
+                    <div class="feature-hero-badge" style="display: inline-block; font-size: 10px; padding: 2px 6px; margin-bottom: 8px;">Active Income Shield // Page 1</div>
+                    <p class="feature-intro-text" style="font-size: 13px; margin-bottom: 12px;">Provides robust financial cushions to ensure legacy assets aren't prematurely liquidated during medical windows.</p>
+                    <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                        <div class="feature-item-card" style="padding: 10px 12px; display: flex; gap: 8px;">
+                            <div class="feature-icon" style="font-size: 16px;">🏥</div>
                             <div>
                                 <h4>48 Covered Illness Events</h4>
-                                <p>Disburses a tax-efficient, liquid lump-sum payout immediately upon configuration diagnosis vectors.</p>
+                                <p style="font-size: 12px; margin-top: 2px;">Disburses a tax-efficient, liquid lump-sum payout immediately upon configuration diagnosis vectors.</p>
                             </div>
                         </div>
                     </div>
@@ -425,51 +411,49 @@
 
                 <!-- Page 2 -->
                 <div id="tab2-page-2" class="presentation-page-view" style="display: none;">
-                    <div class="feature-hero-badge">Wellness Performance // Page 2</div>
-                    <p class="feature-intro-text">Extended parameters governing advanced medical care, premium optimizations, and physical health rebates.</p>
-                    <div class="feature-grid">
-                        <div class="feature-item-card">
-                            <div class="feature-icon">❤️</div>
+                    <div class="feature-hero-badge" style="display: inline-block; font-size: 10px; padding: 2px 6px; margin-bottom: 8px;">Wellness Performance // Page 2</div>
+                    <p class="feature-intro-text" style="font-size: 13px; margin-bottom: 12px;">Extended parameters governing advanced medical care, premium optimizations, and physical health rebates.</p>
+                    <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                        <div class="feature-item-card" style="padding: 10px 12px; display: flex; gap: 8px;">
+                            <div class="feature-icon" style="font-size: 16px;">❤️</div>
                             <div>
                                 <h4>Wellness Charge Rewards</h4>
-                                <p>Enjoy structural premium adjustments up to 30% direct charge reductions aligned to target track performance markers.</p>
+                                <p style="font-size: 12px; margin-top: 2px;">Enjoy structural premium adjustments up to 30% direct charge reductions aligned to target track performance markers.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ==========================================================================
-               CATEGORY 3: ACCIDENTAL DEATH BENEFIT (Tab 3)
-               ========================================================================== -->
+            <!-- CATEGORY 3: ACCIDENTAL DEATH BENEFIT (Tab 3) -->
             <div id="product-tab-3" class="product-tab-content" style="display: none;">
                 <!-- Page 1 -->
                 <div id="tab3-page-1" class="presentation-page-view" style="display: none;">
-                    <div class="feature-hero-badge">Accidental Death Rider // Page 1</div>
-                    <p class="feature-intro-text">Additional layer of protection providing critical financial payouts if the unexpected happens due to external forces.</p>
+                    <div class="feature-hero-badge" style="display: inline-block; font-size: 10px; padding: 2px 6px; margin-bottom: 8px;">Accidental Death Rider // Page 1</div>
+                    <p class="feature-intro-text" style="font-size: 13px; margin-bottom: 12px;">Additional layer of protection providing critical financial payouts if the unexpected happens due to external forces.</p>
                     
                     <div class="feature-grid">
-                        <div class="feature-item-card">
-                            <div class="feature-icon">⚠️</div>
-                            <div style="width: 100%;">
-                                <h4>Nature of Death Payout Schedule</h4>
-                                <p style="margin-bottom: 8px;">Comprehensive baseline breakdown rules overview framework metrics:</p>
-                                
-                                <!-- Apple Style Custom Matrix Info Table -->
-                                <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px;">
-                                    <thead>
-                                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.1); text-align: left;">
-                                            <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f;">Nature of Death</th>
-                                            <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; text-align: right;">Benefit Payable</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style="padding: 8px 0; color: #636366;">1. By accident</td>
-                                            <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">100% of the Face Amount</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div class="feature-item-card" style="padding: 12px;">
+                            <div style="display: flex; gap: 8px; width: 100%;">
+                                <div class="feature-icon" style="font-size: 16px;">⚠️</div>
+                                <div style="width: 100%;">
+                                    <h4 style="font-size: 13px;">Nature of Death Payout Schedule</h4>
+                                    
+                                    <table style="width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12px;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.08); text-align: left;">
+                                                <th style="padding: 4px 0; font-weight: 600; color: #1d1d1f;">Nature of Death</th>
+                                                <th style="padding: 4px 0; font-weight: 600; color: #1d1d1f; text-align: right;">Benefit Payable</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 6px 0; color: #636366;">1. By accident</td>
+                                                <td style="padding: 6px 0; color: #1d1d1f; text-align: right; font-weight: 600;">100% of the Face Amount</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
