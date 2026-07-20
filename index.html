@@ -1724,6 +1724,20 @@ if (sliderElement) {
         updateDiscountIndicators(sliderValue);
     });
 }
+
+// Target your simulation select dropdown
+const genderSelector = document.querySelector('.select-styled'); 
+
+if (genderSelector) {
+    genderSelector.addEventListener('change', (e) => {
+        // Checks if chosen value matches or text matches 'female'
+        if (e.target.value.toLowerCase() === 'female') {
+            document.body.classList.add('theme-female');
+        } else {
+            document.body.classList.remove('theme-female');
+        }
+    });
+}    
 </script>
 
 </body>
