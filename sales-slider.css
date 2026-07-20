@@ -1,56 +1,72 @@
+/* ==========================================================================
+   DYNAMIC PALETTE & TRANSITION ARCHITECTURE
+   ========================================================================== */
+
 :root {    
+    /* Default / Male Premium Core Theme */
     --bg-color: #060913;
     --card-bg: #0d1222;
     --border-color: rgba(255, 255, 255, 0.06);
     --text-main: #ffffff;
     --text-muted: #62728b;
     
-    /* Premium High-Grade Visual Palette */
+    /* High-Grade Glow Accents */
     --primary-glow: #8A2BE2;    
     --secondary-glow: #00d2ff;  
     --warning-glow: #ff9f43;
     --neon-green: #00ff88;
     --neon-amber: #ffaa00;
     --neon-red: #ff4d4d;
+    
+    /* Apple Easing Custom Curve */
+    --apple-transition: all 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+/* Softer, Female-Optimized Premium Palette */
+.theme-female {
+    --bg-color: #0f0b14;                           /* Deep midnight plum */
+    --card-bg: #191222;                             /* Rich warm dark violet */
+    --border-color: rgba(255, 182, 193, 0.09);      /* Subtle rose gold border framework */
+    --text-main: #fff0f5;                           /* Lavender blush text crisping */
+    --text-muted: #9c8aab;                          /* Muted orchid core typography */
+    
+    /* Premium Redefined Glow Coordinates */
+    --primary-glow: #ff69b4;                        /* Hot Pink highlight accent */
+    --secondary-glow: #ffa07a;                      /* Light Salmon / Soft gold light string */
+    --warning-glow: #ff7f50;
+    --neon-green: #2ecc71;
+    --neon-amber: #f39c12;
+    --neon-red: #e74c3c;
 }
 
-body {
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    -webkit-user-select: none;
-    user-select: none;
+/* ==========================================================================
+   GLOBAL TRANSITION INTERACTION BINDINGS
+   ========================================================================== */
+
+/* Apply the structural variable animation layout rules smoothly to the viewport */
+body, 
+header, 
+footer,
+.control-panel, 
+.display-viewport,
+.graph-wrapper,
+.indicators-panel,
+.milestone-card,
+.mode-selector,
+.mode-btn,
+.select-styled,
+.benefit-breakdown,
+.info-icon,
+.folder-tab,
+.axis-label {
+    transition: var(--apple-transition);
 }
 
-header {
-    height: 65px;
-    min-height: 65px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
-    background-color: var(--card-bg);
-}
-
+/* Ensure CSS text clip transitions work perfectly when values change */
 header h1 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    background: linear-gradient(to right, var(--primary-glow), var(--secondary-glow));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    transition: var(--apple-transition);
+    /* Forcing rendering isolation onto hardware layers */
+    will-change: background; 
 }
 
 .telemetry-rack {
