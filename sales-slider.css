@@ -1,9 +1,9 @@
 /* ==========================================================================
-   DYNAMIC PALETTE & TRANSITION ARCHITECTURE
+   DYNAMIC PALETTE DEFINITIONS
    ========================================================================== */
 
 :root {    
-    /* Default / Male Premium Core Theme */
+    /* Default Premium Deep Core Theme */
     --bg-color: #060913;
     --card-bg: #0d1222;
     --border-color: rgba(255, 255, 255, 0.06);
@@ -13,60 +13,65 @@
     /* High-Grade Glow Accents */
     --primary-glow: #8A2BE2;    
     --secondary-glow: #00d2ff;  
-    --warning-glow: #ff9f43;
-    --neon-green: #00ff88;
-    --neon-amber: #ffaa00;
-    --neon-red: #ff4d4d;
     
     /* Apple Easing Custom Curve */
-    --apple-transition: all 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    --apple-transition: background-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                        color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Softer, Female-Optimized Premium Palette */
 .theme-female {
     --bg-color: #0f0b14;                           /* Deep midnight plum */
     --card-bg: #191222;                             /* Rich warm dark violet */
-    --border-color: rgba(255, 182, 193, 0.09);      /* Subtle rose gold border framework */
-    --text-main: #fff0f5;                           /* Lavender blush text crisping */
-    --text-muted: #9c8aab;                          /* Muted orchid core typography */
+    --border-color: rgba(255, 182, 193, 0.12);      /* Softer rose gold border framework */
+    --text-main: #fff0f5;                           /* Lavender blush text */
+    --text-muted: #9c8aab;                          /* Muted orchid typography */
     
-    /* Premium Redefined Glow Coordinates */
-    --primary-glow: #ff69b4;                        /* Hot Pink highlight accent */
-    --secondary-glow: #ffa07a;                      /* Light Salmon / Soft gold light string */
-    --warning-glow: #ff7f50;
-    --neon-green: #2ecc71;
-    --neon-amber: #f39c12;
-    --neon-red: #e74c3c;
+    --primary-glow: #ff69b4;                        /* Softer Hot Pink accent */
+    --secondary-glow: #ffa07a;                      /* Soft gold light string */
 }
 
 /* ==========================================================================
-   GLOBAL TRANSITION INTERACTION BINDINGS
+   EXPLICIT ELEMENT BINDINGS (Forces the Transition Engine)
    ========================================================================== */
 
-/* Apply the structural variable animation layout rules smoothly to the viewport */
-body, 
-header, 
-footer,
+/* The main canvas wrapper */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    transition: var(--apple-transition);
+}
+
+/* Your cards, side panels, and control boxes */
 .control-panel, 
 .display-viewport,
 .graph-wrapper,
 .indicators-panel,
-.milestone-card,
-.mode-selector,
-.mode-btn,
-.select-styled,
-.benefit-breakdown,
-.info-icon,
-.folder-tab,
-.axis-label {
+.milestone-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
     transition: var(--apple-transition);
 }
 
-/* Ensure CSS text clip transitions work perfectly when values change */
-header h1 {
+/* Typography wrappers */
+header h1, h2, h3, .select-styled, .mode-btn {
+    color: var(--text-main);
     transition: var(--apple-transition);
-    /* Forcing rendering isolation onto hardware layers */
-    will-change: background; 
+}
+
+.text-muted, .axis-label, footer {
+    color: var(--text-muted);
+    transition: var(--apple-transition);
+}
+
+/* Glowing buttons or active items */
+.mode-btn.active {
+    background-color: var(--primary-glow);
+    box-shadow: 0 0 15px var(--primary-glow);
+    transition: var(--apple-transition);
 }
 
 .telemetry-rack {
