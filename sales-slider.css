@@ -1049,3 +1049,28 @@ div#presentation-overlay[style*="display: none"] {
     0% { box-shadow: 0 0 4px rgba(255, 184, 0, 0.05); }
     100% { box-shadow: 0 0 14px rgba(255, 184, 0, 0.25); }
 }
+
+/* ==========================================================================
+   FEMALE-FRIENDLY COLOR PALETTE OVERRIDES
+   ========================================================================== */
+
+.theme-female {
+    /* Main Backgrounds - Swapping deep blues for luxury dark plum/orchid tones */
+    --bg-color: #0f0b14;                           /* Deep midnight plum canvas */
+    --card-bg: #191222;                             /* Rich warm dark violet card faces */
+    --border-color: rgba(255, 182, 193, 0.15);      /* Soft rose gold border lines */
+    
+    /* Text/Typography Colors */
+    --text-main: #fff0f5;                           /* Clean lavender blush main text */
+    --text-muted: #a694b7;                          /* Softer orchid-gray for muted text */
+    
+    /* Active Accents & UI Neon Colors */
+    --primary-glow: #ff69b4;                        /* Vibrant premium pink active accents */
+    --secondary-glow: #ffa07a;                      /* Soft rose-gold secondary accents */
+    --warning-glow: #ff7f50;                        /* Warm coral warning indicator */
+    
+    /* Dynamic UI Performance Colors (e.g., charts, progress bars, highlights) */
+    --neon-green: #2ecc71;                          /* Balanced emerald green */
+    --neon-amber: #f39c12;                          /* Soft amber */
+    --neon-red: #e74c3c;                            /* Crimson red */
+}
