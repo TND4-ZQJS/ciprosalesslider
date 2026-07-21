@@ -2,1739 +2,514 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manulife Heritage - Advanced Visualisation Terminal</title>
-    <link rel="stylesheet" href="sales-slider.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI Pro Universe | Workspace</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Arrival Carousel Styles -->
+    <style>
+        .arrival-carousel-container {
+            position: relative;
+            background: linear-gradient(135deg, rgba(28, 28, 30, 0.7) 0%, rgba(18, 18, 20, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 28px 32px 20px 32px;
+            margin-bottom: 36px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .carousel-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .carousel-section-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #8e8e93;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .carousel-nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .carousel-arrow-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-arrow-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .carousel-arrow-btn:active {
+            transform: scale(0.92);
+        }
+
+        .carousel-arrow-btn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        .carousel-track-wrapper {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding: 8px 0 16px 0;
+        }
+
+        .slide-body {
+            max-width: 680px;
+        }
+
+        .slide-tag-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .badge-arrival {
+            background: #0071e3;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .badge-update {
+            background: rgba(52, 199, 89, 0.15);
+            color: #34c759;
+            border: 1px solid rgba(52, 199, 89, 0.3);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .slide-meta {
+            font-size: 12px;
+            color: #8e8e93;
+        }
+
+        .slide-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+        }
+
+        .slide-description {
+            font-size: 13.5px;
+            color: #a1a1a6;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .btn-slide-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            color: #000000;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .btn-slide-action:hover {
+            background: #e8e8ed;
+            transform: translateY(-2px);
+        }
+
+        .carousel-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #0071e3;
+            width: 18px;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .carousel-slide {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .btn-slide-action {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div id="compliance-gatekeeper" class="gatekeeper-overlay">
-    <div class="gatekeeper-modal">
-        <div class="gatekeeper-badge">ⓘ SIMULATION NOTICE</div>
-        
-        <h2>Before You Begin</h2>
-        
-        <p>
-            This interactive module provides conceptual projections based on a hypothetical non-guaranteed 
-            <strong>5.0% annual investment return</strong> of the <strong>Manulife Equity Fund</strong>.
-        </p>
-        
-        <p class="secondary-text">
-            All illustrated account values and milestones are strictly for visual demonstration purposes. 
-            Actual fund performance will fluctuate based on market conditions. For binding contractual metrics, 
-            always cross-reference results with your official <strong>Manulife Product Illustration (PI)</strong>.
-        </p>
-        
-        <button class="gatekeeper-btn" onclick="dismissGatekeeper()">Proceed to Simulation</button>
-    </div>
-</div>
-
-<header class="terminal-header">
-    <div class="header-brand">
-        <h1>CI PRO | Manulife Heritage + Manulife Critical Care <span class="divider">//</span> <span class="subtitle">Advanced Simulation Terminal</span></h1>
-    </div>
-    <div class="telemetry-rack">
-        <!-- Original System Indicators -->
-        <div class="badge-group">
-            <div id="badge-pi" class="status-badge"><div class="dot"></div>Based on PI</div>
-            <div id="badge-sim" class="status-badge"><div class="dot"></div>Simulation Mode</div>
-        </div>
-
-        <div class="badge-separator"></div>
-
-        <!-- New Concurrent COI Discount Indicators -->
-        <div class="badge-group">
-            <!-- MCC Discount Indicator -->
-            <div id="badge-mcc" class="status-badge discount-badge">
-                <div class="dot"></div>
-                <span class="lbl">MCC Discount:</span> <span id="mcc-value">0%</span>
-            </div>
-            <!-- Heritage Discount Indicator -->
-            <div id="badge-heritage" class="status-badge discount-badge">
-                <div class="dot"></div>
-                <span class="lbl">MH Discount:</span> <span id="heritage-value">0%</span>
-            </div>
-        </div>
-    </div>
-</header>
-
-    <div class="terminal-container">
-        <div class="control-panel">
-            <div class="mode-selector">
-                <button class="mode-btn active" onclick="setMode('premium')">Lock Premium</button>
-                <button class="mode-btn" onclick="setMode('protection')">Lock Protection</button>
-            </div>
-
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span class="slider-label">CI Pro Needed</span>
-                    <span id="protection-display-value" class="slider-value">RM 1.0M</span>
-                </div>
+    <header class="navbar">
+        <div class="nav-container">
+            <span class="logo" onclick="window.location.href='dashboard.html'" style="cursor: pointer;">CI Pro Universe</span>
+            <nav class="nav-links">
                 
-                <div class="benefit-breakdown">
-                    <div class="benefit-row">
-                        <span class="benefit-name">1. Manulife Heritage: <strong id="benefit-death">RM 1.0M</strong></span>
-                    </div>
-
-                    <div class="benefit-row">
-                        <span class="benefit-name">2. Manulife Critical Care: <strong id="benefit-cc">RM 1.0M</strong></span>
-                    </div>
-
-                    <div class="benefit-row">
-                        <span class="benefit-name">3. Accidental Death Benefit: <strong id="benefit-accidental">RM 1.0M</strong></span>
-                    </div>
-                </div>
-
-                <input type="range" id="protection-slider" class="range-slider" value="1000000" oninput="recalibrateSliderBounds()">
-            </div>
-
-            <div class="slider-group" id="premium-group">
-                <div class="slider-header">
-                    <span class="slider-label">Dynamic Premium Payment</span>
-                    <span class="slider-value" id="premium-display">RM --/yr</span>
-                </div>
-                <input type="range" id="premium-slider" class="range-slider" min="2400" max="300000" step="1" value="45000" list="pi-points" oninput="executeSimulationEngine()" disabled>
-                <datalist id="pi-points"></datalist>
-            </div>
-            
-
-            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
-                <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em; margin: 0;">Structural Variables</p>
-                
-                <!-- 1. The Clean 3-Column Dropdown Grid -->
-                <div class="control-row-layout" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                    <div class="control-column" style="display: flex; flex-direction: column; gap: 6px;">
-                        <span class="slider-label">Gender</span>
-                        <select id="gender-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                            <option value="Male" selected>Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-
-                    <div class="control-column" style="display: flex; flex-direction: column; gap: 6px;">
-                        <span class="slider-label">Age</span>
-                        <select id="age-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                            <option value="25">25</option>
-                            <option value="35">35</option>
-                            <option value="45" selected>45</option>
-                            <option value="55">55</option>
-                        </select>
-                    </div>
-
-                    <div class="control-column" style="display: flex; flex-direction: column; gap: 6px;">
-                        <span class="slider-label">Pay</span>
-                        <select id="term-selector" class="select-styled" onchange="recalibrateSliderBounds()">
-                            <option value="pay6" selected>6 Yrs</option>
-                            <option value="pay10">10 Yrs</option>
-                            <option value="pay20">20 Yrs</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- 2. The Spaced, Full-Width Presentation Button -->
-                <button type="button" id="open-presentation-btn" class="presentation-trigger-btn" onclick="openFeaturePresentation()">Present Product Features
+                <button id="inboxBell" onclick="toggleInboxTray()" style="background: none; border: none; cursor: pointer; position: relative; padding: 6px; display: flex; align-items: center; margin-right: 16px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span id="inboxDot" style="display: none; position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; background-color: #ff453a; border-radius: 50%; border: 1.5px solid #ffffff;"></span>
                 </button>
-            </div>
-        </div> 
+
+                <a href="javascript:void(0)" onclick="handleLogout()" class="btn-signin">Sign Out</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
         
-        <div class="display-viewport">
-            <div class="graph-wrapper">
-                <div class="chart-container">
-                    <svg viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet">
-                        <defs>
-                            <filter id="neonGlowBlur" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="6" result="blurOut" />
-                                <feMerge>
-                                    <feMergeNode in="blurOut" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                            <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#8A2BE2" /> 
-                                <stop offset="100%" id="gradient-end" stop-color="#00d2ff" /> 
-                            </linearGradient>
-                            <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#aa55ff" />
-                                <stop offset="100%" id="glow-gradient-end" stop-color="#00d2ff" />
-                            </linearGradient>
-                            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#8A2BE2" stop-opacity="0.95"/>
-                                <stop offset="45%" stop-color="#00d2ff" stop-opacity="0.40"/>
-                                <stop offset="100%" stop-color="#00d2ff" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <!-- Grid Lines -->
-                        <line x1="40" y1="180" x2="560" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-                        <line x1="40" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+        <section class="hero" style="padding-top: 100px; padding-bottom: 40px; text-align: left;">
+            <span class="badge">CI Specialist Workspace</span>
+            <h1 id="welcome-heading" style="font-size: 36px; margin-bottom: 8px;">Welcome back...</h1>
+            <p style="text-align: left; margin: 0; font-size: 16px;" class="subtitle">Select an operational module below to begin the amazing journey in CI Pro Universe</p>
+        </section>
 
-                        <text id="dynamic-y-axis-label" x="300" y="25" class="axis-label" style="text-anchor: middle; fill: var(--text-muted); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">SCALE: RM --</text>
-                        
-                        <path id="shadow-area" class="shadow-area-path" fill="url(#ribbonGradient)" mask="url(#verticalFadeMask)" d="" />
-                        <path id="glow-ribbon" class="ribbon-glow" d="" />
-                        <path id="main-ribbon" class="ribbon-main" d="" />
-
-                        <circle id="node-0" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-1" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-2" class="milestone-node early-milestone" r="4.5" />
-                        <circle id="node-3" class="milestone-node growth-milestone" r="4.5" />
-                        <circle id="node-4" class="milestone-node growth-milestone" r="4.5" />
-                        <circle id="node-5" class="milestone-node growth-milestone" r="4.5" />
-
-                        <text x="40" y="205" class="axis-label early-milestone" id="axis-0">Yr 1</text>
-                        <text x="144" y="205" class="axis-label early-milestone" id="axis-1">Yr 5</text>
-                        <text x="248" y="205" class="axis-label early-milestone" id="axis-2">Yr 10</text>
-                        <text x="352" y="205" class="axis-label growth-milestone" id="axis-3">Yr 20</text>
-                        <text x="456" y="205" class="axis-label growth-milestone" id="axis-4">Yr 25</text>
-                        <text x="560" y="205" class="axis-label growth-milestone" id="axis-5">Yr 35</text>
-                    </svg>
+        <section class="arrival-carousel-container">
+            <!-- Header Bar with Arrows -->
+            <div class="carousel-header-bar">
+                <div class="carousel-section-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    New Arrivals & Updates
+                </div>
+                <div class="carousel-nav-controls">
+                    <button class="carousel-arrow-btn" id="prevSlideBtn" aria-label="Previous Slide" disabled>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <button class="carousel-arrow-btn" id="nextSlideBtn" aria-label="Next Slide">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
                 </div>
             </div>
 
-            <div class="indicators-panel">
-                <!-- Folder Tabs Deck -->
-                <div class="tabs-container">
-                    <div class="folder-tab active-tab" onclick="switchFolderTab('projections-panel', this)">
-                        Projections Matrix
-                    </div>
-                    <div class="folder-tab" onclick="switchFolderTab('analysis-panel', this)">
-                        Diagnostic Analysis Desk
-                    </div>
-                    <div class="folder-tab" onclick="switchFolderTab('comparison-panel', this)">
-                        Scenario Matrix Comparison
-                    </div>
-                </div>
-
-                <!-- Folder Content 1: Default Projections Matrix -->
-                <div id="projections-panel" class="tab-panel active-panel">
-                    <div class="panel-title">Asset Projections & Performance Metrics</div>
-                    <div class="milestone-grid">
-                        <div class="milestone-card" id="card-1">
-                            <div class="milestone-age" id="lbl-1">Policy Year 5</div>
-                            <div class="milestone-value" id="val-1">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-2">
-                            <div class="milestone-age" id="lbl-2">Policy Year 10</div>
-                            <div class="milestone-value" id="val-2">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-3">
-                            <div class="milestone-age" id="lbl-3">Policy Year 20</div>
-                            <div class="milestone-value" id="val-3">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-4">
-                            <div class="milestone-age" id="lbl-4">Policy Year 25</div>
-                            <div class="milestone-value" id="val-4">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-5">
-                            <div class="milestone-age" id="lbl-5">Policy Year 35</div>
-                            <div class="milestone-value" id="val-5">RM --</div>
-                        </div>
-                    </div>
-                </div>
-
-<!-- Tab 3: Side-by-Side Matrix Verification Desk -->
-<div id="comparison-panel" class="tab-panel">
-    
-    <!-- 1. Context Telemetry and Pin Controller Header -->
-    <div style="margin: 12px 0; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.01); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
-        <div style="display: flex; gap: 8px; font-size: 11px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
-            <div style="background: rgba(255,255,255,0.03); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05);">
-                <span style="color: var(--text-muted); text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">Premium A:</span> 
-                <strong id="pinned-premium-display" style="color: #fff; margin-left: 4px;">RM --</strong>
-            </div>
-            <div style="background: rgba(0, 210, 255, 0.05); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(0, 210, 255, 0.1);">
-                <span style="color: var(--text-muted); text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">Active B:</span> 
-                <strong id="live-premium-display" style="color: #00d2ff; margin-left: 4px;">RM --</strong>
-            </div>
-        </div>
-
-        <button id="pin-scenario-btn" onclick="toggleScenarioPin()" style="padding: 6px 14px; background: rgba(0, 210, 255, 0.08); border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 6px; color: #00d2ff; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
-            📌 Pin Base
-        </button>
-    </div>
-
-    <!-- 2. Condensed Data Matrix Table -->
-    <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
-            <thead>
-                <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06);">
-                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Milestone</th>
-                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario A</th>
-                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Scenario B</th>
-                    <th style="padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; text-align: right;">Net Delta</th>
-                </tr>
-            </thead>
-            <tbody id="comparison-matrix-body" style="font-family: SFMono-Regular, Consolas, Monaco, monospace; font-size: 11px;">
-                <!-- Target Row Example Layout for when populated by your Javascript Engine -->
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                    <td style="padding: 8px 10px; color: #fff; font-family: -apple-system, sans-serif;">Policy Year 10</td>
-                    <td style="padding: 8px 10px; color: var(--text-muted);">RM 120,500</td>
-                    <td style="padding: 8px 10px; color: #00d2ff;">RM 155,000</td>
-                    <td style="padding: 8px 10px; color: #34c759; text-align: right; font-weight: 600;">+RM 34,500</td>
-                </tr>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
-                    <td style="padding: 8px 10px; color: #fff; font-family: -apple-system, sans-serif;">Policy Year 20</td>
-                    <td style="padding: 8px 10px; color: var(--text-muted);">RM 310,000</td>
-                    <td style="padding: 8px 10px; color: #00d2ff;">RM 420,000</td>
-                    <td style="padding: 8px 10px; color: #34c759; text-align: right; font-weight: 600;">+RM 110,000</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-                <!-- Folder Content 2: Auxiliary Analysis Space -->
-                <div id="analysis-panel" class="tab-panel">
-                    <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
-                    <div class="milestone-grid">
-                        <div class="milestone-card" id="card-net-cost">
-                            <div class="milestone-age">Amortized Net Cost / Yr</div>
-                            <div class="milestone-value" id="val-net-cost">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-cost-100k">
-                            <div class="milestone-age">Net Leverage Cost / 100K</div>
-                            <div class="milestone-value" id="val-cost-100k">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="FeaturePresentation functions exactly the same ...card-leverage-factor">
-                            <div class="milestone-age">Capital Leverage Multiplier</div>
-                            <div class="milestone-value" id="val-leverage-factor">--</div>
-                        </div>
-                        <div class="milestone-card" id="card-preservation-factor">
-                            <div class="milestone-age">Equity Retention Yield</div>
-                            <div class="milestone-value" id="val-preservation-factor">--</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-<!-- ==========================================================================
-   PRODUCT FEATURES SYSTEM PRESENTATION CORE LAYER
-   ========================================================================== -->
-<div id="presentation-overlay" class="presentation-modal-backdrop" style="display: none;">
-    <div class="presentation-modal-card">
-        
-        <!-- NEW Clean Apple Theme Header -->
-        <div class="presentation-modal-header-clean">
-            <div class="mac-window-title">Product Feature Suite</div>
-            <button type="button" class="apple-close-btn" onclick="closeFeaturePresentation()" aria-label="Close">&times;</button>
-        </div>
-        
-        <!-- macOS Native Segmented Tabs Strip -->
-        <div class="mac-segmented-control-container">
-            <div class="mac-segmented-control">
-                <button type="button" class="mac-segment-btn active" id="tab-btn-1" onclick="switchProductTab(1)">
-                    Manulife Heritage
-                </button>
-                <button type="button" class="mac-segment-btn" id="tab-btn-2" onclick="switchProductTab(2)">
-                    Manulife Critical Cover
-                </button>
-                <!-- ADDED: Third Tab Navigation Segment Control Button -->
-                <button type="button" class="mac-segment-btn" id="tab-btn-3" onclick="switchProductTab(3)">
-                    Accidental Death Benefit
-                </button>
-            </div>
-        </div>
-
-        <!-- Scrollable Modal Content Space -->
-        <div class="presentation-modal-body" id="modal-scroll-body">
-            
-           <!-- ==========================================================================
-     CATEGORY 1: MANULIFE HERITAGE (Tab 1)
-     ========================================================================== -->
-<div id="product-tab-1" class="product-tab-content">
-    
-    <!-- Page 1 -->
-    <div id="tab1-page-1" class="presentation-page-view">
-        <div class="feature-hero-badge">Protection: Death/TPD</div>
-        <div class="feature-grid">
-            <div class="feature-item-card">
-                <div>
-                    <h4>High Insurance Protection</h4>
-                    <p>Starts at a minimum Face Amount of RM 500,000 for Death or Total & Permanent Disability (TPD).</p>
-                </div>
-            </div>
-            <div class="feature-item-card">
-                <div>
-                    <h4>Protection Booster</h4>
-                    <p>Automatically enhances basic life coverage by 5% every 10 policy years completely at zero entry premium cost.</p>
-                </div>
-            </div>
-            <div class="feature-item-card">
-                <div>
-                    <h4>Cover Reset</h4>
-                    <p>Resets your protection after a partial withdrawal event (after 13 months)</p>
-                </div>
-            </div>      
-        </div>
-    </div>
-
-    <!-- Page 2 -->
-    <div id="tab1-page-2" class="presentation-page-view" style="display: none;">
-        <div class="feature-hero-badge">Reward and Bonuses</div>
-        <div class="feature-grid">
-            <div class="feature-item-card">
-                <div>
-                    <h4>Wellness Reward</h4>
-                    <p>A portion of the Insurance Charges under the basic plan will be returned to your policy and credited to Account Value at the end of Policy Years 10 (10%), 20 (20%) and 30 (30%).</p>
-                </div>
-            </div>
-            <div class="feature-item-card">
-                <div>
-                    <h4>Loyalty Bonus</h4>
-                    <p>Be rewarded with a <strong>Bonus up to 10% of the Face Amount</strong> which shall be credited to your policy's Account Value, depending on your entry age.</p>
-                </div>
-            </div>    
-            <div class="feature-item-card">
-                <div>
-                    <h4>Maturity Bonus</h4>
-                    <p>Receive up to 10% of the Face Amount, credited to your policy's Account Value</p>
-                </div>
-            </div>   
-        </div>
-    </div>
-
-    <!-- Page 3 -->
-    <div id="tab1-page-3" class="presentation-page-view" style="display: none;">
-        <div class="feature-hero-badge">Discount</div>
-        <div class="feature-grid">
-            <div class="feature-item-card">
-                <div>
-                    <h4>Insurance Charge Discount</h4>
-                    <p>Enjoy a <strong>20% discount</strong> on the Insurance Charge levied on the basic plan insurance charges when you purchase a <strong>Face Amount of RM1,000,000 and above</strong>.</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div> <!-- Tag 1 Container cleanly closes here now -->
-
-<!-- ==========================================================================
-               CATEGORY 2: MANULIFE CRITICAL COVER (Tab 2) FIXED: Wrapped and balanced correctly
-               ========================================================================== -->
-            <div id="product-tab-2" class="product-tab-content" style="display: none;">
-                <!-- Page 1 -->
-                <div id="tab2-page-1" class="presentation-page-view">
-                    <div class="feature-hero-badge" style="display: inline-block; font-size: 10px; padding: 2px 6px; margin-bottom: 8px;">
-                        Protection: Covered Events (48 Critical Illnesses)
-                    </div>
-                    <div class="feature-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px;">
-                        
-                        <!-- MATRIX 1: THE 47 COVERED EVENTS (Optimized 3-Column Visual Grid) -->
-                        <div class="feature-item-card" style="padding: 12px;">
-                            <div style="display: flex; gap: 8px; width: 100%;">
-                                <div style="width: 100%;">
-                                    <h4 style="font-size: 13px; margin-bottom: 2px;">Covered Events</h4>
-                                    
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 24px; font-size: 12px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 6px;">
-                                        <!-- Column 1 -->
-                                        <div class="matrix-column-group">
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">1.</span> Stroke</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">2.</span> Heart Attack</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">3.</span> Kidney Failure</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">4.</span> Cancer</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">5.</span> Coronary Artery By-Pass Surgery</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">6.</span> Serious Coronary Artery Disease</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">7.</span> End-Stage Liver Failure</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">8.</span> Fulminant Viral Hepatitis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">9.</span> Coma</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">10.</span> Benign Brain Tumour</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">11.</span> Paralysis of Limbs</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">12.</span> Blindness</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">13.</span> Deafness</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">14.</span> Third Degree Burns</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">15.</span> HIV Infection via Blood Transfusion</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">16.</span> Full Blown AIDS</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">17.</span> End-Stage Lung Disease</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">18.</span> Encephalitis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">19.</span> Major Organ / Bone Marrow Tx</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">20.</span> Loss of Speech</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">21.</span> Heart Valve Surgery</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">22.</span> Loss of Independent Existence</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">23.</span> Bacterial Meningitis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">24.</span> Major Head Trauma</div>
-                                        </div>
-                                        
-                                        <!-- Column 2 -->
-                                        <div class="matrix-column-group">
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">25.</span> Chronic Aplastic Anaemia</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">26.</span> Motor Neuron Disease</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">27.</span> Parkinson’s Disease</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">28.</span> Alzheimer’s / Severe Dementia</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">29.</span> Muscular Dystrophy</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">30.</span> Surgery to Aorta</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">31.</span> Multiple Sclerosis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">32.</span> Primary Pulmonary Arterial HTN</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">33.</span> Medullary Cystic Disease</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">34.</span> Cardiomyopathy</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">35.</span> SLE with Lupus Nephritis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">36.</span> Occupationally Acquired HIV</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">37.</span> Brain Surgery</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">38.</span> Terminal Illness</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">39.</span> Apallic Syndrome</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">40.</span> Chronic Relapsing Pancreatitis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">41.</span> Creutzfeldt-Jakob Disease</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">42.</span> Elephantiasis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">43.</span> Poliomyelitis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">44.</span> Progressive Scleroderma</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">45.</span> Chronic Autoimmune Hepatitis</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">46.</span> Crohn's with Intestinal Fistula</div>
-                                            <div style="padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); color: #636366;"><span style="color: #1d1d1f; font-weight: 500;">47.</span> Severe Eisenmenger's Syndrome</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- MATRIX 3: CONTRACTUAL ANGIOPLASTY SPECIFIC CLAUSE -->
-                        <div class="feature-item-card" style="padding: 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">
-                            <div style="display: flex; gap: 10px; width: 100%;">
-                                <div style="width: 100%;">
-                                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #1d1d1f;">
-                                        Angioplasty & Other Invasive Treatments Provision
-                                    </h4>
-                                    <p style="font-size: 12px; color: #636366; line-height: 1.4; margin-bottom: 12px;">
-                                        In addition, if the Insured undergoes <strong>“Angioplasty and Other Invasive Treatments for Coronary Artery Disease”</strong>, the following contractual parameters apply:
-                                    </p>
-                                    
-                                    <!-- Bulleted Provision Framework -->
-                                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: #1d1d1f; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 10px;">
-                                        <!-- Clause (i) -->
-                                        <div style="display: flex; gap: 8px; align-items: flex-start; line-height: 1.4;">
-                                            <span style="color: #8e8e93; font-weight: 500; min-width: 20px;">(i)</span>
-                                            <span><strong>10% of the rider’s Face Amount</strong> shall be payable, subject to a maximum of <strong>RM 25,000</strong>.</span>
-                                        </div>
-                                        <!-- Clause (ii) -->
-                                        <div style="display: flex; gap: 8px; align-items: flex-start; line-height: 1.4;">
-                                            <span style="color: #8e8e93; font-weight: 500; min-width: 20px;">(ii)</span>
-                                            <span>The Face Amount for both the <strong>basic plan and this rider</strong> will be reduced by the exact amount claimed.</span>
-                                        </div>
-                                        <!-- Clause (iii) -->
-                                        <div style="display: flex; gap: 8px; align-items: flex-start; line-height: 1.4;">
-                                            <span style="color: #8e8e93; font-weight: 500; min-width: 20px;">(iii)</span>
-                                            <span>The benefit is payable <strong>once only</strong> for the first occurrence.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Page 2 -->
-                <div id="tab2-page-2" class="presentation-page-view" style="display: none;">
-                    <div class="feature-hero-badge">Protection: Admission Event</div>
-                    <div class="feature-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px;">
-                        
-                        <!-- TAB 2, PAGE 2 - CARD 1: ADMISSION EVENTS -->
-                        <div class="feature-item-card" style="padding: 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff; margin-bottom: 16px;">
-                            <div style="display: flex; gap: 10px; width: 100%;">
-                                <div style="width: 100%;">
-                                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #1d1d1f;">
-                                        Admission Events Provision
-                                    </h4>
-                                    <p style="font-size: 11.5px; color: #636366; line-height: 1.4; margin-bottom: 12px;">
-                                        Upon occurrence of any one of the following Admission Events prior to <strong>age 80 next birthday</strong>, this plan pays a lump sum benefit. The aggregate claimable amount across all Admission Events under the same life shall not exceed <strong>RM 500,000</strong>.
-                                    </p>
-                                    
-                                    <!-- Apple Style Custom Matrix Table -->
-                                    <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px; line-height: 1.35;">
-                                        <thead>
-                                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.1); text-align: left;">
-                                                <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; width: 5%;">No.</th>
-                                                <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; width: 55%;">Admission Events</th>
-                                                <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; text-align: right; width: 40%;">Benefit Payable</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: top;">
-                                                <td style="padding: 8px 0; color: #1d1d1f; font-weight: 500;">1</td>
-                                                <td style="padding: 8px 0; color: #636366; padding-right: 12px;">
-                                                    <strong>Admission to ICU</strong> for a continuous period of <strong>10 days or more</strong> (excluding admission due to Dengue).
-                                                </td>
-                                                <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600; vertical-align: middle;" rowspan="2">
-                                                    100% of Rider Face Amount<br>
-                                                    <span style="font-size: 10px; color: #8e8e93; font-weight: 400;">Max RM 500,000 per life</span>
-                                                </td>
-                                            </tr>
-                                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: top;">
-                                                <td style="padding: 8px 0; color: #1d1d1f; font-weight: 500;">2</td>
-                                                <td style="padding: 8px 0; color: #636366; padding-right: 12px;">
-                                                    <strong>Hospitalisation</strong> for a continuous period of <strong>21 days or more</strong>, accompanied by a surgical procedure.
-                                                </td>
-                                            </tr>
-                                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: top;">
-                                                <td style="padding: 8px 0; color: #1d1d1f; font-weight: 500;">3</td>
-                                                <td style="padding: 8px 0; color: #636366; padding-right: 12px;">
-                                                    <strong>Admission to ICU</strong> for a continuous period of <strong>10 days or more</strong> (due to Dengue).
-                                                </td>
-                                                <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">
-                                                    50% of Rider Face Amount<br>
-                                                    <span style="font-size: 10px; color: #8e8e93; font-weight: 400;">Max RM 125,000 per life</span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="feature-item-card" style="padding: 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">
-                            <div style="display: flex; gap: 10px; width: 100%;">
-                                <div style="width: 100%;">
-                                    <!-- Clause List Block -->
-                                    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 11.5px; color: #1d1d1f; line-height: 1.45;">
-                                        <!-- Clause A -->
-                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
-                                            <span style="color: #8e8e93; font-weight: 600; min-width: 20px;">(a)</span>
-                                            <span>Benefits are restricted to hospitalisation/ICU admissions within <strong>Malaysia</strong> deemed <strong>Medically Necessary</strong> by a registered Doctor in Malaysia.</span>
-                                        </div>
-                                        <!-- Clause B -->
-                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
-                                            <span style="color: #8e8e93; font-weight: 600; min-width: 20px;">(b)</span>
-                                            <span>For ICU Event (2) via legal quarantine/PHEIC infectious diseases (WHO), payouts require absolute concurrent use of <strong>mechanical ventilation</strong> for <strong>10 continuous days or more</strong>.</span>
-                                        </div>
-                                        <!-- Clause C -->
-                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
-                                            <span style="color: #8e8e93; font-weight: 600; min-width: 20px;">(c)</span>
-                                            <span>Strictly <strong>one claim maximum</strong> is permitted per individual Admission Event.</span>
-                                        </div>
-                                        <!-- Clause D -->
-                                        <div style="display: flex; gap: 8px; align-items: flex-start;">
-                                            <span style="color: #8e8e93; font-weight: 600; min-width: 20px;">(d)</span>
-                                            <span>Upon payout, the <strong>Rider Face Amount reduces</strong>. Residual values may be utilized against other unmitigated Admission or Covered Events.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Page 3 -->
-                <div id="tab2-page-3" class="presentation-page-view" style="display: none;">
-                    <div class="feature-hero-badge">Discount Benefits</div>
-                    <div class="feature-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px;">
-                        
-                        <div class="feature-item-card" style="padding: 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff; width: 100%;">
-                            <div style="display: flex; gap: 10px; width: 100%;">
-                                <div style="width: 100%;">
-                                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #1d1d1f;">
-                                        Insurance Charge Discount
-                                    </h4>
-                                    <p style="font-size: 11.5px; color: #636366; line-height: 1.4; margin-bottom: 14px;">
-                                        Enjoy discount on the Manulife Critical Cover Insurance Charge when you purchase a Face Amount of RM500,000 and above
-                                    </p>
-                                    
-                                    <!-- Apple Style Discount Tiers Table -->
-                                    <table style="width: 100%; border-collapse: collapse; font-size: 11px; line-height: 1.4;">
-                                        <thead>
-                                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.1); text-align: left;">
-                                                <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; width: 60%;">Face Amount (RM)</th>
-                                                <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; text-align: right; width: 40%;">Insurance Charges Discount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-                                                <td style="padding: 8px 0; color: #636366;">
-                                                    RM 500,000 to below RM 750,000
-                                                </td>
-                                                <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">
-                                                    5%
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 8px 0; color: #636366; font-weight: 500;">
-                                                    <strong>RM 750,000 and above</strong>
-                                                </td>
-                                                <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 700; font-size: 12px;">
-                                                    10%
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-
-            <!-- ==========================================================================
-               CATEGORY 3: ACCIDENTAL DEATH BENEFIT (Tab 3)
-               ========================================================================== -->
-            <div id="product-tab-3" class="product-tab-content" style="display: none;">
-                <!-- Page 1 -->
-                <div id="tab3-page-1" class="presentation-page-view">
-                    <div class="feature-hero-badge">Protection: Accidental Death Benefit</div>
+            <!-- Slide Track -->
+            <div class="carousel-track-wrapper">
+                <div class="carousel-track" id="carouselTrack">
                     
-                    <div class="feature-grid">
-                        <div class="feature-item-card">
-                            <div style="width: 100%;">
-                                <h4>Accidental Death Payout Scheudle</h4>
-                                <p style="margin-bottom: 8px;">Should the death of insured is due to Accident prior to age 70 next birthday and provided such death occurs within 180 days from the date of Accident</p>
-                                
-                                <!-- Apple Style Custom Matrix Info Table -->
-                                <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px;">
-                                    <thead>
-                                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.1); text-align: left;">
-                                            <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f;">Causes</th>
-                                            <th style="padding: 6px 0; font-weight: 600; color: #1d1d1f; text-align: right;">Benefit Payable</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style="padding: 8px 0; color: #636366;">1. Accidental Death</td>
-                                            <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">100% of the Face Amount</td>
-                                        </tr>
-                                             <tr>
-                                            <td style="padding: 8px 0; color: #636366;">2. Accidental Death due to travelling in Public Conveyance, an elevator or eletric lift or due to fire in Public Building/td>
-                                            <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">200% of the Face Amount</td>
-                                        </tr>
-                                             <tr>
-                                            <td style="padding: 8px 0; color: #636366;">3. Accidental Death occuring outside of Malaysia</td>
-                                            <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">300% of the Face Amount</td>
-                                        </tr>
-                                             <tr>
-                                            <td style="padding: 8px 0; color: #636366;">4. Accidental Death due to Natural Disaster</td>
-                                            <td style="padding: 8px 0; color: #1d1d1f; text-align: right; font-weight: 600;">400% of the Face Amount</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide">
+                        <div class="slide-body">
+                            <div class="slide-tag-row">
+                                <span class="badge-arrival">New Arrival</span>
+                                <span class="slide-meta">v2.4.0 • July 2026</span>
                             </div>
+                            <h2 class="slide-title">Shanghai 2026 Countdown Engine</h2>
+                            <p class="slide-description">
+                                Live qualification tracker integrated directly onto your workspace dashboard. Accurately monitors remaining days, hours, and seconds to the Shanghai & Disneyland trip target.
+                            </p>
                         </div>
+                        <a href="#shanghai-widget" class="btn-slide-action">
+                            View Countdown
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                        </a>
                     </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                        <div class="slide-body">
+                            <div class="slide-tag-row">
+                                <span class="badge-update">Update</span>
+                                <span class="slide-meta">v2.3.8 • Dynamic Horizon</span>
+                            </div>
+                            <h2 class="slide-title">Capital Matrix Age 80 Auto-Alignment</h2>
+                            <p class="slide-description">
+                                Analysis deck metrics now dynamically scale amortization windows based on the client's entry age, anchoring retention yields seamlessly to Age 80.
+                            </p>
+                        </div>
+                        <a href="./cipro-presentation" class="btn-slide-action">
+                            Launch Matrix
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                        <div class="slide-body">
+                            <div class="slide-tag-row">
+                                <span class="badge-arrival">New Arrival</span>
+                                <span class="slide-meta">v2.3.0 • Automation</span>
+                            </div>
+                            <h2 class="slide-title">Magic Filler Local Auto-Population</h2>
+                            <p class="slide-description">
+                                Enhanced smart form fields automatically remember and replicate client profiles across recurring insurance documents, cutting manual entry time in half.
+                            </p>
+                        </div>
+                        <a href="magicfiller.html" class="btn-slide-action">
+                            Open Filler
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+
                 </div>
             </div>
 
-        </div> <!-- Close #modal-scroll-body -->
-
-        <!-- ==========================================================================
-           RUNTIME PAGINATION STRIP WITH DISCLOSURE BARS
-           ========================================================================== -->
-        <div class="presentation-modal-footer" style="padding: 16px 24px; border-top: 1px solid rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 12px;">
-            
-            <!-- COMPLIANCE RISK AND T&C SAFEGUARD LINE -->
-            <div class="footer-compliance-disclaimer" style="font-size: 9px; color: #aeaeaf; line-height: 1.3; text-align: center; letter-spacing: -0.1px; max-width: 95%; margin: 0 auto;">
-                <strong>Disclaimer & Terms:</strong> • This marketing material is for general information only and is not to be construed as a contract of insurance • The information contained in this marketing material shall not be interpreted as an offer to sell, solicitation for an offer; or as an investment, legal, financial or any other advice • This marketing material merely contains a brief description of the benefits • For further information on the product details, please refer to the product brochure/product disclosure sheet/product illustration.
+            <!-- Dots Indicator -->
+            <div class="carousel-dots" id="carouselDots">
+                <span class="dot active" data-index="0"></span>
+                <span class="dot" data-index="1"></span>
+                <span class="dot" data-index="2"></span>
             </div>
+        </section>
 
-            <!-- NAVIGATION TRACK ROW -->
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <!-- BACK BUTTON -->
-                <button type="button" id="prev-page-btn" class="footer-nav-btn" disabled>
-                    Back
-                </button>
-                
-                <!-- LIVE VIEWPORT STATUS INDICATOR -->
-                <span id="presentation-page-indicator" class="page-indicator" style="font-size: 13px; color: #636366; font-weight: 500;">
-                    Page 1 of 3
-                </span>
-                
-                <!-- FORWARD NAVIGATION CONTROL BUTTON -->
-                <button type="button" id="next-page-btn" class="footer-nav-btn nav-primary">
-                    Next
-                </button>
+        <section class="features" style="background-color: transparent; padding: 20px 0 60px 0;">
+            <div class="grid">
+
+               <div class="card card-featured" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 220px;"><div>
+                      <span style="font-size: 11px; font-weight: 600; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px; opacity: 0.85;">Legendary CI Blue Print</span>
+                      <h3>CI Pro Presentation Kit</h3>
+                      <p>Access the definitive presentation PDF kit engineered to dismantle client misconceptions and establish immediate urgency for CI coverage. Includes clear, step-by-step guidelines on how to customize the narrative to fit individual client profiles.</p>
+              </div>
+              <a href="./cipro-presentation" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: fit-content; margin-top: 16px; background-color: #ffffff; color: #0071e3;">Launch Module</a>
             </div>
+                
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 220px;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 600; color: #0071e3; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">High-Impact Media Portal</span>
+                        <h3>CI Pro Experience</h3>
+                        <p>A curated library of immersive video assets designed to emotionally anchor the vital importance of critical illness protection, enhance client engagement, and drive deep conviction during consultations.</p>
+                    </div>
+                    <a href="cipro-experience.html" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: fit-content; margin-top: 16px;">Launch Module</a>
+                </div>
+
+                <div class="card apple-widget" id="shanghai-widget">
+                    <div class="widget-header">
+                        <span class="widget-tagline">● Countdown Tracker</span>
+                        <span class="apple-badge-new">NEW</span>
+                        <h3 class="widget-title">Shanghai & Disneyland | 2026 Overseas Convention Trip</h3>
+                    </div>
+
+                    <div class="hero-metric-container">
+                        <span id="days-val" class="hero-digit">00</span>
+                        <span class="hero-label">Days Remaining until 30 Sep 2026</span>
+                    </div>
+
+                    <div class="widget-sub-row">
+                        <div class="sub-metric">
+                            <span id="hours-val" class="sub-digit">00</span>
+                            <span class="sub-label">Hrs</span>
+                        </div>
+                        <div class="sub-metric">
+                            <span id="mins-val" class="sub-digit">00</span>
+                            <span class="sub-label">Min</span>
+                        </div>
+                        <div class="sub-metric live-pulse">
+                            <span id="secs-val" class="sub-digit intense-red">00</span>
+                            <span class="sub-label">Sec</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 220px;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 600; color: #0071e3; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">Smart Form Automation</span>
+                        <h3>Magic Filler</h3>
+                        <p>A high-speed data entry engine built to help advisors fill out complex insurance forms with maximum efficiency. Eliminates repetitive manual typing by automatically cross-populating recurring client data across multiple forms.</p>
+                    </div>
+                    <a href="magicfiller.html" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: fit-content; margin-top: 16px;">Open Filler</a>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 220px;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 600; color: #0071e3; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">Live Application Companion</span>
+                        <h3>EPOS Buddy</h3>
+                        <p>Your real-time digital wingman for navigating the live application portal. Stays by your side to streamline inputs, clarify field requirements, and ensure error-free, first-time-right submissions.</p>
+                    </div>
+                    <a href="eposbuddy.html" class="btn-primary" style="padding: 8px 16px; font-size: 13px; width: fit-content; margin-top: 16px;">Open Tool</a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="security" style="padding: 0 0 60px 0;">
+            <div class="security-box">
+                <strong>Secured Session Active:</strong> This platform operates on a static, local-injection framework. We do not store, log, or track any personal details or financial credentials on external servers.
+            </div>
+        </section>
+
+    </main>
+
+    <div id="trayOverlay" class="tray-backdrop" onclick="toggleInboxTray()"></div>
+    <div id="inboxTray" class="notification-tray">
+        <div class="tray-header">
+            <div>
+                <h3>Workspace Updates</h3>
+                <div id="trayCountBadge" class="tray-badge">0 Updates</div>
+            </div>
+            <button class="tray-close-btn" onclick="toggleInboxTray()">&times;</button>
         </div>
+        <div id="inboxFeed" class="tray-scroll-body">
+        </div>
+    </div>
 
-    </div> <!-- Close .presentation-modal-card -->
-</div> <!-- Close #presentation-overlay -->
+    <footer class="footer">
+        &copy; 2026 CI Pro Universe Portal. All rights reserved. Built for CI Pro operations.<a href="./tnd4">ZQJS</a>
+    </footer>
 
+    <script src="inbox.js"></script>
+    <script src="/js/countdowntimer.js"></script>
 
-<!-- YOUR EXISTING SCRIPT STARTS HERE -->
-<script>
-    /**
-     * Closes/hides the initial compliance warning gatekeeper overlay
-     */
-    function dismissGatekeeper() {
-        const overlayElement = document.getElementById('compliance-gatekeeper');
-        if (overlayElement) {
-            overlayElement.classList.add('gatekeeper-hidden');
-        }
-    }
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentHour = new Date().getHours();
+            let greetingList = [];
 
-    // Global Multi-Tier Data Caching Registry
-    const quotationCache = {};
-    let activeProfileData = null;
-    let currentMode = 'premium'; 
-
-    // --- NEW PRESENTATION SCENARIO STATE REGISTRY ---
-    let baselineSnapshot = null;
-    let pinnedPremiumValue = null;
-    let isComparing = false;
-    let simulatedMilestonesGlobal = []; // Global tracking registry for matrix lookups
-
-    /**
-     * Dynamically loads targeted JSON configuration files from disk
-     */
-    async function fetchQuotationProfile(gender, age, payTerm) {
-        const cacheKey = `${gender.toLowerCase()}_age${age}_${payTerm.toLowerCase()}`;
-        
-        if (quotationCache[cacheKey]) {
-            activeProfileData = quotationCache[cacheKey];
-            return activeProfileData;
-        }
-
-        const targetedPath = `data/${cacheKey}.json`;
-
-        try {
-            const response = await fetch(targetedPath);
-            if (!response.ok) {
-                throw new Error(`Data file not found: ${targetedPath}`);
-            }
-            const data = await response.json();
-            quotationCache[cacheKey] = data;
-            activeProfileData = data;
-            return activeProfileData;
-        } catch (error) {
-            console.error("Critical error mapping external configuration data:", error);
-            return null;
-        }
-    }
-
-    /**
-     * Generates an elegant, Apple-style smooth cubic spline string
-     */
-    function getSmoothBezierPath(coords) {
-        if (coords.length === 0) return "";
-        let pathString = `M ${coords[0].x} ${coords[0].y}`;
-        for (let i = 0; i < coords.length - 1; i++) {
-            const current = coords[i];
-            const next = coords[i + 1];
-            const controlOffset = (next.x - current.x) * 0.35;
-            pathString += ` C ${current.x + controlOffset} ${current.y}, ${next.x - controlOffset} ${next.y}, ${next.x} ${next.y}`;
-        }
-        return pathString;
-    }
-
-    /**
-     * Configures mutual slider locking mechanisms
-     */
-    function setMode(mode) {
-        // Prevent manual mode toggling if we are in the middle of an active presentation comparison
-        if (isComparing) return;
-
-        currentMode = mode;
-        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-        
-        const pSlider = document.getElementById('premium-slider');
-        const protSlider = document.getElementById('protection-slider');
-        
-        if (protSlider) {
-            protSlider.disabled = (mode === 'protection');
-            // Dim or restore the protection slider track visually
-            protSlider.style.opacity = (mode === 'protection') ? '0.35' : '1';
-            protSlider.style.cursor = (mode === 'protection') ? 'not-allowed' : 'pointer';
-        }
-        if (pSlider) {
-            pSlider.disabled = (mode === 'premium');
-            // Dim or restore the premium slider track visually
-            pSlider.style.opacity = (mode === 'premium') ? '0.35' : '1';
-            pSlider.style.cursor = (mode === 'premium') ? 'not-allowed' : 'pointer';
-        }
-        
-        const activeBtn = document.querySelector(`[onclick="setMode('${mode}')"]`);
-        if (activeBtn) activeBtn.classList.add('active');
-        
-        const premiumGroup = document.getElementById('premium-group');
-        const protectionGroup = document.getElementById('protection-group');
-        const lockPremium = document.getElementById('lock-icon-premium');
-        const lockProtection = document.getElementById('lock-icon-protection');
-
-        if (mode === 'premium') {
-            if (premiumGroup) {
-                premiumGroup.classList.add('locked');
-                premiumGroup.style.opacity = '0.4'; // Dim entire premium container group
-            }
-            if (protectionGroup) {
-                protectionGroup.classList.remove('locked');
-                protectionGroup.style.opacity = '1'; // Light up entire protection container group
-            }
-            if (lockPremium) lockPremium.innerText = '🔒';
-            if (lockProtection) lockProtection.innerText = '';
-        } else {
-            if (protectionGroup) {
-                protectionGroup.classList.add('locked');
-                protectionGroup.style.opacity = '0.4'; // Dim entire protection container group
-            }
-            if (premiumGroup) {
-                premiumGroup.classList.remove('locked');
-                premiumGroup.style.opacity = '1'; // Light up entire premium container group
-            }
-            if (lockProtection) lockProtection.innerText = '🔒';
-            if (lockPremium) lockPremium.innerText = '';
-        }
-        
-        recalibrateSliderBounds(); 
-    }
-
-    /**
-     * Recalibrates structural bounds, step constraints, and min/max slider ticks
-     */
-    async function recalibrateSliderBounds() {
-        const ageSelector = document.getElementById('age-selector');
-        const termSlider = document.getElementById('term-selector');
-        const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
-        const genderSelector = document.getElementById('gender-selector');
-
-        if (!ageSelector || !termSlider || !protectionSlider || !premiumSlider) return;
-
-        let ageValue = parseInt(ageSelector.value);
-        let termKey = termSlider.value;
-        let genderValue = genderSelector ? genderSelector.value : "Male"; 
-
-        const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
-        
-        if (!targetTermData || !targetTermData.protectionProfiles) { 
-            renderEmptyState(); 
-            return; 
-        }
-
-        const availableTiers = Object.keys(targetTermData.protectionProfiles).map(Number).sort((a, b) => a - b);
-        
-        if (availableTiers.length === 0) {
-            renderEmptyState();
-            return;
-        }
-
-        const absoluteMin = availableTiers[0];
-        const absoluteMax = availableTiers[availableTiers.length - 1];
-        
-        // Safeguard protection boundaries from updating if locked during presentation
-        if (!isComparing) {
-            protectionSlider.min = absoluteMin;
-            protectionSlider.max = absoluteMax;
-
-            let rawSliderVal = parseInt(protectionSlider.value);
-            let closestTier = availableTiers.reduce((prev, curr) => {
-                return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
-            });
-            protectionSlider.value = closestTier;
-        }
-
-        let protectionValue = protectionSlider.value.toString();
-        const scenarioData = targetTermData.protectionProfiles[protectionValue];
-
-        if (scenarioData && scenarioData.sustainable70Scenario) {
-            const floorPremium = scenarioData.sustainable70Scenario.premiumAmount;
-            const pMin = scenarioData.leastPremiumScenario.premiumAmount;
-            const pMid = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
-            const maxPremium = scenarioData.maxPremiumScenario.premiumAmount;
-            
-            premiumSlider.min = floorPremium;
-            premiumSlider.max = maxPremium;
-            
-            let currentSliderVal = parseInt(premiumSlider.value);
-            if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
-                premiumSlider.value = floorPremium; 
+            if (currentHour < 12) {
+                greetingList = [
+                    "Good morning. Let’s start strong today. ☀️",
+                    "Good morning. Workspace initialized and ready for production. ⚙️",
+                    "Good morning. Setting the pace for an elite day. 📈",
+                    "Good morning. New day, next-level execution. 🎯",
+                    "Good morning. Your operational dashboard is locked and loaded. 🖥️",
+                    "Good morning. Let's map out the wins for today. 🚀",
+                    "Good morning. System status: Optimal. Ready to deploy. ⚡",
+                    "Good morning. Time to streamline operations right from the jump. ⏱️",
+                    "Good morning. Fresh session initiated. Let's make it count. 💎",
+                    "Good morning. Clear skies and high conviction ahead. 🧭"
+                ];
+            } else if (currentHour < 17) {
+                greetingList = [
+                    "Good afternoon. Powering through the day! ☕",
+                    "Good afternoon. Maintaining peak momentum. ⚡",
+                    "Good afternoon. Halfway through—let’s finish the day strong. 💪",
+                    "Good afternoon. Mid-day status: Operational and tracking perfectly. 📊",
+                    "Good afternoon. Next-level calculations await your review. 📱",
+                    "Good afternoon. Stay focused, stay streamlined. 💼",
+                    "Good afternoon. Dive straight back into the flow. 🌊",
+                    "Good afternoon. The Universe is moving fast today; let's keep pace. 🌐",
+                    "Good afternoon. Keeping compliance and efficiency locked down. 🛡️",
+                    "Good afternoon. Ready to finalize today's key targets. 🏁"
+                ];
+            } else {
+                greetingList = [
+                    "Good evening. Wrapping up production like a pro. 🏁",
+                    "Good evening. Securing the day’s wins. 🔒",
+                    "Good evening. Reviewing operations and closing files cleanly. 📁",
+                    "Good evening. Another high-conviction day in the books. 📚",
+                    "Good evening. Logging the final details of a successful run. 📝",
+                    "Good evening. System standby sequence ready when you are. ⏸️",
+                    "Good evening. Protecting what matters most, around the clock. 🌌",
+                    "Good evening. Final session check complete. Excellent progress today. ✨",
+                    "Good evening. Great execution today. Ready to transition to rest. 🔋",
+                    "Good evening. Closing out strong. The Universe rests when you do. 🧘🏽‍♂️"
+                ];
             }
 
-            const datalist = document.getElementById('pi-points');
-            if (datalist) {
-                datalist.innerHTML = ''; 
-                const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
-                premiumMilestones.forEach(premium => {
-                    const option = document.createElement('option');
-                    option.value = premium;
-                    datalist.appendChild(option);
+            const randomIndex = Math.floor(Math.random() * greetingList.length);
+            document.getElementById("welcome-heading").textContent = greetingList[randomIndex];
+        });
+    </script>
+
+    <!-- Carousel Logic Controller -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const track = document.getElementById("carouselTrack");
+            const slides = document.querySelectorAll(".carousel-slide");
+            const prevBtn = document.getElementById("prevSlideBtn");
+            const nextBtn = document.getElementById("nextSlideBtn");
+            const dots = document.querySelectorAll(".dot");
+
+            if (!track || slides.length === 0) return;
+
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+
+            function updateCarousel(index) {
+                currentIndex = index;
+                // Move track horizontally
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+                // Update arrow disabled states
+                if (prevBtn) prevBtn.disabled = currentIndex === 0;
+                if (nextBtn) nextBtn.disabled = currentIndex === totalSlides - 1;
+
+                // Update dots
+                dots.forEach((dot, idx) => {
+                    dot.classList.toggle("active", idx === currentIndex);
                 });
             }
-        }
-        executeSimulationEngine();
-    }
-              
-    /**
-     * Primary Insurance Simulation and Interpolation Core Engine
-     */
-    async function executeSimulationEngine() {
-        const ageSelector = document.getElementById('age-selector');
-        const termSlider = document.getElementById('term-selector');
-        const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
-        const genderSelector = document.getElementById('gender-selector');
 
-        if (!ageSelector || !termSlider || !protectionSlider || !premiumSlider) return;
-
-        let ageValue = parseInt(ageSelector.value);
-        let termKey = termSlider.value;
-        let simulatedPremium = parseInt(premiumSlider.value);
-        let genderValue = genderSelector ? genderSelector.value : "Male";
-
-        const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
-        if (!targetTermData || !targetTermData.protectionProfiles) { 
-            renderEmptyState(); 
-            return; 
-        }
-
-        const availableTiers = Object.keys(targetTermData.protectionProfiles).map(Number).sort((a, b) => a - b);
-        let rawSliderVal = parseInt(protectionSlider.value);
-        let protectionValue = availableTiers.reduce((prev, curr) => {
-            return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
-        }).toString();
-
-        if (!targetTermData.protectionProfiles[protectionValue]) {
-            renderEmptyState();
-            return;
-        }
-
-        const scenarioData = targetTermData.protectionProfiles[protectionValue];
-
-        if (!scenarioData || !scenarioData.sustainable70Scenario) {
-            renderEmptyState();
-            return;
-        }
-
-        const pFloor = scenarioData.sustainable70Scenario.premiumAmount;
-        const pMin   = scenarioData.leastPremiumScenario.premiumAmount;
-        const pMid   = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
-        const pMax   = scenarioData.maxPremiumScenario.premiumAmount;
-
-        const premiumMilestones = [pFloor, pMin, pMid, pMax];
-        const sliderRange = pMax - pFloor;
-        const snapThreshold = sliderRange * 0.025; 
-        
-        let isExactAnchor = false;
-
-        for (let milestone of premiumMilestones) {
-            if (Math.abs(simulatedPremium - milestone) <= snapThreshold) {
-                premiumSlider.value = milestone;
-                simulatedPremium = milestone;
-                isExactAnchor = true;
-                break;
-            }
-        }
-
-        // --- SILK SMOOTH VIEWBOX TRANSITION ENGINE ---
-        const svgElement = document.querySelector('.chart-container svg');
-        const graphWrapper = document.querySelector('.graph-wrapper');
-
-        if (svgElement && graphWrapper) {
-            let zoomProgress = 0;
-            if (simulatedPremium > pMid && pMax > pMid) {
-                zoomProgress = (simulatedPremium - pMid) / (pMax - pMid);
-                zoomProgress = Math.min(Math.max(zoomProgress, 0), 1);
-                zoomProgress = zoomProgress * zoomProgress * (3 - 2 * zoomProgress);
+            if (prevBtn) {
+                prevBtn.addEventListener("click", () => {
+                    if (currentIndex > 0) updateCarousel(currentIndex - 1);
+                });
             }
 
-            const currentX      = 0   + (200 * zoomProgress);
-            const currentY      = 0   + (20   * zoomProgress);
-            const currentWidth  = 600 - (200 * zoomProgress);
-            const currentHeight = 220 - (20   * zoomProgress);
-
-            svgElement.setAttribute('viewBox', `${currentX} ${currentY} ${currentWidth} ${currentHeight}`);
-
-            if (simulatedPremium > pMid) {
-                graphWrapper.classList.add('focus-growth');
-            } else {
-                graphWrapper.classList.remove('focus-growth');
+            if (nextBtn) {
+                nextBtn.addEventListener("click", () => {
+                    if (currentIndex < totalSlides - 1) updateCarousel(currentIndex + 1);
+                });
             }
-        }    
 
-        // Calculate proportions across scenarios
-        let baseScenario, topScenario, proportion;
-
-        if (simulatedPremium <= pMin) {
-            baseScenario = scenarioData.sustainable70Scenario;
-            topScenario = scenarioData.leastPremiumScenario;
-            proportion = (pMin === pFloor) ? 0 : (simulatedPremium - pFloor) / (pMin - pFloor);
-        } else if (simulatedPremium <= pMid) {
-            baseScenario = scenarioData.leastPremiumScenario;
-            topScenario = scenarioData.midPremiumScenario;
-            proportion = (pMid === pMin) ? 0 : (simulatedPremium - pMin) / (pMid - pMin);
-        } else {
-            baseScenario = scenarioData.midPremiumScenario;
-            topScenario = scenarioData.maxPremiumScenario;
-            proportion = (pMax === pMid) ? 0 : (simulatedPremium - pMid) / (pMax - pMid);
-        }
-
-        // Generate current simulated live array values data points
-        let simulatedMilestones = [];
-        for (let i = 0; i < 6; i++) {
-            let v1 = baseScenario.milestones[i].accountValue;
-            let v2 = topScenario.milestones[i].accountValue;
-            let interpolatedValue = Math.round(v1 + proportion * (v2 - v1));
-            
-            simulatedMilestones.push({
-                policyYear: baseScenario.milestones[i].policyYear,
-                ageNext: baseScenario.milestones[i].ageNext,
-                accountValue: interpolatedValue
+            dots.forEach(dot => {
+                dot.addEventListener("click", (e) => {
+                    const targetIndex = parseInt(e.target.getAttribute("data-index"), 10);
+                    updateCarousel(targetIndex);
+                });
             });
-        }
-
-        // Commit tracking arrays to global scope to feed matrix operations
-        simulatedMilestonesGlobal = simulatedMilestones;
-
-        const badgePi = document.getElementById('badge-pi');
-        const badgeSim = document.getElementById('badge-sim');
-        
-        if (badgePi) badgePi.classList.toggle('active-pi', isExactAnchor);
-        if (badgeSim) badgeSim.classList.toggle('active-sim', !isExactAnchor);
-
-        updateUIOutputs(simulatedPremium, simulatedMilestones, pMin, scenarioData);
-
-        // --- DYNAMICALLY UPDATE THE LIVE PREMIUM (B) IN THE UI ---
-        const livePremiumDisplay = document.getElementById('live-premium-display');
-        if (livePremiumDisplay && !isNaN(simulatedPremium)) {
-            // Formats number to standard readable syntax (e.g., RM 45,000/yr)
-            livePremiumDisplay.textContent = `RM ${simulatedPremium.toLocaleString()}/yr`;
-        }
-
-        // Dynamic side-by-side verification updater
-        if (isComparing) {
-            calculateComparisonMatrix(simulatedPremium);
-        }
-    }
-
-    /**
-     * Safety Fallback Default Matrix Handlers
-     */
-    function renderEmptyState() {
-        const premiumDisplay = document.getElementById('premium-display');
-        if (premiumDisplay) premiumDisplay.innerText = "Data Stream Empty";
-        
-        // --- RESET THE COMPARISON BADGES ---
-        const pinnedDisplay = document.getElementById('pinned-premium-display');
-        const liveDisplay = document.getElementById('live-premium-display');
-        if (pinnedDisplay) pinnedDisplay.innerText = "RM --";
-        if (liveDisplay) liveDisplay.innerText = "RM --";
-
-        const badgePi = document.getElementById('badge-pi');
-        const badgeSim = document.getElementById('badge-sim');
-        if (badgePi) badgePi.classList.remove('active-pi');
-        if (badgeSim) badgeSim.classList.remove('active-sim');
-
-        for (let i = 1; i <= 5; i++) {
-            const valEl = document.getElementById(`val-${i}`);
-            const cardEl = document.getElementById(`card-${i}`);
-            if (valEl) valEl.innerText = "RM --";
-            if (cardEl) cardEl.classList.remove('unsustainable-alert');
-        }
-        
-        const mainRibbon = document.getElementById('main-ribbon');
-        const glowRibbon = document.getElementById('glow-ribbon');
-        const shadowArea = document.getElementById('shadow-area');
-        if (mainRibbon) mainRibbon.setAttribute('d', '');
-        if (glowRibbon) glowRibbon.setAttribute('d', '');
-        if (shadowArea) shadowArea.setAttribute('d', '');
-    }
-    
-    /**
-     * Refreshes DOM structural values, maps coordinates, and injects dynamic scales
-     */
-    function updateUIOutputs(premium, milestones, pMinBoundary, scenarioData) {
-        const protectionSlider = document.getElementById('protection-slider');
-        if (!protectionSlider) return;
-
-        const currentProtection = parseInt(protectionSlider.value);
-        const formattedProtection = `RM ${(currentProtection / 1000000) % 1 === 0 ? (currentProtection / 1000000).toFixed(1) : (currentProtection / 1000000).toFixed(2)}M`;
-
-        const mainDisplay = document.getElementById('protection-display-value');
-        if (mainDisplay) mainDisplay.innerText = formattedProtection;
-
-        const deathField = document.getElementById('benefit-death');
-        const ccField = document.getElementById('benefit-cc');
-        const accidentalField = document.getElementById('benefit-accidental');
-
-        if (deathField) deathField.innerText = formattedProtection;
-        if (ccField) ccField.innerText = formattedProtection;
-        if (accidentalField) accidentalField.innerText = formattedProtection;
-
-        const premiumDisplay = document.getElementById('premium-display');
-        if (premiumDisplay) premiumDisplay.innerText = `RM ${premium.toLocaleString()}/yr`;
-
-        // 1. EXTRACT LIVE INTERPOLATED VALUES MATRIX
-        const valuesList = milestones.map(m => {
-            if (typeof m.accountValue === 'number') return m.accountValue;
-            if (typeof m.accountValue === 'string') {
-                const cleaned = m.accountValue.replace(/[^0-9.]/g, '');
-                return parseFloat(cleaned) || 0;
-            }
-            return 0;
         });
-        
-        const localMax = Math.max(...valuesList, 10);
-
-        // 2. FIXED ANTI-OVERSHOOT AUTOMATIC CEILING SELECTOR
-        let dynamicChartCeiling = 100000;
-        if (localMax > 100000) {
-            dynamicChartCeiling = Math.ceil(localMax / 100000) * 100000;
-        }
-        if (dynamicChartCeiling > 1000000) {
-            dynamicChartCeiling = Math.ceil(localMax / 500000) * 500000;
-        }
-
-        // 3. UPDATE APPLE THEME Y-AXIS SCALE CONTENT FIELD DIRECTLY
-        const dynamicYLabel = document.getElementById('dynamic-y-axis-label');
-        if (dynamicYLabel) {
-            dynamicYLabel.textContent = `SCALE: RM ${parseInt(dynamicChartCeiling).toLocaleString()} MAX`;
-        }
-
-        let pMid = pMinBoundary || 1500;
-        let pMax = premium > pMid ? premium * 1.3 : 300000;
-
-        if (scenarioData) {
-            if (scenarioData.maxPremiumScenario) pMax = scenarioData.maxPremiumScenario.premiumAmount || pMax;
-            if (scenarioData.midPremiumScenario) pMid = scenarioData.midPremiumScenario.premiumAmount || pMid;
-        }
-
-        // --- LIQUID HORIZONTAL X-AXIS INTERPOLATION ENGINE ---
-        let xCoordinates = [];
-        const standardX = [40, 150, 260, 370, 480, 570];
-        const growthX   = [20, 80,  150, 260, 400, 580];
-
-        let layoutProgress = 0;
-        if (premium > pMid && pMax > pMid) {
-            layoutProgress = (premium - pMid) / (pMax - pMid);
-            layoutProgress = Math.min(Math.max(layoutProgress, 0), 1);
-            layoutProgress = layoutProgress * layoutProgress * (3 - 2 * layoutProgress);
-        }
-
-        for (let i = 0; i < 6; i++) {
-            const interpolatedX = standardX[i] + (growthX[i] - standardX[i]) * layoutProgress;
-            xCoordinates.push(interpolatedX);
-        }
-
-        // SECURE GEOMETRIC SVG HEIGHT SCALER LIFT
-        function toSvgY(val) {
-            const cleanVal = isNaN(val) ? 0 : val;
-            return 180 - ((cleanVal / dynamicChartCeiling) * 140);
-        }
-
-        const activeCoords = [];
-
-        for (let i = 0; i < 6; i++) {
-            const milestone = milestones[i];
-            const value = milestone.accountValue;
-            
-            const axisEl = document.getElementById(`axis-${i}`);
-            if (axisEl) {
-                axisEl.textContent = ''; 
-                axisEl.textContent = `Yr ${milestone.policyYear} (Age ${milestone.ageNext})`;
-                axisEl.setAttribute('x', xCoordinates[i]); 
-            }
-
-            if (i > 0) {
-                const lblEl = document.getElementById(`lbl-${i}`);
-                const valEl = document.getElementById(`val-${i}`);
-                const cardEl = document.getElementById(`card-${i}`);
-
-                if (lblEl) {
-                    lblEl.innerText = `Policy Yr ${milestone.policyYear} (Age ${milestone.ageNext})`;
-                }
-                
-                if (valEl && cardEl) {
-                    if (i === 5 && premium < pMinBoundary) {
-                        valEl.innerText = "Not Sustainable";
-                        cardEl.classList.add('unsustainable-alert');
-                    } else {
-                        valEl.innerText = `RM ${value.toLocaleString()}`;
-                        cardEl.classList.remove('unsustainable-alert');
-                    }
-                }
-            }
-
-            const cx = xCoordinates[i];
-            const cy = toSvgY(value);
-            const nodeEl = document.getElementById(`node-${i}`);
-
-            if (nodeEl) {
-                nodeEl.setAttribute('cx', cx);
-                nodeEl.setAttribute('cy', cy);
-            }
-            activeCoords.push({ x: cx, y: cy });
-        }
-
-        const smoothSplinePath = getSmoothBezierPath(activeCoords);
-        const mainRibbon = document.getElementById('main-ribbon');
-        const glowRibbon = document.getElementById('glow-ribbon');
-        const shadowArea = document.getElementById('shadow-area');
-        
-        if (mainRibbon) mainRibbon.setAttribute('d', smoothSplinePath);
-        if (glowRibbon) glowRibbon.setAttribute('d', smoothSplinePath);
-        
-        if (shadowArea && activeCoords.length > 0) {
-            const closedPath = `${smoothSplinePath} L ${activeCoords[activeCoords.length - 1].x} 180 L ${activeCoords[0].x} 180 Z`;
-            shadowArea.setAttribute('d', closedPath);
-        }
-
-        // Toggle warnings for downslope projections dynamically
-        const isDownslope = (premium < pMinBoundary);
-        const gradEnd = document.getElementById('gradient-end');
-        const glowGradEnd = document.getElementById('glow-gradient-end');
-
-        if (isDownslope) {
-            if (gradEnd) gradEnd.setAttribute('stop-color', 'var(--warning-glow)');
-            if (glowGradEnd) glowGradEnd.setAttribute('stop-color', 'var(--warning-glow)');
-            const node5 = document.getElementById(`node-5`);
-            if (node5) node5.style.stroke = 'var(--neon-red)';
-        } else {
-            if (gradEnd) gradEnd.setAttribute('stop-color', '#00d2ff');
-            if (glowGradEnd) glowGradEnd.setAttribute('stop-color', '#00d2ff');
-            for (let i = 0; i < 6; i++) { 
-                const nodeEl = document.getElementById(`node-${i}`);
-                if (nodeEl) nodeEl.style.stroke = ''; 
-            }
-        }
-
-        // ==========================================================================
-        // ADVANCED ANALYSIS DESK METRIC CALCULATION ENGINE
-        // ==========================================================================
-        const termSelector = document.getElementById('term-selector');
-        let payYears = 6;
-        if (termSelector.value === 'pay10') payYears = 10;
-        if (termSelector.value === 'pay20') payYears = 20;
-
-        let totalPremiumPaid = premium * payYears;
-        let year35AccountValue = milestones[5].accountValue;
-
-        let amortizedNetCost = (totalPremiumPaid - year35AccountValue) / 35;
-        const valNetCostEl = document.getElementById('val-net-cost');
-        if (valNetCostEl) {
-            if (premium < pMinBoundary) {
-                valNetCostEl.innerText = "Lapse Risk";
-                valNetCostEl.style.color = "var(--neon-red)";
-            } else {
-                valNetCostEl.innerText = (amortizedNetCost < 0 ? "-" : "") + "RM " + Math.abs(Math.round(amortizedNetCost)).toLocaleString();
-                valNetCostEl.style.color = amortizedNetCost < 0 ? "var(--neon-green)" : "var(--text-main)";
-            }
-        }
-
-        const valCost100kEl = document.getElementById('val-cost-100k');
-        if (valCost100kEl) {
-            if (premium < pMinBoundary) {
-                valCost100kEl.innerText = "N/A";
-                valCost100kEl.style.color = "var(--text-muted)";
-            } else {
-                let costPer100K = (amortizedNetCost / (currentProtection / 100000));
-                valCost100kEl.innerText = (costPer100K < 0 ? "-" : "") + "RM " + Math.abs(Math.round(costPer100K)).toLocaleString();
-                valCost100kEl.style.color = costPer100K < 0 ? "var(--neon-green)" : "var(--text-main)";
-            }
-        }
-
-        const valLeverageEl = document.getElementById('val-leverage-factor');
-        if (valLeverageEl) {
-            let protectionLeverageRatio = currentProtection / Math.max(totalPremiumPaid, 1);
-            valLeverageEl.innerText = protectionLeverageRatio.toFixed(2) + "x";
-            valLeverageEl.style.color = "var(--secondary-glow)";
-        }
-
-        const valPreservationEl = document.getElementById('val-preservation-factor');
-        if (valPreservationEl) {
-            let retainedEquityRatio = (year35AccountValue / Math.max(totalPremiumPaid, 1)) * 100;
-            if (premium < pMinBoundary) {
-                valPreservationEl.innerText = "0.0%";
-                valPreservationEl.style.color = "var(--neon-red)";
-            } else {
-                valPreservationEl.innerText = retainedEquityRatio.toFixed(1) + "%";
-                valPreservationEl.style.color = retainedEquityRatio >= 100 ? "var(--neon-green)" : "var(--neon-amber)";
-            }
-        }
-    }
-
-    // ==========================================================================
-    // PRESENTATION SIDE-BY-SIDE SNAPSHOT ENGINE
-    // ==========================================================================
-    function toggleScenarioPin() {
-        const pinBtn = document.getElementById('pin-scenario-btn');
-        const protectionSlider = document.getElementById('protection-slider');
-        const modeSelectors = document.querySelectorAll('.mode-btn');
-
-        // 1. Fetch what the active premium slider is currently sitting at
-        const premiumSlider = document.getElementById('premium-slider');
-        if (!premiumSlider) return;
-
-        const currentPremiumVal = parseInt(premiumSlider.value);
-        
-        // 2. Format and inject into the Premium A UI Badge
-        const pinnedPremiumDisplay = document.getElementById('pinned-premium-display');
-        if (pinnedPremiumDisplay && !isNaN(currentPremiumVal)) {
-            pinnedPremiumDisplay.textContent = `RM ${currentPremiumVal.toLocaleString()}/yr`;
-        }
-
-        if (!isComparing) {
-            // Lock Scenario A (Baseline) Data Structures
-            if (simulatedMilestonesGlobal.length === 0) return;
-            
-            baselineSnapshot = JSON.parse(JSON.stringify(simulatedMilestonesGlobal));
-            pinnedPremiumValue = parseInt(premiumSlider.value);
-            isComparing = true;
-
-            // Enforce Operational Constraint: Clamping the Protection parameters
-            if (protectionSlider) {
-                protectionSlider.disabled = true;
-                protectionSlider.style.opacity = '0.35';
-                protectionSlider.style.cursor = 'not-allowed';
-            }
-            
-            // Lock out mode selection to protect calculation symmetry
-            modeSelectors.forEach(btn => {
-                btn.style.opacity = '0.4';
-                btn.style.pointerEvents = 'none';
-            });
-
-            if (pinBtn) {
-                pinBtn.innerHTML = '<span>🔓</span> Reset Baseline';
-                pinBtn.style.background = 'rgba(255, 69, 58, 0.15)';
-                pinBtn.style.color = '#ff453a';
-                pinBtn.style.borderColor = '#ff453a';
-            }
-            
-            // Fire matrix compilation engine
-            calculateComparisonMatrix(parseInt(premiumSlider.value));
-        } else {
-            // Release snapshot storage and restore standard inputs
-            baselineSnapshot = null;
-            pinnedPremiumValue = null;
-            isComparing = false;
-
-            if (protectionSlider) {
-                protectionSlider.disabled = (currentMode === 'protection'); // Match operational mode rules
-                protectionSlider.style.opacity = '1';
-                protectionSlider.style.cursor = 'pointer';
-            }
-
-            modeSelectors.forEach(btn => {
-                btn.style.opacity = '1';
-                btn.style.pointerEvents = 'auto';
-            });
-
-            if (pinBtn) {
-                pinBtn.innerHTML = '<span>📌</span> Pin Scenario A';
-                pinBtn.style.background = 'rgba(0, 210, 255, 0.1)';
-                pinBtn.style.color = 'var(--secondary-glow)';
-                pinBtn.style.borderColor = 'rgba(0, 210, 255, 0.3)';
-            }
-
-            // Restore comparison interface to standard empty placeholder state
-            const tableBody = document.getElementById('comparison-matrix-body');
-            if (tableBody) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
-                            No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
-                        </td>
-                    </tr>`;
-            }
-        }
-    }
-
-    function calculateComparisonMatrix(currentLivePremium) {
-        if (!isComparing || !baselineSnapshot || simulatedMilestonesGlobal.length === 0) return;
-
-        const tableBody = document.getElementById('comparison-matrix-body');
-        if (!tableBody) return;
-
-        const termSelector = document.getElementById('term-selector');
-        let payYears = 6;
-        if (termSelector.value === 'pay10') payYears = 10;
-        if (termSelector.value === 'pay20') payYears = 20;
-
-        let htmlRows = '';
-
-        // Generate out-of-pocket metrics
-        let totalOutlayA = pinnedPremiumValue * payYears;
-        let totalOutlayB = currentLivePremium * payYears;
-        let outlayDelta = totalOutlayB - totalOutlayA;
-
-        // Step through timeline milestones index-by-index synchronously
-        simulatedMilestonesGlobal.forEach((milestoneB, i) => {
-            const milestoneA = baselineSnapshot[i];
-            if (!milestoneA) return;
-
-            let valA = milestoneA.accountValue;
-            let valB = milestoneB.accountValue;
-            let valDelta = valB - valA;
-
-            let deltaClass = valDelta >= 0 ? 'net-gain-green' : 'net-loss-red';
-            let deltaPrefix = valDelta >= 0 ? '+' : '';
-
-            htmlRows += `
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;">
-                    <td style="padding: 14px 12px; font-weight: 600; color: var(--text-main); font-size: 13px;">
-                        Yr ${milestoneB.policyYear} <span style="display:block; font-size:11px; color:var(--text-muted); font-weight:400;">Age ${milestoneB.ageNext}</span>
-                    </td>
-                    <td style="padding: 14px 12px; font-size: 13px; color: rgba(255,255,255,0.85);">
-                        RM ${valA.toLocaleString()}
-                    </td>
-                    <td style="padding: 14px 12px; font-size: 13px; color: var(--text-main); font-weight: 500;">
-                        RM ${valB.toLocaleString()}
-                    </td>
-                    <td style="padding: 14px 12px; font-size: 13px; font-weight: 600;" class="${deltaClass}">
-                        ${deltaPrefix}RM ${valDelta.toLocaleString()}
-                    </td>
-                </tr>`;
-        });
-
-        // Inject cumulative aggregate row directly at bottom boundary
-        let structuralOutlayClass = outlayDelta <= 0 ? 'net-gain-green' : 'net-loss-red';
-        let structuralOutlayPrefix = outlayDelta > 0 ? '+' : '';
-
-        htmlRows += `
-            <tr style="background: rgba(255,255,255,0.03); font-weight: 600;">
-                <td style="padding: 16px 12px; color: var(--secondary-glow); font-size: 13px;">TOTAL PREMIUM PAID</td>
-                <td style="padding: 16px 12px; font-size: 13px; color: var(--text-muted);">RM ${totalOutlayA.toLocaleString()}</td>
-                <td style="padding: 16px 12px; font-size: 13px; color: var(--text-main);">RM ${totalOutlayB.toLocaleString()}</td>
-                <td style="padding: 16px 12px; font-size: 13px;" class="${structuralOutlayClass}">
-                    ${structuralOutlayPrefix}RM ${outlayDelta.toLocaleString()}
-                </td>
-            </tr>`;
-
-        tableBody.innerHTML = htmlRows;
-    }
-
-    // System Initialization Entry Trigger
-    document.addEventListener("DOMContentLoaded", () => {
-        // Force clear out the comparison matrix on fresh page loads
-        const tableBody = document.getElementById('comparison-matrix-body');
-        if (tableBody) {
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; font-style: italic;">
-                        No operational baseline locked. Click "Pin Scenario A" to populate side-by-side premium efficiency variance matrix.
-                    </td>
-                </tr>`;
-        }
-
-        // Initialize with Premium mode active by default to unlock the sliders
-        setMode('premium'); 
-    });
+    </script>
     
-    /**
-     * Interface Folder Tab Toggle Manager
-     */
-    function switchFolderTab(panelId, tabElement) {
-        const tabContainer = tabElement.parentElement;
-        tabContainer.querySelectorAll('.folder-tab').forEach(tab => {
-            tab.classList.remove('active-tab');
-        });
-        
-        const parentContainer = tabContainer.parentElement;
-        parentContainer.querySelectorAll('.tab-panel').forEach(panel => {
-            panel.classList.remove('active-panel');
-        });
-        
-        tabElement.classList.add('active-tab');
-        document.getElementById(panelId).classList.add('active-panel');
-        
-        // Force refresh table updates when moving to comparison tab
-        if (panelId === 'comparison-panel' && isComparing) {
-            const premiumSlider = document.getElementById('premium-slider');
-            if (premiumSlider) calculateComparisonMatrix(parseInt(premiumSlider.value));
-        }
-    }
-
-// ==========================================================================
-// PRODUCT FEATURE SUITE OVERLAY CONTROLLER
-// ==========================================================================
-let activeTab = 1; 
-let currentPage = 1;
-
-const tabPagesConfig = {
-    1: 3, // Tab 1 (Manulife Heritage) has 3 pages
-    2: 3, // Tab 2 (Critical Cover) has 3 pages
-    3: 1  // Tab 3 (Accidental Death Benefit) has 1 page
-};
-
-function openFeaturePresentation() {
-    const presentation = document.getElementById('presentation-overlay');
-    if (presentation) {
-        presentation.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Lock system scroll
-        switchProductTab(1); 
-    }
-}
-
-function closeFeaturePresentation() {
-    const presentation = document.getElementById('presentation-overlay');
-    if (presentation) {
-        presentation.style.display = 'none';
-        document.body.style.overflow = ''; // Release system scroll
-    }
-}
-
-// Switches categories (Tabs)
-function switchProductTab(tabIndex) {
-    activeTab = tabIndex;
-    currentPage = 1; 
-    
-    // Toggle Active Styles Header Buttons
-    document.querySelectorAll('.mac-segment-btn').forEach((btn, i) => {
-        btn.classList.toggle('active', (i + 1) === tabIndex);
-    });
-
-    // Synchronize display framework states across parent tabs
-    document.getElementById('product-tab-1').style.display = (tabIndex === 1) ? 'block' : 'none';
-    document.getElementById('product-tab-2').style.display = (tabIndex === 2) ? 'block' : 'none';
-    document.getElementById('product-tab-3').style.display = (tabIndex === 3) ? 'block' : 'none';
-
-    renderCurrentViewState();
-}
-
-// Navigates internal pages
-function navigatePage(direction) {
-    const maxPages = tabPagesConfig[activeTab];
-    const targetPage = currentPage + direction;
-    
-    if (targetPage >= 1 && targetPage <= maxPages) {
-        currentPage = targetPage;
-        renderCurrentViewState();
-    }
-}
-
-function renderCurrentViewState() {
-    const maxPages = tabPagesConfig[activeTab];
-
-    // FIX: Only loop through and hide views inside the CURRENT active tab 
-    // to prevent display states from breaking across hidden containers
-    const currentTabContainer = document.getElementById(`product-tab-${activeTab}`);
-    if (currentTabContainer) {
-        currentTabContainer.querySelectorAll('.presentation-page-view').forEach(view => {
-            view.style.display = 'none';
-        });
-    }
-
-    // Display the specific active target page structure
-    const targetViewId = `tab${activeTab}-page-${currentPage}`;
-    const targetView = document.getElementById(targetViewId);
-    if (targetView) {
-        targetView.style.display = 'block';
-    }
-
-    // Scroll back to top smoothly if text runs long
-    const bodyScroll = document.getElementById('modal-scroll-body');
-    if (bodyScroll) bodyScroll.scrollTop = 0;
-
-    // Sync structural UI pagination footer values
-    document.getElementById('presentation-page-indicator').textContent = `Page ${currentPage} of ${maxPages}`;
-    
-    // Setup Back button actions
-    const prevBtn = document.getElementById('prev-page-btn');
-    if (prevBtn) {
-        prevBtn.disabled = (currentPage === 1);
-        prevBtn.onclick = function() {
-            navigatePage(-1);
-        };
-    }
-    
-    // Setup Next button states and conditional redirection targets
-    const nextBtn = document.getElementById('next-page-btn');
-    if (nextBtn) {
-        if (currentPage === maxPages) {
-            if (activeTab === 1 || activeTab === 2) {
-                nextBtn.textContent = 'Next Tab';
-            } else {
-                nextBtn.textContent = 'Done';
-            }
-        } else {
-            nextBtn.textContent = 'Next';
-        }
-
-        nextBtn.onclick = function() {
-            if (currentPage === maxPages) {
-                if (activeTab === 1) {
-                    switchProductTab(2); 
-                } else if (activeTab === 2) {
-                    switchProductTab(3); 
-                } else {
-                    closeFeaturePresentation(); 
-                }
-            } else {
-                navigatePage(1);
-            }
-        };
-    }
-}
-
-/**
- * Updates the header discount badges based on the current protection slider value.
- * @param {number} value - The raw numeric value from your protection slider (e.g. 750000)
- */
-function updateDiscountIndicators(value) {
-    const mccBadge = document.getElementById('badge-mcc');
-    const mccValueText = document.getElementById('mcc-value');
-    const heritageBadge = document.getElementById('badge-heritage');
-    const heritageValueText = document.getElementById('heritage-value');
-
-    if (!mccBadge || !heritageBadge) return;
-
-    // Reset default values
-    let mccRate = "0%";
-    let heritageRate = "0%";
-    let isMccActive = false;
-    let isHeritageActive = false;
-
-    // Evaluate Protection Slider thresholds
-    if (value >= 1000000) {
-        // RM1,000,000 and above: Concurrently lights up both
-        mccRate = "10%";
-        heritageRate = "20%";
-        isMccActive = true;
-        isHeritageActive = true;
-    } else if (value >= 749000) {
-        // RM749,000 to RM999,999
-        mccRate = "10%";
-        isMccActive = true;
-        isHeritageActive = false;
-    } else if (value >= 500000) {
-        // RM500,000 to RM748,999
-        mccRate = "5%";
-        isMccActive = true;
-        isHeritageActive = false;
-    } else {
-        // Below RM500,000
-        isMccActive = false;
-        isHeritageActive = false;
-    }
-
-    // Update Text Content
-    mccValueText.textContent = mccRate;
-    heritageValueText.textContent = heritageRate;
-
-// Toggle Active UI States
-    if (isMccActive) {
-        mccBadge.classList.add('discount-active');
-        mccBadge.classList.remove('standard-rate');
-    } else {
-        mccBadge.classList.remove('discount-active');
-        mccBadge.classList.add('standard-rate');
-    }
-
-    if (isHeritageActive) {
-        heritageBadge.classList.add('discount-active');
-        heritageBadge.classList.remove('standard-rate');
-    } else {
-        heritageBadge.classList.remove('discount-active');
-        heritageBadge.classList.add('standard-rate');
-    }
-}
-
-// Example Slider Hookup:
-// Replace 'protection-slider' with the actual ID of your slider input element.
-const sliderElement = document.getElementById('protection-slider');
-if (sliderElement) {
-    sliderElement.addEventListener('input', (e) => {
-        const sliderValue = Number(e.target.value);
-        updateDiscountIndicators(sliderValue);
-    });
-}
-
-// Test this simple structure in your handler
-if (isFemaleSelected) {
-    document.body.classList.add('theme-female');
-} else {
-    document.body.classList.remove('theme-female');
-}    
-</script>
-
-</body>
-</html>
-
 </body>
 </html>
