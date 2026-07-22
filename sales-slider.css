@@ -66,7 +66,7 @@ header h1 {
     align-items: center;
     gap: 0.5rem;
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 0.7rem;
@@ -75,9 +75,7 @@ header h1 {
     text-transform: uppercase;
     color: var(--text-muted);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    
-    /* NEW: Prevents badges from shrinking or wrapping text internally */
-    flex-shrink: 0;          
+    flex-shrink: 0;         
     white-space: nowrap;     
 }
 
@@ -91,29 +89,41 @@ header h1 {
 
 .status-badge.active-pi {
     color: var(--neon-green);
-    background: rgba(0, 255, 136, 0.04);
-    border-color: rgba(0, 255, 136, 0.25);
-    box-shadow: 0 0 12px rgba(0, 255, 136, 0.1);
+    background: rgba(48, 209, 88, 0.06);
+    border-color: rgba(48, 209, 88, 0.25);
+    box-shadow: 0 0 12px rgba(48, 209, 88, 0.12);
 }
 
+/* Default Theme (Male / Dark) */
 .status-badge.active-sim {
-    color: #BF5AF2; /* Vivid Electric Purple */
-    background: rgba(191, 90, 242, 0.04);
+    color: #BF5AF2; 
+    background: rgba(191, 90, 242, 0.06);
     border-color: rgba(191, 90, 242, 0.25);
-    box-shadow: 0 0 12px rgba(191, 90, 242, 0.1);
+    box-shadow: 0 0 12px rgba(191, 90, 242, 0.12);
     animation: statusPulse 2s infinite alternate;
 }
 
-/* Optional: If your badges have an inner indicator dot, update it too */
 .status-badge.active-sim .dot {
-    background-color: #BF5AF2 !important;
-    box-shadow: 0 0 8px #BF5AF2 !important;
+    background-color: currentColor !important;
+    box-shadow: 0 0 8px currentColor !important;
 }
 
-
 @keyframes statusPulse {
-    0% { box-shadow: 0 0 4px rgba(255, 170, 0, 0.05); }
-    100% { box-shadow: 0 0 14px rgba(255, 170, 0, 0.2); }
+    0% { box-shadow: 0 0 4px rgba(191, 90, 242, 0.1); }
+    100% { box-shadow: 0 0 14px rgba(191, 90, 242, 0.35); }
+}
+
+/* Female Theme High-Contrast Override */
+.theme-female .status-badge.active-sim {
+    color: #ff9eba;                                    /* Luminous Rose Gold */
+    background: rgba(255, 158, 186, 0.08);
+    border-color: rgba(255, 158, 186, 0.4);
+    animation: statusPulseFemale 2s infinite alternate;
+}
+
+@keyframes statusPulseFemale {
+    0% { box-shadow: 0 0 4px rgba(255, 158, 186, 0.15); }
+    100% { box-shadow: 0 0 14px rgba(255, 158, 186, 0.45); }
 }
 
 .terminal-container {
