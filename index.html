@@ -6,7 +6,7 @@
     <title>Manulife Heritage - Advanced Visualisation Terminal</title>
     <link rel="stylesheet" href="sales-slider.css">
 </head>
-<body>
+<body>F
 
 <div id="compliance-gatekeeper" class="gatekeeper-overlay">
     <div class="gatekeeper-modal">
@@ -877,78 +877,85 @@
     /**
      * Recalibrates structural bounds, step constraints, and min/max slider ticks
      */
-    async function recalibrateSliderBounds() {
-        const ageSelector = document.getElementById('age-selector');
-        const termSlider = document.getElementById('term-selector');
-        const protectionSlider = document.getElementById('protection-slider');
-        const premiumSlider = document.getElementById('premium-slider');
-        const genderSelector = document.getElementById('gender-selector');
+   async function recalibrateSliderBounds() {
+    const ageSelector = document.getElementById('age-selector');
+    const termSlider = document.getElementById('term-selector');
+    const protectionSlider = document.getElementById('protection-slider');
+    const premiumSlider = document.getElementById('premium-slider');
+    const genderSelector = document.getElementById('gender-selector');
 
-        if (!ageSelector || !termSlider || !protectionSlider || !premiumSlider) return;
+    if (!ageSelector || !termSlider || !protectionSlider || !premiumSlider) return;
 
-        let ageValue = parseInt(ageSelector.value);
-        let termKey = termSlider.value;
-        let genderValue = genderSelector ? genderSelector.value : "Male"; 
+    let ageValue = parseInt(ageSelector.value);
+    let termKey = termSlider.value;
+    let genderValue = genderSelector ? genderSelector.value : "Male"; 
 
-        const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
-        
-        if (!targetTermData || !targetTermData.protectionProfiles) { 
-            renderEmptyState(); 
-            return; 
-        }
-
-        const availableTiers = Object.keys(targetTermData.protectionProfiles).map(Number).sort((a, b) => a - b);
-        
-        if (availableTiers.length === 0) {
-            renderEmptyState();
-            return;
-        }
-
-        const absoluteMin = availableTiers[0];
-        const absoluteMax = availableTiers[availableTiers.length - 1];
-        
-        // Safeguard protection boundaries from updating if locked during presentation
-        if (!isComparing) {
-            protectionSlider.min = absoluteMin;
-            protectionSlider.max = absoluteMax;
-
-            let rawSliderVal = parseInt(protectionSlider.value);
-            let closestTier = availableTiers.reduce((prev, curr) => {
-                return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
-            });
-            protectionSlider.value = closestTier;
-        }
-
-        let protectionValue = protectionSlider.value.toString();
-        const scenarioData = targetTermData.protectionProfiles[protectionValue];
-
-        if (scenarioData && scenarioData.sustainable70Scenario) {
-            const floorPremium = scenarioData.sustainable70Scenario.premiumAmount;
-            const pMin = scenarioData.leastPremiumScenario.premiumAmount;
-            const pMid = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
-            const maxPremium = scenarioData.maxPremiumScenario.premiumAmount;
-            
-            premiumSlider.min = floorPremium;
-            premiumSlider.max = maxPremium;
-            
-            let currentSliderVal = parseInt(premiumSlider.value);
-            if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
-                premiumSlider.value = floorPremium; 
-            }
-
-            const datalist = document.getElementById('pi-points');
-            if (datalist) {
-                datalist.innerHTML = ''; 
-                const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
-                premiumMilestones.forEach(premium => {
-                    const option = document.createElement('option');
-                    option.value = premium;
-                    datalist.appendChild(option);
-                });
-            }
-        }
-        executeSimulationEngine();
+    // === THEME TOGGLE FOR FEMALE SELECTION ===
+    if (genderValue === 'Female') {
+        document.body.classList.add('theme-female');
+    } else {
+        document.body.classList.remove('theme-female');
     }
+
+    const targetTermData = await fetchQuotationProfile(genderValue, ageValue, termKey);
+    
+    if (!targetTermData || !targetTermData.protectionProfiles) { 
+        renderEmptyState(); 
+        return; 
+    }
+
+    const availableTiers = Object.keys(targetTermData.protectionProfiles).map(Number).sort((a, b) => a - b);
+    
+    if (availableTiers.length === 0) {
+        renderEmptyState();
+        return;
+    }
+
+    const absoluteMin = availableTiers[0];
+    const absoluteMax = availableTiers[availableTiers.length - 1];
+    
+    // Safeguard protection boundaries from updating if locked during presentation
+    if (!isComparing) {
+        protectionSlider.min = absoluteMin;
+        protectionSlider.max = absoluteMax;
+
+        let rawSliderVal = parseInt(protectionSlider.value);
+        let closestTier = availableTiers.reduce((prev, curr) => {
+            return (Math.abs(curr - rawSliderVal) < Math.abs(prev - rawSliderVal)) ? curr : prev;
+        });
+        protectionSlider.value = closestTier;
+    }
+
+    let protectionValue = protectionSlider.value.toString();
+    const scenarioData = targetTermData.protectionProfiles[protectionValue];
+
+    if (scenarioData && scenarioData.sustainable70Scenario) {
+        const floorPremium = scenarioData.sustainable70Scenario.premiumAmount;
+        const pMin = scenarioData.leastPremiumScenario.premiumAmount;
+        const pMid = scenarioData.midPremiumScenario ? scenarioData.midPremiumScenario.premiumAmount : pMin;
+        const maxPremium = scenarioData.maxPremiumScenario.premiumAmount;
+        
+        premiumSlider.min = floorPremium;
+        premiumSlider.max = maxPremium;
+        
+        let currentSliderVal = parseInt(premiumSlider.value);
+        if (isNaN(currentSliderVal) || currentSliderVal < floorPremium || currentSliderVal > maxPremium) {
+            premiumSlider.value = floorPremium; 
+        }
+
+        const datalist = document.getElementById('pi-points');
+        if (datalist) {
+            datalist.innerHTML = ''; 
+            const premiumMilestones = [floorPremium, pMin, pMid, maxPremium];
+            premiumMilestones.forEach(premium => {
+                const option = document.createElement('option');
+                option.value = premium;
+                datalist.appendChild(option);
+            });
+        }
+    }
+    executeSimulationEngine();
+}
               
     /**
      * Primary Insurance Simulation and Interpolation Core Engine
