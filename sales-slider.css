@@ -1049,3 +1049,63 @@ div#presentation-overlay[style*="display: none"] {
     0% { box-shadow: 0 0 4px rgba(255, 184, 0, 0.05); }
     100% { box-shadow: 0 0 14px rgba(255, 184, 0, 0.25); }
 }
+
+/* ==========================================================================
+   FEMALE-FRIENDLY THEME PALETTE
+   ========================================================================== */
+
+.theme-female {
+    /* Base Surface Colors */
+    --bg-color: #0d0914;                            /* Deep midnight plum */
+    --card-bg: #181124;                              /* Rich warm violet container background */
+    --border-color: rgba(255, 182, 193, 0.14);       /* Soft rose gold border tint */
+    
+    /* Typography Colors */
+    --text-main: #fff2f7;                            /* Lavender blush main text */
+    --text-muted: #9f8ba8;                           /* Muted orchid secondary text */
+    
+    /* Primary Accent & Glow Elements */
+    --primary-glow: #e056fd;                        /* Electric orchid/rose focus */
+    --secondary-glow: #ff79a8;                      /* Soft pink/rose gold secondary glow */
+    --warning-glow: #ffbe76;                        /* Warm peach indicator */
+    
+    /* Highlights & Indicators */
+    --neon-green: #30d158;
+    --neon-amber: #ff9f0a;
+    --neon-red: #ff453a;
+}
+
+/* ==========================================================================
+   APPLE-STYLE FLUID COLOR TRANSITION
+   ========================================================================== */
+
+/* Universal color transition mapping for UI components */
+body, 
+header, 
+footer,
+div, 
+span, 
+button, 
+input, 
+select, 
+.control-panel, 
+.display-viewport,
+.graph-wrapper,
+.indicators-panel,
+.milestone-card,
+.benefit-breakdown,
+.select-styled,
+.mode-btn {
+    transition: 
+        background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Transitions for SVG chart lines and nodes */
+svg, path, text, .axis-label {
+    transition: 
+        stroke 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        fill 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
