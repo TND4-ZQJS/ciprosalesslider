@@ -605,148 +605,195 @@ footer {
 }
 
 /* ==========================================================================
-   COMPLIANCE GATEKEEPER OVERLAY & MODAL
+   COMPLIANCE GATEKEEPER - MODERN ENTERPRISE UI
    ========================================================================== */
 
 #compliance-gatekeeper,
 .gatekeeper-overlay {
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+    inset: 0 !important;
     width: 100vw !important;
     height: 100dvh !important;
-    inset: 0 !important;
-    
-    background-color: rgba(6, 9, 19, 0.82) !important;
+    background-color: rgba(6, 9, 19, 0.85) !important;
     backdrop-filter: blur(16px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-    
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    
-    z-index: 2147483647 !important; /* Highest layer level */
-    padding: 20px !important;
+    z-index: 2147483647 !important;
+    padding: 16px !important;
     box-sizing: border-box !important;
 }
 
-/* Ensure hidden state works cleanly when dismissed */
 #compliance-gatekeeper[style*="display: none"],
 .gatekeeper-overlay.is-hidden {
     display: none !important;
     pointer-events: none !important;
 }
 
-/* Modal Container - Expanded Width */
+/* Modal Card */
 .gatekeeper-modal {
-    background: rgba(28, 28, 30, 0.96);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #1c1c1e;
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 20px;
-    padding: 2rem;               /* Generous inner padding */
-    max-width: 540px;            /* Widened from 380px to accommodate text comfortably */
-    width: 92%;                  /* Clean margins on smaller displays/tablets */
-    max-height: 85vh;
+    padding: 1.75rem;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
-    text-align: left;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden; /* Internal scrolling handled inside body */
 }
 
-/* Header */
-.gatekeeper-modal h2 {
+/* Modal Header */
+.gatekeeper-header {
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 1rem;
+}
+
+.gatekeeper-header h2 {
     color: #ffffff;
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    margin: 0 0 1rem 0;
-    line-height: 1.35;
+    margin: 0 0 0.4rem 0;
+    line-height: 1.3;
     letter-spacing: -0.01em;
-    text-align: left;
 }
 
-/* Disclaimer / Mode Explanation Box */
-.gatekeeper-pidm-badge {
-    background-color: rgba(241, 245, 249, 0.06);
-    border-left: 4px solid #00a859; /* Manulife Green */
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px;
-    font-size: 0.84rem;
-    color: #e2e8f0;
-    margin: 0 0 1.25rem 0;
-    line-height: 1.55;
-    text-align: left;
-}
-
-/* Body Text */
-.gatekeeper-modal p {
-    color: #e1e1e6;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin: 0 0 1rem 0;
-    text-align: left;
-}
-
-/* Disclaimer Scroll Box */
-.disclaimer-scroll-box {
-    max-height: 150px;           /* Slightly taller scroll area */
-    overflow-y: auto;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 14px;
-    background: rgba(0, 0, 0, 0.3);
-    margin: 0 0 1.25rem 0;
-    border-radius: 10px;
-    text-align: left;
-}
-
-.disclaimer-scroll-box .secondary-text {
+.gatekeeper-subtitle {
     color: #a1a1a6;
     font-size: 0.82rem;
-    line-height: 1.55;
     margin: 0;
-    text-align: left;
+    line-height: 1.4;
 }
 
-/* Checkbox Alignment */
+/* Scrollable Content Body */
+.gatekeeper-body {
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-bottom: 1.25rem;
+}
+
+/* Mode Explanation Grid */
+.gatekeeper-mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.mode-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.mode-card.highlight {
+    border-color: rgba(0, 168, 89, 0.4);
+    background: rgba(0, 168, 89, 0.05);
+}
+
+.mode-card-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mode-card-title .badge-tag {
+    background: #00a859;
+    color: #ffffff;
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.mode-card-desc {
+    font-size: 0.78rem;
+    color: #c7c7cc;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Compliance Notes Box */
+.gatekeeper-legal-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.8rem;
+    color: #8e8e93;
+    line-height: 1.5;
+}
+
+.gatekeeper-legal-box p {
+    margin: 0 0 8px 0;
+}
+
+.gatekeeper-legal-box p:last-child {
+    margin: 0;
+}
+
+.gatekeeper-legal-box a {
+    color: #34c759;
+    text-decoration: none;
+}
+
+.gatekeeper-legal-box a:hover {
+    text-decoration: underline;
+}
+
+/* Modal Footer / Actions */
+.gatekeeper-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 0.5rem;
+}
+
 .gatekeeper-checkbox-label {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    font-size: 0.85rem;
+    gap: 10px;
+    font-size: 0.82rem;
     color: #d1d1d6;
-    line-height: 1.45;
-    margin: 0 0 1.5rem 0;
+    line-height: 1.4;
     cursor: pointer;
     user-select: none;
-    text-align: left;
 }
 
 .gatekeeper-checkbox-label input[type="checkbox"] {
-    margin-top: 2px;
-    width: 18px;
-    height: 18px;
+    margin-top: 1px;
+    width: 17px;
+    height: 17px;
     flex-shrink: 0;
     accent-color: #00a859;
     cursor: pointer;
 }
 
-/* Action Button */
+/* Button States */
 .gatekeeper-btn {
     background: #ffffff;
     color: #000000;
-    border: 1px solid transparent;
-    padding: 14px 24px;
-    font-size: 0.95rem;
+    border: none;
+    padding: 12px 20px;
+    font-size: 0.9rem;
     font-weight: 600;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     width: 100%;
     text-align: center;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    opacity: 1;
+    transition: all 0.2s ease;
 }
 
 .gatekeeper-btn:hover:not(:disabled) {
@@ -758,15 +805,20 @@ footer {
     transform: scale(0.98);
 }
 
-/* Dimmed Disabled State */
 .gatekeeper-btn:disabled {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     cursor: not-allowed;
     opacity: 0.5;
     transform: none;
-    box-shadow: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .gatekeeper-mode-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .net-gain-green { color: #30d158 !important; }
