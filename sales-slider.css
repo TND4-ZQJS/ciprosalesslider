@@ -1303,3 +1303,22 @@ svg, path, text, .axis-label {
     color: #00a859; /* Brand green */
     transform: translateX(2px);
 }
+
+/* Hidden by default */
+.metric-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 9, 19, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: none; /* Keeps it hidden initially */
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    padding: 20px;
+}
+
+/* Shown when active class is added by JS */
+.metric-modal-overlay.active {
+    display: flex !important; /* Forces it to show up */
+}
