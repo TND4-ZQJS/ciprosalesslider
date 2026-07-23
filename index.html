@@ -368,7 +368,7 @@
         </div>
     </div>
 
-<!-- METRIC EXPLANATION OVERLAY MODAL -->
+<--! Metric Explanation-->
 <div id="metric-modal" class="metric-modal-overlay" onclick="closeMetricModal(event)">
   <div class="metric-modal-card">
     <button class="metric-modal-close" onclick="closeMetricModalForce()">&times;</button>
@@ -392,13 +392,16 @@
         <code id="modal-metric-formula">Formula...</code>
       </div>
 
+      <!-- DYNAMIC NET SURPLUS CALLOUT BOX (NEW) -->
+      <div id="modal-surplus-note" class="metric-surplus-box" style="display: none;"></div>
+
       <div class="metric-takeaway-box">
         <strong>💡 Key Insight for Clients:</strong>
         <p id="modal-metric-takeaway">Takeaway...</p>
       </div>
     </div>
   </div>
-</div>    
+</div>   
     
 <!-- ==========================================================================
    PRODUCT FEATURES SYSTEM PRESENTATION CORE LAYER
@@ -1920,14 +1923,18 @@ const metricDataStore = {
     valueElementId: 'val-net-cost',
     getDesc: (years) => `Calculates the true average annual out-of-pocket cost of funding the policy over a ${years}-year horizon (to Age 80), netting out accumulated cash values.`,
     getFormula: (years) => `(Total Premiums Paid - Account Value at Age 80) ÷ ${years} Years`,
-    getTakeaway: (years) => `Shows the effective annual cost to maintain your coverage across the ${years}-year holding period once cash growth is factored in.`
+    getTakeaway: (years) => `Shows the effective annual cost to maintain your coverage across the ${years}-year holding period once cash growth is factored in.`,
+    // Dynamic explanation when value is negative
+    getSurplusNote: (years) => `🎉 <strong>Net Surplus Advantage:</strong> A negative cost means your accumulated Account Value at Age 80 exceeds total premiums paid. Your life coverage has effectively cost <strong>RM 0</strong>, while yielding an average annual net gain across the ${years}-year period!`
   },
   'cost-100k': {
     title: 'Net Leverage Cost / 100K',
     valueElementId: 'val-cost-100k',
     getDesc: (years) => `Standardizes the annual net cost of coverage per RM 100,000 of sum assured based on the ${years}-year horizon to Age 80.`,
     getFormula: (years) => `(Amortized Net Cost / Yr) ÷ (Sum Assured ÷ 100,000)`,
-    getTakeaway: (years) => `Allows side-by-side efficiency comparisons across different plan sizes or policy structures.`
+    getTakeaway: (years) => `Allows side-by-side efficiency comparisons across different plan sizes or policy structures.`,
+    // Dynamic explanation when value is negative
+    getSurplusNote: (years) => `🎉 <strong>Negative Cost Efficiency:</strong> You are receiving a net financial return while holding every RM 100,000 of coverage, as cash growth surpasses the cost of insurance and charges.`
   },
   'leverage-factor': {
     title: 'Capital Leverage Multiplier',
@@ -1953,25 +1960,34 @@ function openMetricDetail(metricKey) {
   const data = metricDataStore[metricKey];
   if (!data) return;
 
-  // 1. Read the selected age from #age-selector
+  // 1. Read entry age from #age-selector
   const ageSelect = document.getElementById('age-selector');
-  const entryAge = ageSelect ? parseInt(ageSelect.value, 10) : 45; // Defaults to 45 if not found
-  
-  // 2. Compute dynamic horizon duration to Age 80
+  const entryAge = ageSelect ? parseInt(ageSelect.value, 10) : 45;
   const horizonYears = 80 - entryAge;
 
-  // 3. Read live value currently shown on the metric card
+  // 2. Read live metric value currently displayed on the card
   const cardElem = document.getElementById(data.valueElementId);
   const liveCapturedValue = cardElem ? cardElem.textContent.trim() : 'RM --';
 
-  // 4. Inject dynamic content into the overlay modal
+  // 3. Populate standard overlay text
   document.getElementById('modal-metric-title').textContent = data.title;
   document.getElementById('modal-captured-value').textContent = liveCapturedValue;
   document.getElementById('modal-metric-desc').textContent = data.getDesc(horizonYears);
   document.getElementById('modal-metric-formula').textContent = data.getFormula(horizonYears);
   document.getElementById('modal-metric-takeaway').textContent = data.getTakeaway(horizonYears);
 
-  // 5. Display the modal overlay
+  // 4. CHECK FOR SURPLUS (- minus sign detection)
+  const surplusBox = document.getElementById('modal-surplus-note');
+  if (surplusBox) {
+    if (liveCapturedValue.includes('-') && data.getSurplusNote) {
+      surplusBox.innerHTML = data.getSurplusNote(horizonYears);
+      surplusBox.style.display = 'block'; // Show surplus highlight
+    } else {
+      surplusBox.style.display = 'none';  // Hide if positive or zero
+    }
+  }
+
+  // 5. Show Modal Overlay
   const modalElem = document.getElementById('metric-modal');
   if (modalElem) {
     modalElem.classList.add('active');
