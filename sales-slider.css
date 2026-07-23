@@ -21,44 +21,57 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+/* ==========================================================================
+   FIX 1: IPAD VIEWPORT LOCK ENGINE
+   ========================================================================== */
+
+html {
+    width: 100vw;
+    height: 100dvh;
+    overflow: hidden !important;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-main);
-    height: 100vh;
+    height: 100dvh;             /* Dynamic viewport height fixes iPad address bar pushing header top */
     width: 100vw;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: hidden !important; /* Locks entire page to single-screen view */
     -webkit-user-select: none;
     user-select: none;
+    touch-action: none;          /* Stops iPad elastic rubber-band pull */
 }
 
+/* FIX 2: iPad Safe Area Padding on Header */
 header {
-    height: 65px;
-    min-height: 65px;
+    height: auto;
+    min-height: 58px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1.5rem;
+    padding: max(8px, env(safe-area-inset-top)) 1.5rem 8px 1.5rem;
     background-color: var(--card-bg);
+    flex-shrink: 0;             /* Guarantees header never collapses */
 }
 
 header h1 {
     font-size: 1.15rem;
     font-weight: 600;
     letter-spacing: -0.01em;
-    /* FIX: Starts closer to white/lavender, flows into your theme accents */
     background: linear-gradient(135deg, #ffffff 0%, var(--primary-glow) 55%, var(--secondary-glow) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(224, 86, 253, 0.35)) contrast(1.15) brightness(1.2);
 }
 
 .telemetry-rack {
     display: flex;
-    gap: 0.5rem;             /* Keeps badges close together */
+    gap: 0.5rem;             
     align-items: center;
-    flex-wrap: nowrap;       /* STRICTLY forces them onto a single line */
+    flex-wrap: nowrap;       
 }
 
 .status-badge {
@@ -126,45 +139,51 @@ header h1 {
     100% { box-shadow: 0 0 14px rgba(255, 158, 186, 0.45); }
 }
 
+/* ==========================================================================
+   FIX 3: FLEXIBLE GRID & INNER PANEL SCROLL LOCKS
+   ========================================================================== */
+
 .terminal-container {
     flex: 1;
+    min-height: 0;              /* CRITICAL: Allows flex child to contract within 100dvh */
     display: grid;
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: clamp(300px, 30vw, 360px) 1fr;
     overflow: hidden;
 }
 
 .control-panel {
     background-color: var(--card-bg);
     border-right: 1px solid var(--border-color);
-    padding: 1.5rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.25rem;
     overflow-y: auto;
-    width: 380px;
-    min-width: 380px;
-    max-width: 380px;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 .display-viewport {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-height: 0;
 }
 
 .graph-wrapper {
-    padding: 2rem;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     background-color: rgba(13, 18, 34, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .chart-container {
     width: 100%;
     max-width: 900px;
-    height: 240px;
+    height: 220px;              /* Optimized height to preserve space on iPad */
     position: relative;
 }
 
@@ -178,9 +197,11 @@ svg {
 
 .indicators-panel {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
-    padding: 1.5rem;
+    padding: 1.25rem;
     background-color: var(--bg-color);
+    -webkit-overflow-scrolling: touch;
 }
 
 .panel-title {
@@ -188,12 +209,12 @@ svg {
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--text-muted);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
 }
 
 .milestone-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 0.75rem;
 }
 
@@ -378,17 +399,19 @@ svg {
     transition: all 0.4s ease;
 }
 
+/* FIX 4: Footer Safe Area Binding */
 footer {
-    height: 30px;
-    min-height: 30px;
+    height: auto;
+    min-height: 28px;
     background-color: var(--card-bg);
     border-top: 1px solid var(--border-color);
     display: flex;
     align-items: center;
-    padding: 0 1.5rem;
+    padding: 4px 1.5rem max(6px, env(safe-area-inset-bottom)) 1.5rem;
     font-size: 0.68rem;
     color: var(--text-muted);
     letter-spacing: 0.02em;
+    flex-shrink: 0;             /* Guarantees footer never collapses */
 }
 
 .graph-wrapper.focus-growth .early-milestone {
@@ -682,19 +705,16 @@ footer {
 }
 
 .presentation-trigger-btn {
-    /* Promoted Hover Style to Default for High Visibility */
     background: rgba(0, 210, 255, 0.05);
     border: 1px solid rgba(0, 210, 255, 0.35);
     color: var(--secondary-glow);
     box-shadow: 0 0 12px rgba(0, 210, 255, 0.1);
     
-    /* Perfect Center Alignment */
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     
-    /* Layout & Sizing Match */
     padding: 8px 16px;
     border-radius: 6px; 
     font-size: 0.75rem; 
@@ -703,24 +723,21 @@ footer {
     text-transform: uppercase;
     cursor: pointer;
     
-    /* Smooth transitions for tap responses */
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    -webkit-tap-highlight-color: transparent; /* Removes default mobile browser tap box overlay */
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Touch Feedback: Shrinks slightly and flashes brighter when actively pressed */
 .presentation-trigger-btn:active {
     transform: scale(0.96);
     background: rgba(0, 210, 255, 0.15);
     border-color: rgba(0, 210, 255, 0.6);
     box-shadow: 0 0 16px rgba(0, 210, 255, 0.25);
 }
+
 /* ==========================================================================
-   PRODUCTION-READY PREMIUM ARCHITECTURE: MODERN INTEGRATED EYE-CATCHING GLASS UI
+   GLASS UI PRESENTATION MODAL
    ========================================================================== */
 
-/* 1. LAYER STATE AND CLAMP ENGINE CLEARANCES */
-/* FIX: Restrict the display state override strictly to the parent backdrop utility */
 .presentation-modal-backdrop.is-hidden,
 div#presentation-overlay[style*="display: none"] {
     display: none !important;
@@ -729,13 +746,12 @@ div#presentation-overlay[style*="display: none"] {
     opacity: 0 !important;
 }
 
-/* Deep Dynamic Backdrop Frame Metrics - Enhanced Translucency & Scale Depth */
 .presentation-modal-backdrop {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100dvh !important;
     background: radial-gradient(circle at center, rgba(10, 15, 30, 0.12) 0%, rgba(5, 5, 10, 0.35) 100%) !important;
     backdrop-filter: blur(24px) saturate(210%) cubic-bezier(0.16, 1, 0.3, 1) !important;
     -webkit-backdrop-filter: blur(24px) saturate(210%) !important;
@@ -752,16 +768,15 @@ div#presentation-overlay[style*="display: none"] {
     to { opacity: 1; }
 }
 
-/* Master Center Modal Card - High-Grade Chamfered Architectural Shell */
 .presentation-modal-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(250, 252, 255, 0.76) 100%) !important;
     border: 1px solid rgba(255, 255, 255, 0.65) !important;
-    outline: 1px solid rgba(0, 0, 0, 0.03) !important; /* Micro external definition line */
+    outline: 1px solid rgba(0, 0, 0, 0.03) !important;
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.02),
         0 24px 68px rgba(10, 20, 50, 0.15), 
         0 1px 0 rgba(255, 255, 255, 0.4) inset !important;
-    border-radius: 24px !important; /* Smooth hyper-elliptical Apple profile curvature */
+    border-radius: 24px !important;
     width: 92% !important;
     max-width: 660px !important;
     height: 76vh !important;
@@ -782,7 +797,6 @@ div#presentation-overlay[style*="display: none"] {
     100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
 }
 
-/* Polished High-Contrast Header Row */
 .presentation-modal-header-clean {
     display: flex !important;
     justify-content: space-between !important;
@@ -794,7 +808,6 @@ div#presentation-overlay[style*="display: none"] {
     user-select: none !important;
 }
 
-/* Crisp Geometric Title Component */
 .mac-window-title {
     font-size: 18px !important;
     font-weight: 700 !important;
@@ -805,7 +818,6 @@ div#presentation-overlay[style*="display: none"] {
     -webkit-text-fill-color: transparent !important;
 }
 
-/* Sleek Circle Close Control - High-DPI Focus Ring */
 .apple-close-btn {
     background: rgba(0, 0, 0, 0.04) !important;
     border: 1px solid rgba(0, 0, 0, 0.02) !important;
@@ -826,7 +838,7 @@ div#presentation-overlay[style*="display: none"] {
 }
 
 .apple-close-btn:hover {
-    background: rgba(255, 59, 48, 0.12) !important; /* Soft dynamic destructive warning shift */
+    background: rgba(255, 59, 48, 0.12) !important;
     color: #ff3b30 !important;
     border-color: rgba(255, 59, 48, 0.15) !important;
     transform: scale(1.05);
@@ -836,7 +848,6 @@ div#presentation-overlay[style*="display: none"] {
     transform: scale(0.94);
 }
 
-/* Segmented App Navigation Track */
 .mac-segmented-control-container {
     display: flex !important;
     justify-content: center !important;
@@ -846,7 +857,6 @@ div#presentation-overlay[style*="display: none"] {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Segment Capsule Base - Fluid Visual Pill */
 .mac-segmented-control {
     background: rgba(0, 0, 0, 0.05) !important;
     padding: 3px !important;
@@ -857,7 +867,6 @@ div#presentation-overlay[style*="display: none"] {
     position: relative !important;
 }
 
-/* Segment Control Options - Clean Micro-Type Alignment */
 .mac-segment-btn {
     background: transparent !important;
     border: none !important;
@@ -881,17 +890,15 @@ div#presentation-overlay[style*="display: none"] {
     background: rgba(0, 0, 0, 0.03) !important;
 }
 
-/* Elevated Foreground Interactive Switch */
 .mac-segment-btn.active {
     background: #ffffff !important;
-    color: #007AFF !important; /* Thematic focal pop */
+    color: #007AFF !important;
     box-shadow: 
         0 1px 2px rgba(0, 0, 0, 0.04), 
         0 4px 10px rgba(10, 20, 40, 0.06),
         0 0 0 0.5px rgba(0, 0, 0, 0.02) !important;
 }
 
-/* Structural Fluid Document Panel */
 .presentation-modal-body {
     padding: 26px 28px !important;
     overflow-y: auto !important;
@@ -900,7 +907,6 @@ div#presentation-overlay[style*="display: none"] {
     scroll-behavior: smooth !important;
 }
 
-/* High-Contrast Focal Visual Badges */
 .feature-hero-badge {
     display: inline-flex !important;
     padding: 5px 11px !important;
@@ -916,7 +922,6 @@ div#presentation-overlay[style*="display: none"] {
     box-shadow: 0 2px 6px rgba(0, 122, 255, 0.04) !important;
 }
 
-/* Primary Form Copywriting Frameworks */
 .feature-intro-text {
     font-size: 16px !important;
     line-height: 1.5 !important;
@@ -926,7 +931,6 @@ div#presentation-overlay[style*="display: none"] {
     letter-spacing: -0.01em !important;
 }
 
-/* Premium Adaptive Feature Block Assemblies */
 .feature-item-card {
     background: rgba(255, 255, 255, 0.55) !important;
     border: 1px solid rgba(0, 0, 0, 0.04) !important;
@@ -951,7 +955,6 @@ div#presentation-overlay[style*="display: none"] {
     transform: translateY(-1px) !important;
 }
 
-/* Visual Anchor Indicators */
 .feature-icon {
     font-size: 24px !important;
     line-height: 1 !important;
@@ -974,7 +977,6 @@ div#presentation-overlay[style*="display: none"] {
     color: #515154 !important;
 }
 
-/* Bottom Actions Control Strip */
 .presentation-modal-footer {
     padding: 18px 24px !important;
     border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
@@ -986,7 +988,6 @@ div#presentation-overlay[style*="display: none"] {
     backdrop-filter: blur(10px) !important;
 }
 
-/* Standard Secondary Command Interface Elements */
 .footer-nav-btn {
     background: rgba(0, 0, 0, 0.04) !important;
     border: 1px solid rgba(0, 0, 0, 0.01) !important;
@@ -1020,7 +1021,6 @@ div#presentation-overlay[style*="display: none"] {
     background: rgba(0, 0, 0, 0.02) !important;
 }
 
-/* Premium Core Target Action System Button */
 .footer-nav-btn.nav-primary {
     background: linear-gradient(180deg, #007AFF 0%, #0066CC 100%) !important;
     color: #ffffff !important;
@@ -1062,33 +1062,25 @@ div#presentation-overlay[style*="display: none"] {
 }
 
 /* ==========================================================================
-   FEMALE-FRIENDLY THEME PALETTE
+   FEMALE-FRIENDLY THEME PALETTE & SMOOTH MORPH
    ========================================================================== */
 
 .theme-female {
-    /* Base Surface Colors */
     --bg-color: #0d0914;                            /* Deep midnight plum */
     --card-bg: #181124;                              /* Rich warm violet container background */
     --border-color: rgba(255, 182, 193, 0.14);       /* Soft rose gold border tint */
     
-    /* Typography Colors */
     --text-main: #fff2f7;                            /* Lavender blush main text */
     --text-muted: #9f8ba8;                           /* Muted orchid secondary text */
     
-    /* Primary Accent & Glow Elements */
     --primary-glow: #e056fd;                        /* Electric orchid/rose focus */
     --secondary-glow: #ff79a8;                      /* Soft pink/rose gold secondary glow */
     --warning-glow: #ffbe76;                        /* Warm peach indicator */
     
-    /* Highlights & Indicators */
     --neon-green: #30d158;
     --neon-amber: #ff9f0a;
     --neon-red: #ff453a;
 }
-
-/* ==========================================================================
-   APPLE-STYLE FLUID COLOR TRANSITION
-   ========================================================================== */
 
 /* Universal color transition mapping for UI components */
 body, 
@@ -1114,7 +1106,6 @@ select,
         box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Transitions for SVG chart lines and nodes */
 svg, path, text, .axis-label {
     transition: 
         stroke 0.6s cubic-bezier(0.16, 1, 0.3, 1),
