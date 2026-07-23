@@ -1737,6 +1737,36 @@ if (sliderElement) {
         updateDiscountIndicators(sliderValue);
     });
 }
+
+function checkOrientation() {
+  const o = document.getElementById('rotateOverlay');
+  if (!o) return;
+  
+  // Checks if height is greater than width (Portrait mode)
+  if (window.innerHeight > window.innerWidth) {
+    o.classList.add('show');
+  } else {
+    o.classList.remove('show');
+  }
+}
+
+// Event Listeners
+window.addEventListener('resize', () => { 
+  checkOrientation(); 
+  if (typeof pdfDoc !== 'undefined' && pdfDoc) renderPage(pageNum); 
+});
+
+window.addEventListener('orientationchange', () => {
+  // Small delay allows mobile browsers to update window dimensions
+  setTimeout(() => {
+    checkOrientation();
+    if (typeof pdfDoc !== 'undefined' && pdfDoc) renderPage(pageNum);
+  }, 200);
+});
+
+// Run once on initial page load
+document.addEventListener('DOMContentLoaded', checkOrientation);
+
 </script>
 
 </body>
