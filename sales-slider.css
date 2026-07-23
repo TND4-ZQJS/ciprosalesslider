@@ -1468,3 +1468,20 @@ svg, path, text, .axis-label {
     color: #c7c7cc;
     font-size: 0.82rem;
 }
+
+/* Net Surplus Callout Box (For Negative Costs) */
+.metric-surplus-box {
+    background: rgba(0, 200, 83, 0.12) !important;
+    border: 1px solid rgba(0, 200, 83, 0.4) !important;
+    border-radius: 10px !important;
+    padding: 12px 14px !important;
+    margin: 1rem 0 !important;
+    font-size: 0.84rem !important;
+    line-height: 1.45 !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 200, 83, 0.1) !important;
+}
+
+.metric-surplus-box strong {
+    color: #34c759 !important; /* Vibrant Green */
+}
