@@ -604,116 +604,115 @@ footer {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.gatekeeper-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.4s;
-}
-
+/* Modal Container */
 .gatekeeper-modal {
-    background: rgba(30, 30, 32, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(28, 28, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 20px;
-    padding: 2.5rem;
-    max-width: 460px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    padding: 2.25rem;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* Consistent left alignment for all children */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
-.gatekeeper-badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #00d2ff;
-    background: rgba(0, 210, 255, 0.1);
-    padding: 4px 12px;
-    border-radius: 100px;
-    margin-bottom: 1.25rem;
-}
-
+/* Header - Aligned to match the rest of the text */
 .gatekeeper-modal h2 {
     color: #ffffff;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 600;
-    margin: 0 0 1rem 0;
+    margin: 0 0 0.85rem 0;
+    line-height: 1.3;
     letter-spacing: -0.02em;
+    text-align: left; /* Fixed: Changed from centered to left to align with body */
 }
 
+/* PIDM Badge */
+.gatekeeper-pidm-badge {
+    background-color: rgba(241, 245, 249, 0.08);
+    border-left: 4px solid #00a859; /* Manulife Green */
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #e2e8f0;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.45;
+    text-align: left;
+}
+
+/* Body Text */
 .gatekeeper-modal p {
     color: #e1e1e6;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     line-height: 1.5;
     margin: 0 0 1rem 0;
+    text-align: left;
 }
 
-.gatekeeper-modal .secondary-text {
-    color: var(--text-muted, #a1a1a6);
+/* Disclaimer Scroll Box */
+.disclaimer-scroll-box {
+    max-height: 140px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.25);
+    margin: 0 0 1.25rem 0;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.disclaimer-scroll-box .secondary-text {
+    color: #a1a1a6;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin: 0;
+    text-align: left;
+}
+
+/* Checkbox Alignment Fix */
+.gatekeeper-checkbox-label {
+    display: flex;
+    align-items: flex-start; /* Aligns checkbox to top line of text */
+    gap: 12px;
     font-size: 0.85rem;
+    color: #d1d1d6;
     line-height: 1.4;
-    margin-bottom: 2rem;
+    margin: 0 0 1.5rem 0;
+    cursor: pointer;
+    user-select: none;
+    text-align: left;
 }
 
+.gatekeeper-checkbox-label input[type="checkbox"] {
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0; /* Ensures checkbox won't shrink/distort */
+    accent-color: #00a859;
+    cursor: pointer;
+}
+
+/* Action Button */
 .gatekeeper-btn {
     background: #ffffff;
     color: #000000;
     border: none;
-    padding: 12px 32px;
+    padding: 14px 24px;
     font-size: 0.95rem;
     font-weight: 600;
     border-radius: 12px;
     cursor: pointer;
     width: 100%;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-align: center; /* Button text stays centered */
+    transition: all 0.2s ease;
 }
 
-.gatekeeper-btn:hover {
-    background: #e5e5ea;
-}
-
-.gatekeeper-btn:active {
-    transform: scale(0.98);
-}
-
-.gatekeeper-hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-/* Styling for PIDM Badge in Modal */
-.gatekeeper-pidm-badge {
-  background-color: #f1f5f9;
-  border-left: 4px solid #00a859; /* Manulife Green */
-  padding: 10px 14px;
-  font-size: 0.8rem;
-  color: #334155;
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-.disclaimer-scroll-box {
-  max-height: 120px;
-  overflow-y: auto;
-  border: 1px solid #e2e8f0;
-  padding: 10px;
-  background: #fafafa;
-  margin: 10px 0;
-  border-radius: 4px;
-}
 
 
 .net-gain-green { color: #30d158 !important; }
