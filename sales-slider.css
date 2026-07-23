@@ -639,19 +639,19 @@ footer {
     pointer-events: none !important;
 }
 
-/* Modal Container - Compact & Centered */
+/* Modal Container - Expanded Width */
 .gatekeeper-modal {
-    background: rgba(28, 28, 30, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 18px;
-    padding: 1.5rem;             /* Compact inner padding */
-    max-width: 380px;            /* Sleek, non-wide card width */
-    width: 88%;                  /* Clean margins on narrower viewports */
+    background: rgba(28, 28, 30, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+    padding: 2rem;               /* Generous inner padding */
+    max-width: 540px;            /* Widened from 380px to accommodate text comfortably */
+    width: 92%;                  /* Clean margins on smaller displays/tablets */
     max-height: 85vh;
     display: flex;
     flex-direction: column;
     text-align: left;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     box-sizing: border-box;
     overflow-y: auto;
@@ -660,52 +660,52 @@ footer {
 /* Header */
 .gatekeeper-modal h2 {
     color: #ffffff;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: 600;
-    margin: 0 0 0.75rem 0;
-    line-height: 1.3;
-    letter-spacing: -0.02em;
+    margin: 0 0 1rem 0;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
     text-align: left;
 }
 
-/* PIDM Badge */
+/* Disclaimer / Mode Explanation Box */
 .gatekeeper-pidm-badge {
-    background-color: rgba(241, 245, 249, 0.08);
-    border-left: 4px solid #00a859; /* Brand Green */
-    border-radius: 0 6px 6px 0;
-    padding: 8px 12px;
-    font-size: 0.78rem;
+    background-color: rgba(241, 245, 249, 0.06);
+    border-left: 4px solid #00a859; /* Manulife Green */
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    font-size: 0.84rem;
     color: #e2e8f0;
-    margin: 0 0 1rem 0;
-    line-height: 1.4;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.55;
     text-align: left;
 }
 
 /* Body Text */
 .gatekeeper-modal p {
     color: #e1e1e6;
-    font-size: 0.85rem;
-    line-height: 1.45;
-    margin: 0 0 0.85rem 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin: 0 0 1rem 0;
     text-align: left;
 }
 
 /* Disclaimer Scroll Box */
 .disclaimer-scroll-box {
-    max-height: 120px;
+    max-height: 150px;           /* Slightly taller scroll area */
     overflow-y: auto;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.25);
-    margin: 0 0 1rem 0;
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.3);
+    margin: 0 0 1.25rem 0;
+    border-radius: 10px;
     text-align: left;
 }
 
 .disclaimer-scroll-box .secondary-text {
     color: #a1a1a6;
-    font-size: 0.78rem;
-    line-height: 1.45;
+    font-size: 0.82rem;
+    line-height: 1.55;
     margin: 0;
     text-align: left;
 }
@@ -714,11 +714,11 @@ footer {
 .gatekeeper-checkbox-label {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    font-size: 0.82rem;
+    gap: 12px;
+    font-size: 0.85rem;
     color: #d1d1d6;
-    line-height: 1.4;
-    margin: 0 0 1.25rem 0;
+    line-height: 1.45;
+    margin: 0 0 1.5rem 0;
     cursor: pointer;
     user-select: none;
     text-align: left;
@@ -726,22 +726,22 @@ footer {
 
 .gatekeeper-checkbox-label input[type="checkbox"] {
     margin-top: 2px;
-    width: 17px;
-    height: 17px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
     accent-color: #00a859;
     cursor: pointer;
 }
 
-/* Action Button - Active State */
+/* Action Button */
 .gatekeeper-btn {
     background: #ffffff;
     color: #000000;
     border: 1px solid transparent;
-    padding: 12px 20px;
-    font-size: 0.9rem;
+    padding: 14px 24px;
+    font-size: 0.95rem;
     font-weight: 600;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     width: 100%;
     text-align: center;
@@ -758,16 +758,17 @@ footer {
     transform: scale(0.98);
 }
 
-/* Action Button - Dimmed Disabled State */
+/* Dimmed Disabled State */
 .gatekeeper-btn:disabled {
-    background: rgba(255, 255, 255, 0.08); /* Dim translucent fill */
-    color: rgba(255, 255, 255, 0.25);       /* Dimmed text */
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.05);
     cursor: not-allowed;
-    opacity: 0.5;                            /* Lowered opacity */
+    opacity: 0.5;
     transform: none;
     box-shadow: none;
 }
+
 .net-gain-green { color: #30d158 !important; }
 .net-loss-red { color: #ff453a !important; }
 
