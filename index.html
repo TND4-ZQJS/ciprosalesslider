@@ -1914,58 +1914,64 @@ window.addEventListener('orientationchange', () => {
    METRIC EXPLANATION MODAL & DYNAMIC DATA HANDLER
    ========================================================================== */
 
-// 1. Map metric keys to your DOM element IDs and compliance descriptions
 const metricDataStore = {
   'net-cost': {
     title: 'Amortized Net Cost / Yr',
     valueElementId: 'val-net-cost',
-    desc: 'Calculates the true average annual out-of-pocket cost of funding the policy over a 35-year horizon, netting out accumulated cash values.',
-    formula: '(Total Premiums Paid - Account Value at Yr 35) ÷ 35 Years',
-    takeaway: 'Shows the effective annual cost to maintain your coverage once cash growth is factored in.'
+    getDesc: (years) => `Calculates the true average annual out-of-pocket cost of funding the policy over a ${years}-year horizon (to Age 80), netting out accumulated cash values.`,
+    getFormula: (years) => `(Total Premiums Paid - Account Value at Age 80) ÷ ${years} Years`,
+    getTakeaway: (years) => `Shows the effective annual cost to maintain your coverage across the ${years}-year holding period once cash growth is factored in.`
   },
   'cost-100k': {
     title: 'Net Leverage Cost / 100K',
     valueElementId: 'val-cost-100k',
-    desc: 'Standardizes the annual net cost of coverage per RM 100,000 of sum assured to evaluate cost-efficiency.',
-    formula: '(Amortized Net Cost / Yr) ÷ (Sum Assured ÷ 100,000)',
-    takeaway: 'Allows side-by-side efficiency comparisons across different plan sizes or policy structures.'
+    getDesc: (years) => `Standardizes the annual net cost of coverage per RM 100,000 of sum assured based on the ${years}-year horizon to Age 80.`,
+    getFormula: (years) => `(Amortized Net Cost / Yr) ÷ (Sum Assured ÷ 100,000)`,
+    getTakeaway: (years) => `Allows side-by-side efficiency comparisons across different plan sizes or policy structures.`
   },
   'leverage-factor': {
     title: 'Capital Leverage Multiplier',
     valueElementId: 'val-leverage-factor',
-    desc: 'Measures how many times over the total policy death benefit payout exceeds the cumulative premium outlay at Year 35.',
-    formula: 'Total Sum Assured ÷ Total Premiums Paid',
-    takeaway: 'A higher multiplier reflects stronger estate creation per ringgit invested.'
+    getDesc: (years) => `Measures how many times over the total policy death benefit payout exceeds cumulative premium outlay at Age 80 (${years} policy years).`,
+    getFormula: (years) => `Total Sum Assured ÷ Total Premiums Paid`,
+    getTakeaway: (years) => `A higher multiplier reflects stronger estate creation per ringgit invested.`
   },
   'preservation-factor': {
     title: 'Equity Retention Yield',
     valueElementId: 'val-preservation-factor',
-    desc: 'Evaluates capital preservation by comparing accumulated cash account values against cumulative premium outlay.',
-    formula: '(Account Value at Yr 35 ÷ Total Premiums Paid) × 100%',
-    takeaway: 'Demonstrates how much of your total premium outlay is recovered as liquid account value at Year 35.'
+    getDesc: (years) => `Evaluates capital preservation by comparing accumulated account value at Age 80 against cumulative premium outlay.`,
+    getFormula: (years) => `(Account Value at Age 80 ÷ Total Premiums Paid) × 100%`,
+    getTakeaway: (years) => `Demonstrates how much of your total premium outlay is recovered as liquid account value at Age 80.`
   }
 };
 
 /**
- * Opens the detail overlay modal and injects captured live data + explanations
+ * Opens the detail overlay modal and injects captured live data + dynamic age-based explanations
  * @param {string} metricKey - Key matching metricDataStore ('net-cost', 'cost-100k', etc.)
  */
 function openMetricDetail(metricKey) {
   const data = metricDataStore[metricKey];
   if (!data) return;
 
-  // A. Read live calculated figure directly from the card DOM
+  // 1. Read the selected age from #age-selector
+  const ageSelect = document.getElementById('age-selector');
+  const entryAge = ageSelect ? parseInt(ageSelect.value, 10) : 45; // Defaults to 45 if not found
+  
+  // 2. Compute dynamic horizon duration to Age 80
+  const horizonYears = 80 - entryAge;
+
+  // 3. Read live value currently shown on the metric card
   const cardElem = document.getElementById(data.valueElementId);
   const liveCapturedValue = cardElem ? cardElem.textContent.trim() : 'RM --';
 
-  // B. Populate overlay modal elements
+  // 4. Inject dynamic content into the overlay modal
   document.getElementById('modal-metric-title').textContent = data.title;
   document.getElementById('modal-captured-value').textContent = liveCapturedValue;
-  document.getElementById('modal-metric-desc').textContent = data.desc;
-  document.getElementById('modal-metric-formula').textContent = data.formula;
-  document.getElementById('modal-metric-takeaway').textContent = data.takeaway;
+  document.getElementById('modal-metric-desc').textContent = data.getDesc(horizonYears);
+  document.getElementById('modal-metric-formula').textContent = data.getFormula(horizonYears);
+  document.getElementById('modal-metric-takeaway').textContent = data.getTakeaway(horizonYears);
 
-  // C. Display the modal overlay
+  // 5. Display the modal overlay
   const modalElem = document.getElementById('metric-modal');
   if (modalElem) {
     modalElem.classList.add('active');
@@ -1990,13 +1996,6 @@ function closeMetricModalForce() {
     modalElem.classList.remove('active');
   }
 }
-
-// Optional: Allow pressing the 'Escape' key on keyboard to dismiss overlay
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') {
-    closeMetricModalForce();
-  }
-});
 
 
 </script>
