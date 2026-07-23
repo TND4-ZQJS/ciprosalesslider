@@ -1754,34 +1754,91 @@ if (sliderElement) {
     });
 }
 
-function checkOrientation() {
-  const o = document.getElementById('rotateOverlay');
-  if (!o) return;
-  
-  // Checks if height is greater than width (Portrait mode)
-  if (window.innerHeight > window.innerWidth) {
-    o.classList.add('show');
-  } else {
-    o.classList.remove('show');
+/**
+ * Compliance Gatekeeper & Orientation Management
+ */
+
+// 1. Initialise event listeners when DOM content is ready
+document.addEventListener('DOMContentLoaded', () => {
+  initGatekeeper();
+  checkOrientation();
+});
+
+// 2. Gatekeeper Logic
+function initGatekeeper() {
+  const checkbox = document.getElementById('gatekeeper-ack');
+  const proceedBtn = document.getElementById('gatekeeper-proceed-btn');
+  const gatekeeper = document.getElementById('compliance-gatekeeper');
+  const appContainer = document.getElementById('app-container');
+
+  // Check if session was already accepted previously in this session
+  if (sessionStorage.getItem('manulife_disclaimer_accepted') === 'true') {
+    if (gatekeeper) gatekeeper.style.display = 'none';
+    if (appContainer) appContainer.classList.remove('app-locked');
+    return;
+  }
+
+  // Handle checkbox change state
+  if (checkbox && proceedBtn) {
+    checkbox.addEventListener('change', (e) => {
+      proceedBtn.disabled = !e.target.checked;
+    });
   }
 }
 
-// Event Listeners
-window.addEventListener('resize', () => { 
-  checkOrientation(); 
-  if (typeof pdfDoc !== 'undefined' && pdfDoc) renderPage(pageNum); 
+function dismissGatekeeper() {
+  const gatekeeper = document.getElementById('compliance-gatekeeper');
+  const appContainer = document.getElementById('app-container');
+  const checkbox = document.getElementById('gatekeeper-ack');
+
+  // Security check: ensure checkbox is ticked before proceeding
+  if (checkbox && !checkbox.checked) return;
+
+  // Save audit trail to sessionStorage
+  sessionStorage.setItem('manulife_disclaimer_accepted', 'true');
+  sessionStorage.setItem('manulife_disclaimer_timestamp', new Date().toISOString());
+
+  // Hide modal and unlock app UI
+  if (gatekeeper) gatekeeper.style.display = 'none';
+  if (appContainer) appContainer.classList.remove('app-locked');
+
+  // Trigger initial orientation check once unlocked
+  checkOrientation();
+}
+
+// 3. Orientation Management Logic
+function checkOrientation() {
+  const overlay = document.getElementById('rotateOverlay');
+  if (!overlay) return;
+
+  // Detect portrait mode (height > width)
+  if (window.innerHeight > window.innerWidth) {
+    overlay.classList.add('show');
+  } else {
+    overlay.classList.remove('show');
+  }
+}
+
+// 4. Window Event Listeners
+window.addEventListener('resize', () => {
+  checkOrientation();
+  
+  // Safely re-render PDF page if pdfDoc and pageNum are defined
+  if (typeof pdfDoc !== 'undefined' && pdfDoc && typeof renderPage === 'function' && typeof pageNum !== 'undefined') {
+    renderPage(pageNum);
+  }
 });
 
 window.addEventListener('orientationchange', () => {
-  // Small delay allows mobile browsers to update window dimensions
+  // 200ms delay compensates for mobile browser delay in updating window dimensions
   setTimeout(() => {
     checkOrientation();
-    if (typeof pdfDoc !== 'undefined' && pdfDoc) renderPage(pageNum);
+    if (typeof pdfDoc !== 'undefined' && pdfDoc && typeof renderPage === 'function' && typeof pageNum !== 'undefined') {
+      renderPage(pageNum);
+    }
   }, 200);
 });
 
-// Run once on initial page load
-document.addEventListener('DOMContentLoaded', checkOrientation);
 
 </script>
 
