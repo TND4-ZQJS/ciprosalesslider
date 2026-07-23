@@ -1111,3 +1111,37 @@ svg, path, text, .axis-label {
         stroke 0.6s cubic-bezier(0.16, 1, 0.3, 1),
         fill 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+
+/* Rotate Overlay Styling */
+#rotateOverlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.95); /* Dark translucent background */
+  color: #ffffff;
+  z-index: 9999; /* Higher than everything else */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+#rotateOverlay.show {
+  display: flex; /* Shown when portrait is detected */
+}
+
+#rotateOverlay .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: spin 3s infinite linear;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
