@@ -14,26 +14,42 @@
 </div>
 
 
-<div id="compliance-gatekeeper" class="gatekeeper-overlay">
-    <div class="gatekeeper-modal">
-        <div class="gatekeeper-badge">ⓘ SIMULATION NOTICE</div>
-        
-        <h2>Before You Begin</h2>
-        
-        <p>
-            This interactive module provides conceptual projections based on a hypothetical non-guaranteed 
-            <strong>5.0% annual investment return</strong> of the <strong>Manulife Equity Fund</strong>.
-        </p>
-        
-        <p class="secondary-text">
-            All illustrated account values and milestones are strictly for visual demonstration purposes. 
-            Actual fund performance will fluctuate based on market conditions. For binding contractual metrics, 
-            always cross-reference results with your official <strong>Manulife Product Illustration (PI)</strong>.
-        </p>
-        
-        <button class="gatekeeper-btn" onclick="dismissGatekeeper()">Proceed to Simulation</button>
+<div id="compliance-gatekeeper" class="gatekeeper-overlay" role="dialog" aria-modal="true">
+  <div class="gatekeeper-modal">
+    <!-- PIDM Notice Badge -->
+    <div class="gatekeeper-pidm-badge">
+      🛡️ <strong>PIDM NOTICE:</strong> Protection by PIDM on benefits payable from the unit portion of this product is subject to limitations.
     </div>
+
+    <h2>Manulife Heritage Simulation Notice</h2>
+
+    <p>
+      This interactive tool provides conceptual projections based on an illustrated hypothetical gross investment return of 
+      <strong>5.0% per annum</strong>. Returns are non-guaranteed and subject to fund performance.
+    </p>
+
+    <div class="disclaimer-scroll-box">
+      <p class="secondary-text">
+        <strong>Important Compliance Notes:</strong><br>
+        1. This simulation is for visual demonstration purposes only and does not constitute an official contract or binding quote.<br>
+        2. Investment returns are not guaranteed; unit prices may go down as well as up. Past performance is not an indication of future results.<br>
+        3. For complete plan details, visit the official 
+        <a href="https://www.manulife.com.my/en/individual/products/invest/investment-linked-plan/manulife-heritage.html" target="_blank" rel="noopener noreferrer">
+          Manulife Heritage Product Page
+        </a> or cross-reference results with an official <strong>Manulife Product Illustration (PI)</strong>.
+      </p>
+    </div>
+
+    <label class="gatekeeper-checkbox-label">
+      <input type="checkbox" id="gatekeeper-ack"> 
+      I acknowledge that this simulation is for illustrative purposes only and refer to the official Product Illustration for binding values.
+    </label>
+
+    <button id="gatekeeper-proceed-btn" class="gatekeeper-btn" disabled onclick="dismissGatekeeper()">Proceed to Simulation</button>
+  </div>
 </div>
+
+
 
 <header class="terminal-header">
     <div class="header-brand">
