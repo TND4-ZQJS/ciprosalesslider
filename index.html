@@ -15,43 +15,60 @@
 
 
 <div id="compliance-gatekeeper" class="gatekeeper-overlay" role="dialog" aria-modal="true">
-<div class="gatekeeper-modal">
-<div class="gatekeeper-pidm-badge">
-    <strong>DISCLAIMER:</strong> 
-    This tool offers two viewing modes:
-    <br><br>
-    • <strong>PI Mode:</strong> Displays 6 official milestone data points extracted directly from the client's formal Product Illustration.
-    <br>
-    • <strong>Simulation Mode:</strong> Uses linear interpolation across benchmark scenarios based on Manulife Equity Fund projections to calculate estimated milestone account values for custom premium levels.
-    <br><br>
-    Simulation figures are non-guaranteed estimates for visual modeling only. Contractual terms and official policy values are strictly governed by the formal Product Illustration (PI).
-</div>
-
-    <h2>CI Pro Advanced Visualisation Terminal Notice</h2>
-
-    <p>
-      This interactive tool provides conceptual projections based on an illustrated hypothetical gross investment return of 
-      <strong>5.0% per annum (Manulife Equity Fund)</strong>. Returns are non-guaranteed and subject to fund performance.
-    </p>
-
-    <div class="disclaimer-scroll-box">
-      <p class="secondary-text">
-        <strong>Important Compliance Notes:</strong><br>
-        1. This simulation/visualisation is for visual demonstration purposes only and does not constitute an official contract or binding quote.<br>
-        2. Investment returns are not guaranteed; unit prices may go down as well as up. Past performance is not an indication of future results.<br>
-        3. For complete plan details, visit the official 
-        <a href="https://www.manulife.com.my/en/individual/products/invest/investment-linked-plan/manulife-heritage.html" target="_blank" rel="noopener noreferrer">
-          Manulife Heritage Product Page
-        </a> or cross-reference results with an official <strong>Manulife Product Illustration (PI)</strong>.
+  <div class="gatekeeper-modal">
+    
+    <!-- Header Zone -->
+    <div class="gatekeeper-header">
+      <h2>CI Pro Visualisation Terminal Notice</h2>
+      <p class="gatekeeper-subtitle">
+        Projections are based on an illustrated gross return of <strong>5.0% p.a. (Manulife Equity Fund)</strong>.
       </p>
     </div>
 
-    <label class="gatekeeper-checkbox-label">
-      <input type="checkbox" id="gatekeeper-ack"> 
-      I acknowledge that this simulation/visualisation is for illustrative purposes only and refer to the official Product Illustration for binding values.
-    </label>
+    <!-- Scrollable Body Zone -->
+    <div class="gatekeeper-body">
+      
+      <!-- Mode Comparison Grid -->
+      <div class="gatekeeper-mode-grid">
+        <div class="mode-card">
+          <div class="mode-card-title">PI Mode</div>
+          <p class="mode-card-desc">
+            Displays 6 official milestone data points extracted directly from the formal Product Illustration.
+          </p>
+        </div>
 
-    <button id="gatekeeper-proceed-btn" class="gatekeeper-btn" disabled onclick="dismissGatekeeper()">Proceed to Simulation</button>
+        <div class="mode-card highlight">
+          <div class="mode-card-title">
+            Simulation <span class="badge-tag">Formula</span>
+          </div>
+          <p class="mode-card-desc">
+            Uses linear interpolation across benchmark scenarios to estimate milestone values for custom premiums.
+          </p>
+        </div>
+      </div>
+
+      <!-- Legal Box -->
+      <div class="gatekeeper-legal-box">
+        <p><strong>Important Compliance Notes:</strong></p>
+        <p>1. Simulation mode is for visual modeling only and does not constitute an official quote or contract.</p>
+        <p>2. Investment returns are non-guaranteed; unit prices fluctuate based on fund performance.</p>
+        <p>3. Refer to the official <a href="https://www.manulife.com.my/en/individual/products/invest/investment-linked-plan/manulife-heritage.html" target="_blank" rel="noopener noreferrer">Manulife Heritage Product Page</a> or formal PI for binding values.</p>
+      </div>
+
+    </div>
+
+    <!-- Footer Action Zone -->
+    <div class="gatekeeper-footer">
+      <label class="gatekeeper-checkbox-label">
+        <input type="checkbox" id="gatekeeper-ack" onchange="toggleGatekeeperBtn(this)"> 
+        <span>I acknowledge that simulation figures are non-guaranteed and refer to the official PI for binding values.</span>
+      </label>
+
+      <button id="gatekeeper-proceed-btn" class="gatekeeper-btn" disabled onclick="dismissGatekeeper()">
+        Proceed to Simulation
+      </button>
+    </div>
+
   </div>
 </div>
 
