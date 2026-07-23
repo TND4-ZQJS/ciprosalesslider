@@ -1764,25 +1764,31 @@ document.addEventListener('DOMContentLoaded', () => {
   checkOrientation();
 });
 
-// 2. Gatekeeper Logic
+// 2. Gatekeeper Logic (Forces disclaimer agreement on every page load)
 function initGatekeeper() {
   const checkbox = document.getElementById('gatekeeper-ack');
   const proceedBtn = document.getElementById('gatekeeper-proceed-btn');
   const gatekeeper = document.getElementById('compliance-gatekeeper');
   const appContainer = document.getElementById('app-container');
 
-  // Check if session was already accepted previously in this session
-  if (sessionStorage.getItem('manulife_disclaimer_accepted') === 'true') {
-    if (gatekeeper) gatekeeper.style.display = 'none';
-    if (appContainer) appContainer.classList.remove('app-locked');
-    return;
+  // Always reset the gatekeeper state on page load
+  if (gatekeeper) gatekeeper.style.display = 'flex';
+  if (appContainer) appContainer.classList.add('app-locked');
+
+  // Force checkbox to be unchecked initially
+  if (checkbox) {
+    checkbox.checked = false;
+    
+    // Toggle button enabled/disabled status based on checkbox state
+    checkbox.addEventListener('change', (e) => {
+      if (proceedBtn) {
+        proceedBtn.disabled = !e.target.checked;
+      }
+    });
   }
 
-  // Handle checkbox change state
-  if (checkbox && proceedBtn) {
-    checkbox.addEventListener('change', (e) => {
-      proceedBtn.disabled = !e.target.checked;
-    });
+  if (proceedBtn) {
+    proceedBtn.disabled = true;
   }
 }
 
@@ -1791,18 +1797,14 @@ function dismissGatekeeper() {
   const appContainer = document.getElementById('app-container');
   const checkbox = document.getElementById('gatekeeper-ack');
 
-  // Security check: ensure checkbox is ticked before proceeding
-  if (checkbox && !checkbox.checked) return;
+  // Hard guard: Ensure checkbox is checked before allowing entry
+  if (!checkbox || !checkbox.checked) return;
 
-  // Save audit trail to sessionStorage
-  sessionStorage.setItem('manulife_disclaimer_accepted', 'true');
-  sessionStorage.setItem('manulife_disclaimer_timestamp', new Date().toISOString());
-
-  // Hide modal and unlock app UI
+  // Hide modal and unlock the main application UI
   if (gatekeeper) gatekeeper.style.display = 'none';
   if (appContainer) appContainer.classList.remove('app-locked');
 
-  // Trigger initial orientation check once unlocked
+  // Perform orientation check once the app is unlocked
   checkOrientation();
 }
 
@@ -1823,14 +1825,14 @@ function checkOrientation() {
 window.addEventListener('resize', () => {
   checkOrientation();
   
-  // Safely re-render PDF page if pdfDoc and pageNum are defined
+  // Safely re-render PDF page if PDF.js is active
   if (typeof pdfDoc !== 'undefined' && pdfDoc && typeof renderPage === 'function' && typeof pageNum !== 'undefined') {
     renderPage(pageNum);
   }
 });
 
 window.addEventListener('orientationchange', () => {
-  // 200ms delay compensates for mobile browser delay in updating window dimensions
+  // 200ms delay compensates for mobile device dimension updates
   setTimeout(() => {
     checkOrientation();
     if (typeof pdfDoc !== 'undefined' && pdfDoc && typeof renderPage === 'function' && typeof pageNum !== 'undefined') {
@@ -1838,6 +1840,7 @@ window.addEventListener('orientationchange', () => {
     }
   }, 200);
 });
+
 
 
 </script>
