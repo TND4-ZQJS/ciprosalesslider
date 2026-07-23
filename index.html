@@ -367,6 +367,38 @@
             </div>
         </div>
     </div>
+
+<!-- METRIC EXPLANATION OVERLAY MODAL -->
+<div id="metric-modal" class="metric-modal-overlay" onclick="closeMetricModal(event)">
+  <div class="metric-modal-card">
+    <button class="metric-modal-close" onclick="closeMetricModalForce()">&times;</button>
+    
+    <div class="metric-modal-header">
+      <span class="metric-tag">METRIC EXPLANATION</span>
+      <h3 id="modal-metric-title">Metric Title</h3>
+    </div>
+
+    <div class="metric-modal-body">
+      <!-- Live Value Callout -->
+      <div class="captured-value-badge">
+        <span class="captured-label">CURRENT SIMULATED VALUE</span>
+        <span class="captured-amount" id="modal-captured-value">--</span>
+      </div>
+
+      <p id="modal-metric-desc">Description text...</p>
+      
+      <div class="metric-formula-box">
+        <span class="formula-label">CALCULATION LOGIC</span>
+        <code id="modal-metric-formula">Formula...</code>
+      </div>
+
+      <div class="metric-takeaway-box">
+        <strong>💡 Key Insight for Clients:</strong>
+        <p id="modal-metric-takeaway">Takeaway...</p>
+      </div>
+    </div>
+  </div>
+</div>    
     
 <!-- ==========================================================================
    PRODUCT FEATURES SYSTEM PRESENTATION CORE LAYER
