@@ -329,27 +329,41 @@
 
 
                 <!-- Folder Content 2: Auxiliary Analysis Space -->
-                <div id="analysis-panel" class="tab-panel">
-                    <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
-                    <div class="milestone-grid">
-                        <div class="milestone-card" id="card-net-cost">
-                            <div class="milestone-age">Amortized Net Cost / Yr</div>
-                            <div class="milestone-value" id="val-net-cost">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="card-cost-100k">
-                            <div class="milestone-age">Net Leverage Cost / 100K</div>
-                            <div class="milestone-value" id="val-cost-100k">RM --</div>
-                        </div>
-                        <div class="milestone-card" id="FeaturePresentation functions exactly the same ...card-leverage-factor">
-                            <div class="milestone-age">Capital Leverage Multiplier</div>
-                            <div class="milestone-value" id="val-leverage-factor">--</div>
-                        </div>
-                        <div class="milestone-card" id="card-preservation-factor">
-                            <div class="milestone-age">Equity Retention Yield</div>
-                            <div class="milestone-value" id="val-preservation-factor">--</div>
-                        </div>
-                    </div>
-                </div>
+             <div id="analysis-panel" class="tab-panel">
+  <div class="panel-title">Advanced Leveraged Cost & Performance Capital Metrics (Horizon: Yr 35)</div>
+  <div class="milestone-grid">
+    
+    <!-- Amortized Net Cost / Yr -->
+    <div class="milestone-card clickable-card" onclick="openMetricDetail('net-cost')">
+      <div class="milestone-age">Amortized Net Cost / Yr</div>
+      <div class="milestone-value" id="val-net-cost">RM --</div>
+      <div class="card-click-hint">Click for explanation ➔</div>
+    </div>
+
+    <!-- Net Leverage Cost / 100K -->
+    <div class="milestone-card clickable-card" onclick="openMetricDetail('cost-100k')">
+      <div class="milestone-age">Net Leverage Cost / 100K</div>
+      <div class="milestone-value" id="val-cost-100k">RM --</div>
+      <div class="card-click-hint">Click for explanation ➔</div>
+    </div>
+
+    <!-- Capital Leverage Multiplier -->
+    <div class="milestone-card clickable-card" onclick="openMetricDetail('leverage-factor')">
+      <div class="milestone-age">Capital Leverage Multiplier</div>
+      <div class="milestone-value" id="val-leverage-factor">--</div>
+      <div class="card-click-hint">Click for explanation ➔</div>
+    </div>
+
+    <!-- Equity Retention Yield -->
+    <div class="milestone-card clickable-card" onclick="openMetricDetail('preservation-factor')">
+      <div class="milestone-age">Equity Retention Yield</div>
+      <div class="milestone-value" id="val-preservation-factor">--</div>
+      <div class="card-click-hint">Click for explanation ➔</div>
+    </div>
+
+  </div>
+</div>
+            
             </div>
         </div>
     </div>
@@ -1864,6 +1878,93 @@ window.addEventListener('orientationchange', () => {
   }, 200);
 });
 
+/* ==========================================================================
+   METRIC EXPLANATION MODAL & DYNAMIC DATA HANDLER
+   ========================================================================== */
+
+// 1. Map metric keys to your DOM element IDs and compliance descriptions
+const metricDataStore = {
+  'net-cost': {
+    title: 'Amortized Net Cost / Yr',
+    valueElementId: 'val-net-cost',
+    desc: 'Calculates the true average annual out-of-pocket cost of funding the policy over a 35-year horizon, netting out accumulated cash values.',
+    formula: '(Total Premiums Paid - Account Value at Yr 35) ÷ 35 Years',
+    takeaway: 'Shows the effective annual cost to maintain your coverage once cash growth is factored in.'
+  },
+  'cost-100k': {
+    title: 'Net Leverage Cost / 100K',
+    valueElementId: 'val-cost-100k',
+    desc: 'Standardizes the annual net cost of coverage per RM 100,000 of sum assured to evaluate cost-efficiency.',
+    formula: '(Amortized Net Cost / Yr) ÷ (Sum Assured ÷ 100,000)',
+    takeaway: 'Allows side-by-side efficiency comparisons across different plan sizes or policy structures.'
+  },
+  'leverage-factor': {
+    title: 'Capital Leverage Multiplier',
+    valueElementId: 'val-leverage-factor',
+    desc: 'Measures how many times over the total policy death benefit payout exceeds the cumulative premium outlay at Year 35.',
+    formula: 'Total Sum Assured ÷ Total Premiums Paid',
+    takeaway: 'A higher multiplier reflects stronger estate creation per ringgit invested.'
+  },
+  'preservation-factor': {
+    title: 'Equity Retention Yield',
+    valueElementId: 'val-preservation-factor',
+    desc: 'Evaluates capital preservation by comparing accumulated cash account values against cumulative premium outlay.',
+    formula: '(Account Value at Yr 35 ÷ Total Premiums Paid) × 100%',
+    takeaway: 'Demonstrates how much of your total premium outlay is recovered as liquid account value at Year 35.'
+  }
+};
+
+/**
+ * Opens the detail overlay modal and injects captured live data + explanations
+ * @param {string} metricKey - Key matching metricDataStore ('net-cost', 'cost-100k', etc.)
+ */
+function openMetricDetail(metricKey) {
+  const data = metricDataStore[metricKey];
+  if (!data) return;
+
+  // A. Read live calculated figure directly from the card DOM
+  const cardElem = document.getElementById(data.valueElementId);
+  const liveCapturedValue = cardElem ? cardElem.textContent.trim() : 'RM --';
+
+  // B. Populate overlay modal elements
+  document.getElementById('modal-metric-title').textContent = data.title;
+  document.getElementById('modal-captured-value').textContent = liveCapturedValue;
+  document.getElementById('modal-metric-desc').textContent = data.desc;
+  document.getElementById('modal-metric-formula').textContent = data.formula;
+  document.getElementById('modal-metric-takeaway').textContent = data.takeaway;
+
+  // C. Display the modal overlay
+  const modalElem = document.getElementById('metric-modal');
+  if (modalElem) {
+    modalElem.classList.add('active');
+  }
+}
+
+/**
+ * Closes the modal overlay when clicking backdrop outside the modal card
+ */
+function closeMetricModal(event) {
+  if (event.target.id === 'metric-modal') {
+    document.getElementById('metric-modal').classList.remove('active');
+  }
+}
+
+/**
+ * Force close modal (via '×' button)
+ */
+function closeMetricModalForce() {
+  const modalElem = document.getElementById('metric-modal');
+  if (modalElem) {
+    modalElem.classList.remove('active');
+  }
+}
+
+// Optional: Allow pressing the 'Escape' key on keyboard to dismiss overlay
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    closeMetricModalForce();
+  }
+});
 
 
 </script>
