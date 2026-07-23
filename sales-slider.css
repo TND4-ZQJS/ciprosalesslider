@@ -694,6 +694,28 @@ footer {
     pointer-events: none;
 }
 
+/* Styling for PIDM Badge in Modal */
+.gatekeeper-pidm-badge {
+  background-color: #f1f5f9;
+  border-left: 4px solid #00a859; /* Manulife Green */
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: #334155;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.disclaimer-scroll-box {
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  background: #fafafa;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+
 .net-gain-green { color: #30d158 !important; }
 .net-loss-red { color: #ff453a !important; }
 
