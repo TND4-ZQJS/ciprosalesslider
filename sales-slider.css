@@ -1272,3 +1272,34 @@ svg, path, text, .axis-label {
   to { transform: rotate(360deg); }
 }
 
+/* Card Container Styling */
+.clickable-card {
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 2rem; /* Leaves room for the bottom hint text */
+    transition: all 0.2s ease;
+}
+
+.clickable-card:hover {
+    border-color: rgba(0, 168, 89, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Bottom Hint Text */
+.card-click-hint {
+    position: absolute;
+    bottom: 8px;
+    left: 12px;
+    font-size: 0.72rem;
+    color: #8e8e93;
+    font-weight: 500;
+    transition: color 0.2s ease, transform 0.2s ease;
+    user-select: none;
+}
+
+/* Subtle glow on card hover */
+.clickable-card:hover .card-click-hint {
+    color: #00a859; /* Brand green */
+    transform: translateX(2px);
+}
