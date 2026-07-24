@@ -1115,6 +1115,7 @@ div#presentation-overlay[style*="display: none"] {
     backdrop-filter: blur(10px) !important;
 }
 
+/* Base Button Styling */
 .footer-nav-btn {
     background: rgba(0, 0, 0, 0.04) !important;
     border: 1px solid rgba(0, 0, 0, 0.01) !important;
@@ -1129,25 +1130,11 @@ div#presentation-overlay[style*="display: none"] {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important; /* Prevents Safari focus rings from sticking on tap */
 }
 
-.footer-nav-btn:hover:not(:disabled) {
-    background: rgba(0, 0, 0, 0.07) !important;
-    color: #0056b3 !important;
-}
-
-.footer-nav-btn:active:not(:disabled) {
-    transform: scale(0.97) !important;
-}
-
-.footer-nav-btn:disabled {
-    opacity: 0.25 !important;
-    color: #86868b !important;
-    cursor: not-allowed !important;
-    background: rgba(0, 0, 0, 0.02) !important;
-}
-
+/* Primary Button State */
 .footer-nav-btn.nav-primary {
     background: linear-gradient(180deg, #007AFF 0%, #0066CC 100%) !important;
     color: #ffffff !important;
@@ -1158,11 +1145,41 @@ div#presentation-overlay[style*="display: none"] {
         0 4px 12px rgba(0, 122, 255, 0.2) !important;
 }
 
-.footer-nav-btn.nav-primary:hover:not(:disabled) {
-    background: linear-gradient(180deg, #0082ff 0%, #0073e6 100%) !important;
-    box-shadow: 
-        0 2px 4px rgba(0, 122, 255, 0.2), 
-        0 6px 16px rgba(0, 122, 255, 0.3) !important;
+/* Desktop Mouse Hover States Only (Gated from Mobile/iPad Touch Latches) */
+@media (hover: hover) and (pointer: fine) {
+    .footer-nav-btn:hover:not(:disabled) {
+        background: rgba(0, 0, 0, 0.07) !important;
+        color: #0056b3 !important;
+    }
+
+    .footer-nav-btn.nav-primary:hover:not(:disabled) {
+        background: linear-gradient(180deg, #0082ff 0%, #0073e6 100%) !important;
+        box-shadow: 
+            0 2px 4px rgba(0, 122, 255, 0.2), 
+            0 6px 16px rgba(0, 122, 255, 0.3) !important;
+    }
+}
+
+/* Active Tap / Press Feedback (Works smoothly on both Desktop and Mobile) */
+.footer-nav-btn:active:not(:disabled) {
+    transform: scale(0.97) !important;
+    opacity: 0.85 !important;
+}
+
+/* Focus State Reset for Mobile WebKit */
+.footer-nav-btn:focus:not(:focus-visible) {
+    outline: none !important;
+}
+
+/* Disabled State */
+.footer-nav-btn:disabled {
+    opacity: 0.25 !important;
+    color: #86868b !important;
+    cursor: not-allowed !important;
+    background: rgba(0, 0, 0, 0.02) !important;
+    box-shadow: none !important;
+}
+
 }
 
 .page-indicator {
